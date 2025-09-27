@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta name="Author" content="Kwak HyunBin">
+    <meta name="Author-date" content="2025-08-12">
+    <meta name="Author-email" content="k97764224@gmail.com">
+    <meta name="status" content="draft">
+    <meta name="Revision" content="1.0">
+    <meta name="Description" content="Test HTML file">
+    <meta charset="UTF-8">
+    <title>calculator</title>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <form action="Calculator" method="get">
+            <table width="80%" border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td colspan="5" style="text-align:center; font-weight:bold; font-size: 22px;">계산기</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" name="value1" style="height:35px;width: 100%;font-size:24px;box-sizing:border-box;" id="value1">
+                    </td>
+                    <td>
+                        <select name="symbol" style="height:35px;width: 50px;font-size:24px;box-sizing:border-box;" id="symbol">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                            <option value="*">*</option>
+                            <option value="/">/</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="value2" style="height:35px;width: 100%;font-size:24px;box-sizing:border-box;" id="value2">
+                    </td>
+                    <td>
+                        <button type="submit" style="height: 35px; width: 50px; font-size:14px;">계산</button>
+                    </td>
+                    <td>
+                        <button type="reset" style="height: 35px; width: 100px; font-size:14px;">다시입력</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

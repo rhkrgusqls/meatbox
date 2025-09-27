@@ -1,0 +1,17 @@
+# Eclipse
+.metadata/
+*.tmp
+*.bak
+
+# Eclipse project files (optional: 공유할 필요 없는 경우)
+.settings/
+.project
+.classpath
+
+# 빌드 결과
+bin/
+target/
+
+# 운영체제
+.DS_Store
+Thumbs.db
