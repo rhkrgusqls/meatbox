@@ -3,7 +3,7 @@
 *.tmp
 *.bak
 
-# Eclipse project files (optional: 공유할 필요 없는 경우)
+# Eclipse project files (optional)
 .settings/
 .project
 .classpath
@@ -15,3 +15,6 @@ target/
 # 운영체제
 .DS_Store
 Thumbs.db
+
+# 로컬 프로퍼티
+dbconnection.properties
