@@ -1,47 +1,53 @@
 package jdbc.db.connection;
 
 import com.product.db.ProductDAO;
+import com.user.register.db.RegisterDAO;
+import com.user.register.db.RegisterException;
 import com.product.db.ProductBean;
 import java.sql.Connection;
 
 public class TestDBConnection {
     public static void main(String[] args) {
-        // 1️⃣ DB 연결 테스트
+        RegisterDAO dao = new RegisterDAO();
+
+        // 1️⃣ 정상 회원가입 테스트
         try {
-            Connection conn = DBConnectionManager.getConnection();
-            if (conn != null && !conn.isClosed()) {
-                System.out.println("[SUCCESS] DB connection established successfully.");
-            } else {
-                System.out.println("[FAIL] DB connection failed.");
-                return;
-            }
-        } catch (Exception e) {
-            System.out.println("[ERROR] DB connection test failed.");
-            e.printStackTrace();
-            return;
+            int result1 = dao.register_normaluser("testuser2", "1234", "홍길동");
+            System.out.println("회원가입 성공, user_index: " + result1);
+        } catch (RegisterException e) {
+            System.out.println("회원가입 실패: " + e.getMessage());
         }
 
-        // 2️⃣ DAO 테스트
+        // 2️⃣ 중복 ID 테스트
         try {
-            ProductDAO dao = new ProductDAO();
-            int testProductId = 5; // DB에 존재하는 product_id로 수정해 테스트
-            ProductBean product = dao.product_detail(testProductId);
+            int result2 = dao.register_normaluser("testuser1", "1234", "홍길동");
+            System.out.println("회원가입 성공, user_index: " + result2);
+        } catch (RegisterException e) {
+            System.out.println("중복 ID 테스트 실패: " + e.getMessage());
+        }
 
-            if (product != null) {
-                System.out.println("[SUCCESS] Product fetched successfully:");
-                System.out.println("product_id = " + product.get_product_id());
-                System.out.println("user_index = " + product.get_user_index());
-                System.out.println("quantity = " + product.get_quantity());
-                System.out.println("storage_type = " + product.get_storage_type());
-                System.out.println("product_form = " + product.get_product_form());
-                System.out.println("price = " + product.get_price());
-                System.out.println("seller_note = " + product.get_seller_note());
-            } else {
-                System.out.println("[INFO] No product found with ID " + testProductId);
-            }
-        } catch (Exception e) {
-            System.out.println("[ERROR] DAO test failed.");
-            e.printStackTrace();
+        // 3️⃣ 빈 ID 입력 테스트
+        try {
+            int result3 = dao.register_normaluser("", "1234", "홍길동");
+            System.out.println("회원가입 성공, user_index: " + result3);
+        } catch (RegisterException e) {
+            System.out.println("빈 ID 입력 테스트 실패: " + e.getMessage());
+        }
+
+        // 4️⃣ 빈 비밀번호 입력 테스트
+        try {
+            int result4 = dao.register_normaluser("testuser2", "", "홍길동");
+            System.out.println("회원가입 성공, user_index: " + result4);
+        } catch (RegisterException e) {
+            System.out.println("빈 비밀번호 입력 테스트 실패: " + e.getMessage());
+        }
+
+        // 5️⃣ 빈 이름 입력 테스트
+        try {
+            int result5 = dao.register_normaluser("testuser3", "1234", "");
+            System.out.println("회원가입 성공, user_index: " + result5);
+        } catch (RegisterException e) {
+            System.out.println("빈 이름 입력 테스트 실패: " + e.getMessage());
         }
     }
 }
