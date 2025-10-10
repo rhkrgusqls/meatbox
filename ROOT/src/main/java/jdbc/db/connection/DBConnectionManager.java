@@ -20,7 +20,8 @@ public class DBConnectionManager {
         String[] possiblePaths = {
             "classpath:dbconnection.properties",
             "./dbconnection.properties",
-            "../dbconnection.properties"
+            "../dbconnection.properties",
+            "C://workspace/KDT/git/meatbox/dbconnection.properties"
         };
 
         try {
