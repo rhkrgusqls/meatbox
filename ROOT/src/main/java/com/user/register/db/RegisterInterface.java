@@ -8,9 +8,10 @@ public interface RegisterInterface {
 	int register_normaluser(String id, String password, String name) throws RegisterException ;
 	/** 사업자용 (미구현) */
 	int register_selleruser(String id, String password, String name, String businessNumber, String companyName,
-			String ceoName, String businessType, String businessItem, String phoneNumber, String storeType)
-			throws RegisterException;
+			String ceoName, String businessType, String businessItem, String phoneNumber, String storeType, String city,
+			String district, String neighborhood, String detailAddress) throws RegisterException;
 	/** 미트박스 관리자용 (미구현) */
 	int register_adminuser();
+
 
 }
