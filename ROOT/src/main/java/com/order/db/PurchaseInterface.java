@@ -1,4 +1,4 @@
-package com.purchase.db;
+package com.order.db;
 
 public interface PurchaseInterface {
 	/** 상품 구매 함수
