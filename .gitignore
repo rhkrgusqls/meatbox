@@ -8,13 +8,20 @@
 .project
 .classpath
 
-# 빌드 결과
+# IntelliJ IDEA
+.idea/
+*.xml
+*.iml
+
+# 빌드 결과 (컴파일된 산출물)
 bin/
 target/
+out/
+*.class
 
 # 운영체제
 .DS_Store
 Thumbs.db
 
-# 로컬 프로퍼티
+# 로컬 프로퍼티 (환경별 설정)
 dbconnection.properties
