@@ -13,7 +13,7 @@ public class DBConnectionManager {
     static {
         try {
             // 프로젝트 루트 기준 상대경로
-        	FileInputStream input = new FileInputStream("C:\\workspace\\KDT\\git\\meatbox\\dbconnection.properties");
+        	FileInputStream input = new FileInputStream("..//dbconnection.properties");
 
 
             System.out.println("Current working directory: " + System.getProperty("user.dir"));
