@@ -2889,159 +2889,59 @@
 
             //
             prepareLogin: function() {
-                var memberId	= $.trim(me.$memberIdFld.val());
-                var passwd		= $.trim(me.$passwdFld.val());
-
-                //
-                me.memberIdError = me.checkIdFormat(me.$memberIdFld);
-                me.passwdError = me.checkPasswdFormat(me.$passwdFld);
-
-                if (me.memberIdError != null)
-                {
-                    alert(me.memberIdError);
-                    me.$memberIdFld.focus();
-                    return;
-                }
-                if (me.passwdError != null)
-                {
-                    alert(me.passwdError);
-                    me.$passwdFld.focus();
-                    return;
-                }
-
-                var params = {
-                    'ts'		: $.now()
-                    ,'memberId'	: memberId
-                    ,'passwd'	: passwd
-                    ,'siteCd'	: me.siteCd
-                    ,'siteId'	: me.siteId
-                    ,'snsLinkYn': me.snsLinkYn
-                };
-
-                me.login( '/fo/main/login.json', params );
-            },
+			    var memberId = $.trim(me.$memberIdFld.val());
+			    var passwd   = $.trim(me.$passwdFld.val());
+			
+			    // 입력값 검증
+			    me.memberIdError = me.checkIdFormat(me.$memberIdFld);
+			    me.passwdError   = me.checkPasswdFormat(me.$passwdFld);
+			
+			    if (me.memberIdError != null) {
+			        alert(me.memberIdError);
+			        me.$memberIdFld.focus();
+			        return;
+			    }
+			
+			    if (me.passwdError != null) {
+			        alert(me.passwdError);
+			        me.$passwdFld.focus();
+			        return;
+			    }
+			
+			    // 아이디와 비밀번호만 전송
+			    var params = {
+			        'memberId': memberId,
+			        'passwd': passwd
+			    };
+			
+			    // 서버 요청 (URL은 상황에 맞게 수정 가능)
+			    me.login('/fo/main/login.json', params);
+			},
 
             //
-            login: function(url, params)
-            {
-                $.ajax ({
-                    url: WebTool.getUrl( url ),
-                    dataType: 'json',
-                    type: 'POST',
-                    data: params,
-                    async: false,
-                    global: false,
-                    success: function (result, textStatus, jqXHR)
-                    {
-                        if (ResultTool.isSuccess (result))
-                        {
-                            FoTool.showLoading();
-
-                            var data = ResultTool.getData(result);
-
-                            var productDisplayPagePathPc = data.productDisplayPagePathPc;
-                            if (StringTool.isNotBlank(productDisplayPagePathPc)) {
-                                me.redirectUrl = productDisplayPagePathPc;
-                            }
-
-                            if (data.info.status == 'AA01')
-                            {
-                                try {
-                                    // 고객 프로필 추적
-                                    WebTool.setUserProperties();
-                                    FoTool.sendBrazeEvent("braze.changeUser",data.info.memberSeq);
-                                    WebTool.removeChannelTokUpdateCookie(data.info.memberSeq);
-                                }
-                                catch(err) {
-                                    console.log(err);
-                                }
-
-                                if (me.$savingYnFld.is (':checked')) //아이디 저장
-                                {
-                                    $.cookie (me.saveCookieName, data.info.memberId, {'path':'/', 'domain':'meatbox.co.kr', 'expires':DateTool.addSeconds (me.expireSeconds)});
-                                    $.removeCookie (me.saveCookieName, {'path':'/', 'domain':'www.meatbox.co.kr'});
-                                }
-                                else
-                                {
-                                    $.removeCookie (me.saveCookieName, {'path':'/', 'domain':'www.meatbox.co.kr'});
-                                    $.removeCookie (me.saveCookieName, {'path':'/', 'domain':'meatbox.co.kr'});
-                                }
-
-                                if (StringTool.isNotBlank (me.redirectUrl)) {
-                                    // 육마트 멤버십 가입 회원이면서 메인화면에서 로그인한 경우
-                                    var redirectPathname = WebTool.getPathname(me.redirectUrl);
-                                    if(redirectPathname == '/' || redirectPathname == '/fo/main/mainPage.do'){
-                                        if(data.info.memberProperties.meatMartYn == 'Y'){
-                                            WebTool.go('/fo/meatmart/productList?displayCategorySeq=40002');
-                                            return;
-                                        }
-                                    }
-
-                                    //회원가입화면에서 로그인 시 메인화면으로 전환 kwangY 2020.10.15
-                                    if(me.redirectUrl.indexOf("/fo/member/memberAddPage.do") >= 0){
-                                        //회원가입 페이지
-                                        WebTool.goHome();
-                                    } else if(me.redirectUrl.indexOf("/fo/member/memberTermsPage.do") >= 0){
-                                        //이용약관 페이지
-                                        WebTool.goHome();
-                                    } else if(me.redirectUrl.indexOf("/fo/member/businessInfoPage.do") >= 0) {
-                                        //사업자 정보 입력 페이지
-                                        WebTool.goHome();
-                                    } else  if(me.redirectUrl.indexOf("/fo/member/personalInfoPage.do") >= 0) {
-                                        //개인 정보 입력 페이지
-                                        WebTool.goHome();
-                                    } else {
-                                        top.location.href = me.redirectUrl;
-                                    }
-                                } else {
-                                    WebTool.goHome();
-                                }
-                            }
-                            else if (data.info.status == 'AA04') // 탈퇴(휴폐업)
-                            {
-                                var formData = {
-                                    'action'	: WebTool.getUrl ('/fo/member/withdrawMemberPage.do')
-                                    , 'inputs'	: {'memberId' : data.info.memberId}
-                                };
-                                WebTool.submit (formData);
-                            }
-                            else if (data.info.status == 'AA05') // 휴면
-                            {
-
-                                var formData = {
-                                    'action'	: WebTool.getUrl ('/fo/member/sleepMemberPage.do')
-                                    , 'inputs'	: {'memberId' : data.info.memberId,
-                                        'passwd' : params.passwd,
-                                        'redirectUrl' : window.location.pathname}
-                                };
-
-                                WebTool.submit (formData);
-                            }
-                            else
-                            {
-                                alert('고객님의 계정은 승인대기, 탈퇴 등으로\n정상적인 이용이 불가능한 상태입니다.\n정상적인 이용을 위하여\n고객센터(1644-6689)로 문의 부탁드립니다.');
-                                FoTool.hideLoading();
-                                me.$loginComment.html('죄송합니다. 로그인에 실패하였습니다. <br> 아이디(ID)와 비밀번호 확인후, 다시 로그인하여 주십시오.');
-                                me.$loginComment.show();
-                                me.$memberIdFld.focus();
-                            }
-                        }
-                        else
-                        {
-                            var message = ResultTool.getMessage(result);
-                            if (message === '잠김 계정입니다.') {
-                                alert('아이디/패스워드 입력 가능 횟수를 초과하셨습니다.\n아이디/비밀번호 찾기로 이동합니다.');
-                                WebTool.go('/fo/member/findLoginInfoPage.do?findType=passwd');
-                            } else {
-                                alert (ResultTool.getMessage (result));
-                                me.$loginComment.html('죄송합니다. 로그인에 실패하였습니다. <br> 아이디(ID)와 비밀번호 확인후, 다시 로그인하여 주십시오.');
-                                me.$loginComment.show();
-                                me.$memberIdFld.focus();
-                            }
-                        }
-                    }
-                });
-            },
+		        login: function(url, params) {
+		    $.ajax({
+		        url: WebTool.getUrl(url),   // 로그인 API 주소
+		        type: 'POST',
+		        dataType: 'json',
+		        data: params,
+		        success: function(result) {
+		            // 로그인 성공 여부 확인
+		            if (result && result.success === true) {
+		                alert("✅ 로그인 성공!");
+		                console.log("로그인 성공:", result);
+		                WebTool.goHome(); // 혹은 location.href = "/";
+		            } else {
+		                alert("❌ 로그인 실패. 아이디나 비밀번호를 확인하세요.");
+		                console.log("로그인 실패:", result);
+		            }
+		        },
+		        error: function(xhr, status, error) {
+		            alert("⚠️ 서버 통신 오류가 발생했습니다.");
+		            console.error("AJAX 오류:", status, error);
+		        }
+		    });
+		},
 
             //
             popupSnsLogin: function(type) {
