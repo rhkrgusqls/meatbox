@@ -53,3 +53,14 @@ public class RegisterDAO implements RegisterInterface {
         return -1;
     }
 }
+/*
+        RegisterDAO dao = new RegisterDAO();
+
+        // 정상 회원가입 테스트
+        try {
+            int result1 = dao.register_normaluser("testuser2", "1234", "홍길동");
+            System.out.println("회원가입 성공, user_index: " + result1);
+        } catch (RegisterException e) {
+            System.out.println("회원가입 실패: " + e.getMessage());
+        }
+*/
