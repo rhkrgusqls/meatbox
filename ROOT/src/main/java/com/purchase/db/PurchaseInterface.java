@@ -9,8 +9,11 @@ public interface PurchaseInterface {
 	 * @int discount_amount 쿠폰, 상품권으로 할인된 전체 금액
 	 * @int shipping_fee 배송비
 	 * @int used_points 미트박스포인트 사용량
+	 * 
+	 * @return -1(실패) 보통의 경우 PurchaseException을 먼저 반환할것임으로 try catch 사용 권장, -1반환시 Exception조건에 걸러지지 않은 실패를 처리(알 수 없는 에러)
+	 * @return orderid(성공)
 	 * */
-	boolean purchase_product(int userIndex, int product_id[], int product_option_id[], int payment_method_id, int discount_amount, int shipping_fee, int used_points);
+	int purchase_product(int userIndex, int product_id[], int product_option_id[], int payment_method_id, int discount_amount, int shipping_fee, int used_points);
 }
 
 /**
