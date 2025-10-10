@@ -5,15 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConnectionManager {
 
-    private static Connection connection = null;
+    private static String url;
+    private static String user;
+    private static String password;
+    private static String driver;
 
     static {
         Properties prop = new Properties();
-
         String[] possiblePaths = {
             "classpath:dbconnection.properties",
             "./dbconnection.properties",
@@ -22,7 +25,6 @@ public class DBConnectionManager {
 
         try {
             InputStream input = null;
-
             for (String path : possiblePaths) {
                 if (path.startsWith("classpath:")) {
                     input = DBConnectionManager.class.getClassLoader()
@@ -34,35 +36,30 @@ public class DBConnectionManager {
                         input = null;
                     }
                 }
-
-                if (input != null) {
-                    break;
-                }
+                if (input != null) break;
             }
 
-            if (input == null) {
-                throw new RuntimeException("dbconnection.properties 파일을 찾을 수 없습니다.");
-            }
+            if (input == null) throw new RuntimeException("dbconnection.properties 파일을 찾을 수 없습니다.");
 
             prop.load(input);
 
-            String url = prop.getProperty("db.url");
-            String user = prop.getProperty("db.user");
-            String password = prop.getProperty("db.password");
-            String driver = prop.getProperty("db.driver");
+            url = prop.getProperty("db.url");
+            user = prop.getProperty("db.user");
+            password = prop.getProperty("db.password");
+            driver = prop.getProperty("db.driver");
 
             Class.forName(driver);
-            connection = DriverManager.getConnection(url, user, password);
 
-            System.out.println("DB 연결 성공");
+            System.out.println("DB 드라이버 로드 성공");
             System.out.println("Current working directory: " + System.getProperty("user.dir"));
 
-        } catch (IOException | ClassNotFoundException | java.sql.SQLException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public static Connection getConnection() {
-        return connection;
+    // 매번 새로운 Connection 반환
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, user, password);
     }
 }
