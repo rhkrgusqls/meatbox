@@ -38,50 +38,59 @@ public class RegisterDAO implements RegisterInterface {
 	}
 
 
-    // SELLER USER 등록
-    @Override
-    public int register_selleruser(String id, String password, String name,
-                                   String businessNumber, String companyName,
-                                   String ceoName, String businessType,
-                                   String businessItem, String phoneNumber,
-                                   String storeType) throws RegisterException {
+	// SELLER USER 등록
+	@Override
+	public int register_selleruser(String id, String password, String name,
+	                               String businessNumber, String companyName,
+	                               String ceoName, String businessType,
+	                               String businessItem, String phoneNumber,
+	                               String storeType,
+	                               String city, String district,
+	                               String neighborhood, String detailAddress) throws RegisterException {
 
-        try (Connection conn = DBConnectionManager.getConnection();
-             CallableStatement stmt = conn.prepareCall("{CALL create_default_user(?, ?, ?, ?, ?, ?, ?)}")) {
+	    try (Connection conn = DBConnectionManager.getConnection();
+	         CallableStatement stmt = conn.prepareCall("{CALL create_default_user(?, ?, ?, ?, ?, ?, ?)}")) {
 
-            // SELLER JSON 생성
-            JSONObject sellerJson = new JSONObject();
-            sellerJson.put("businessNumber", businessNumber);
-            sellerJson.put("companyName", companyName);
-            sellerJson.put("ceoName", ceoName);
-            sellerJson.put("businessType", businessType);
-            sellerJson.put("businessItem", businessItem);
-            sellerJson.put("phoneNumber", phoneNumber);
-            sellerJson.put("storeType", storeType);
+	        // SELLER JSON 생성 (주소 포함)
+	        JSONObject sellerJson = new JSONObject();
+	        sellerJson.put("businessNumber", businessNumber);
+	        sellerJson.put("companyName", companyName);
+	        sellerJson.put("ceoName", ceoName);
+	        sellerJson.put("businessType", businessType);
+	        sellerJson.put("businessItem", businessItem);
+	        sellerJson.put("phoneNumber", phoneNumber);
+	        sellerJson.put("storeType", storeType);
 
-            // 파라미터 순서: p_id, p_password, p_name, p_role, p_result(OUT), p_seller_json, p_admin_json
-            stmt.setString(1, id);
-            stmt.setString(2, password);
-            stmt.setString(3, name);
-            stmt.setString(4, "SELLER");
-            stmt.registerOutParameter(5, java.sql.Types.INTEGER); // OUT p_result
-            stmt.setString(6, sellerJson.toString());
-            stmt.setString(7, null); // ADMIN JSON은 null
+	        // 주소 정보 추가
+	        sellerJson.put("city", city);
+	        sellerJson.put("district", district);
+	        sellerJson.put("neighborhood", neighborhood);
+	        sellerJson.put("detail_address", detailAddress);
 
-            stmt.execute();
+	        // 파라미터 순서: p_id, p_password, p_name, p_role, p_result(OUT), p_seller_json, p_admin_json
+	        stmt.setString(1, id);
+	        stmt.setString(2, password);
+	        stmt.setString(3, name);
+	        stmt.setString(4, "SELLER");
+	        stmt.registerOutParameter(5, java.sql.Types.INTEGER); // OUT p_result
+	        stmt.setString(6, sellerJson.toString());
+	        stmt.setString(7, null); // ADMIN JSON은 null
 
-            int result = stmt.getInt(5);
-            if (result <= 0) {
-                throw new RegisterException(result);
-            }
+	        stmt.execute();
 
-            return result;
+	        int result = stmt.getInt(5);
+	        if (result <= 0) {
+	            throw new RegisterException(result);
+	        }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RegisterException(-99);
-        }
-    }
+	        return result;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new RegisterException(-99);
+	    }
+	}
+
 
     @Override
     public int register_adminuser() {
