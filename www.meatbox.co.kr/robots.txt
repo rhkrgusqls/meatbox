@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /*.doAjax$
+Allow: /
+
+Sitemap: https://www.meatbox.co.kr/sitemap.xml
