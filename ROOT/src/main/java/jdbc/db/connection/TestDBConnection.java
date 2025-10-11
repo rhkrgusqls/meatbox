@@ -1,47 +1,43 @@
 package jdbc.db.connection;
 
-import com.product.db.ProductDAO;
-import com.product.db.ProductBean;
-import java.sql.Connection;
+import com.user.register.db.RegisterDAO;
+import com.user.register.db.RegisterException;
 
 public class TestDBConnection {
     public static void main(String[] args) {
-        // 1️⃣ DB 연결 테스트
+        RegisterDAO dao = new RegisterDAO();
+
+        // ✅ 1. 일반 유저 등록 테스트
         try {
-            Connection conn = DBConnectionManager.getConnection();
-            if (conn != null && !conn.isClosed()) {
-                System.out.println("[SUCCESS] DB connection established successfully.");
-            } else {
-                System.out.println("[FAIL] DB connection failed.");
-                return;
-            }
-        } catch (Exception e) {
-            System.out.println("[ERROR] DB connection test failed.");
-            e.printStackTrace();
-            return;
+            int userIndex = dao.register_normaluser("test_normal11", "1234", "홍길동");
+            System.out.println("✅ NORMAL USER 등록 성공: user_index = " + userIndex);
+        } catch (RegisterException e) {
+            System.err.println("❌ NORMAL USER 등록 실패: code = " + e.getMessage());
         }
 
-        // 2️⃣ DAO 테스트
+     // ✅ 2. SELLER 유저 등록 테스트
         try {
-            ProductDAO dao = new ProductDAO();
-            int testProductId = 5; // DB에 존재하는 product_id로 수정해 테스트
-            ProductBean product = dao.product_detail(testProductId);
+            int sellerIndex = dao.register_selleruser(
+                "test_seller11",
+                "abcd1234",
+                "상점주인",
+                "1234567890",       // 사업자등록번호
+                "테스트상점",         // 상호
+                "김대표",           // 대표자명
+                "Food",            // 업태 (식당)
+                "정육판매",         // 업종
+                "02-1234-5678",    // 전화번호
+                "BUTCHER",         // 사업장 형태 (ENUM 값)
+                "서울시",            // city
+                "강남구",            // district
+                "역삼동",            // neighborhood
+                "테스트주소 123"      // detail_address
+            );
 
-            if (product != null) {
-                System.out.println("[SUCCESS] Product fetched successfully:");
-                System.out.println("product_id = " + product.get_product_id());
-                System.out.println("user_index = " + product.get_user_index());
-                System.out.println("quantity = " + product.get_quantity());
-                System.out.println("storage_type = " + product.get_storage_type());
-                System.out.println("product_form = " + product.get_product_form());
-                System.out.println("price = " + product.get_price());
-                System.out.println("seller_note = " + product.get_seller_note());
-            } else {
-                System.out.println("[INFO] No product found with ID " + testProductId);
-            }
-        } catch (Exception e) {
-            System.out.println("[ERROR] DAO test failed.");
-            e.printStackTrace();
+            System.out.println("✅ SELLER USER 등록 성공: user_index = " + sellerIndex);
+
+        } catch (RegisterException e) {
+            System.err.println("❌ SELLER USER 등록 실패: code = " + e.getMessage());
         }
     }
 }
