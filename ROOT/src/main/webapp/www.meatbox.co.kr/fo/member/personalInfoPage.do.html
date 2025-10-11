@@ -3123,14 +3123,10 @@
             '#passwd', //비밀번호
             '#passwdConfirm', //비밀번호확인
             '#realName', //이름
-            '#cellNo', //휴대폰번호
-            '#email', //이메일
           ];
         }else{//sns 회원가입
           me.idsInputToCheck = [
             '#realName', //이름
-            '#cellNo', //휴대폰번호
-            '#email', //이메일
           ];
         }
 
@@ -3930,8 +3926,6 @@
             me.passwdErrorMsg, //비밀번호
             me.passwdConfirmErrorMsg, //비밀번호 확인
             me.realNameErrorMsg, //이름
-            me.cellNoErrorMsg, //휴대폰번호
-            me.emailErrorMsg, //이메일
           ];
         }else{//sns 회원가입
           me.errorStrings	= [
@@ -3941,22 +3935,17 @@
           ];
           me.errorFields = [
             me.$realNameFld, //이름
-            me.$cellNoFld, //휴대폰번호
-            me.$emailFld, //이메일
           ];
         }
 
         if(allFilled){
-          if(me.isInputValid(me.errorStrings, me.errorFields) && me.canUseCellNos.length > 0 ) {
-            $('#nextStepButton').prop('disabled', false);
+          if(me.isInputValid(me.errorStrings, me.errorFields)) {
             $('#joinComplt').prop('disabled', false)
           }else{
-            $('#nextStepButton').prop('disabled', true);
             $('#joinComplt').prop('disabled', true)
           }
         }else{
           $('#joinComplt').prop('disabled', true)
-          $('#nextStepButton').prop('disabled', true)
         }
       },
       /**
@@ -4114,94 +4103,83 @@
 
   $(function() {
     MainMgr.startup();
-  });
+  }); 
 </script>
 <!-- 회원가입: 개인 정보 입력 페이지 -->
 <div class="container white_box">
-  <div class="content">
-    <div id="join_login" class="join_form"><!-- //join_form: 회원가입 대표 클래스 -->
-      <div class="join-form-comm">
-        <div class="join-tit">
-          <h4>사업자 회원가입</h4>
-          <h2 id="default_join">거의 다왔어요!<br><em class="ce853">개인 정보</em>를 입력해주세요</h2>
-          <h2 id="sns_join"><em class="ce853"></em>&nbsp;회원 정보로<br>미트박스 아이디가 만들어져요</h2>
-        </div>
-      </div><!-- //join-form-comm -->
-      <div class="form_box">
-        <div class="form-wrap">
-          <form action="/meatbox/register.do" method="post">
-            <div class="input_form">
-              <ul>
-                <li>
-                  <div class="input-wrap">
-                    <input type="text" id="memberId" name="id" placeholder="아이디" data-focus="아이디(영문,숫자/4~18자 이내)" autocomplete="new-password" required>
-                    <span class="placeholder">아이디</span>
-                  </div>
-                  <em class="error-msg" id="memberId_comment">아이디를 입력해주세요.</em>
-                </li>
-                <li>
-                  <div class="input-wrap">
-                    <input type="password" id="passwd" name="password" placeholder="비밀번호" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required><button type="button" class="pw-show"></button>
-                    <span class="placeholder">비밀번호</span>
-                  </div>
-                  <em class="error-msg" id="passwd_comment">비밀번호를 입력해주세요.</em>
-                </li>
-                <li>
-                  <div class="input-wrap">
-                    <input type="password" id="passwdConfirm" placeholder="비밀번호 확인" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required><button type="button" class="pw-show"></button>
-                    <span class="placeholder">비밀번호 확인</span>
-                  </div>
-                  <em class="error-msg" id="passwdConfirm_comment">비밀번호가 일치하지 않습니다.</em>
-                </li>
-                <li>
-                  <div class="input-wrap">
-                    <input type="text" id="realName" name="name" placeholder="이름" data-focus="이름(국,영문/30자 이내)" autocomplete="new-password" required>
-                    <span class="placeholder">이름</span>
-                  </div>
-                  <em class="error-msg" id="realName_comment">이름을 입력해주세요.</em>
-                </li>
-                <li class="check_btn" id="buyer_cellNoArea">
-                  <div class="input-wrap phone-num">
-                    <input type="tel" id="cellNo" name="cellNo" placeholder="휴대폰번호" data-focus="휴대폰번호(숫자/11자리)" autocomplete="new-password" required maxlength="14">
-                    <span class="placeholder" id="cellNoLabel">휴대폰번호</span>
-                  </div>
-                  <button type="button" onclick="MainMgr.requestAuthNoForCellNo();" id="auth_button">인증번호</button>
-                  <em class="error-msg" id="cellNo_comment">휴대폰번호를 입력해주세요</em>
-                  <div class="hidden-area flex" id="authNoArea">
-                    <div class="input-wrap">
-                      <input type="number" id="authNo" placeholder="인증번호 4자리" data-focus="인증번호 4자리" required>
-                      <span class="placeholder" id="authNoLabel">인증번호 4자리</span>
-                      <em class="count-time" id="authSubMsg"></em>
-                      <em class="error-msg" id="authNo_comment">인증번호를 입력해주세요.</em>
-                    </div>
-                    <button type="button" onclick="MainMgr.isValidAuthNo();" id="authConfirm_button">확인</button>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="select-area" id="joinPathArea">
-              <b>가입경로 <em class="ca0a4" style="font-weight: 400;">(선택)</em></b>
-              <ul id="joinPath">
-                <li><button type="button" value="HE98">인터넷 검색</button></li>
-                <li><button type="button" value="HE20">영업사원 방문</button></li>
-                <li><button type="button" value="HE21">SNS/광고</button></li>
-                <li><button type="button" value="HE22">주변소개</button></li>
-                <li><button type="button" class="etc" value="HE99">기타</button></li>
-              </ul>
-              <div class="textarea">
-                <textarea placeholder="기타 가입경로를 입력해주세요. (최대 30자)" maxlength="30" id="joinPathExt"></textarea>
-              </div>
-            </div>
+    <div class="content">
+        <div id="join_login" class="join_form">
+            <div class="join-form-comm">
+                <div class="join-tit">
+                    <h4>일반 회원가입</h4>
+                    <h2 id="default_join">거의 다왔어요!<br><em class="ce853">개인 정보</em>를 입력해주세요</h2>
+                </div>
+            </div><div class="form_box">
+                <div class="form-wrap">
+                    <form action="./registerNormalAction.do" method="post" onsubmit="return validatePassword();">
+                        <div class="input_form">
+                            <ul>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="memberId" name="id" placeholder="아이디" data-focus="아이디(영문,숫자/4~18자 이내)" autocomplete="off" required>
+                                        <span class="placeholder">아이디</span>
+                                    </div>
+                                    <em class="error-msg" id="memberId_comment"></em>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="password" id="passwd" name="password" placeholder="비밀번호" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required>
+                                        <button type="button" class="pw-show"></button>
+                                        <span class="placeholder">비밀번호</span>
+                                    </div>
+                                    <em class="error-msg" id="passwd_comment"></em>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="password" id="passwdConfirm" placeholder="비밀번호 확인" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required>
+                                        <button type="button" class="pw-show"></button>
+                                        <span class="placeholder">비밀번호 확인</span>
+                                    </div>
+                                    <em class="error-msg" id="passwdConfirm_comment"></em>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="realName" name="name" placeholder="이름" data-focus="이름(국,영문/30자 이내)" autocomplete="new-password" required>
+                                        <span class="placeholder">이름</span>
+                                    </div>
+                                    <em class="error-msg" id="realName_comment"></em>
+                                </li>
+                            </ul>
+                        </div>
 
-            <div class="btn_box">
-              <button type="submit" class="comm_btn" id="joinComplt" disabled>회원가입 완료</button>
-            </div>
-          </form>
-        </div><!-- //form-wrap -->
-      </div><!-- //form_box -->
-    </div><!-- //join_login -->
-  </div><!-- //content -->
-</div><!-- //container -->
+                        <div class="btn_box">
+                            <button type="submit" class="comm_btn" id="joinComplt">회원가입 완료</button>
+                        </div>
+
+                        <div id="error-message" style="color: red; text-align: center; margin-top: 20px; font-weight: bold;"></div>
+                    </form>
+                </div></div></div></div></div><script>
+    // 비밀번호 일치 여부 확인
+    function validatePassword() {
+        var password = document.getElementById("passwd").value;
+        var confirmPassword = document.getElementById("passwdConfirm").value;
+
+        if (password !== confirmPassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return false; // form 제출 막기
+        }
+        return true; // form 제출 허용
+    }
+
+    // 페이지 로드 시 URL 파라미터 확인하여 에러 메시지 표시
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            const errorMessage = decodeURIComponent(urlParams.get('error'));
+            document.getElementById('error-message').textContent = errorMessage;
+        }
+    });
+</script>
 <script type="text/javascript">
   (function() {
     var me = window.BottomMgr = {
