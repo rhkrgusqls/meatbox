@@ -4129,19 +4129,19 @@
       </div><!-- //join-form-comm -->
       <div class="form_box">
         <div class="form-wrap">
-          <form>
+          <form action="/meatbox/register.do" method="post">
             <div class="input_form">
               <ul>
                 <li>
                   <div class="input-wrap">
-                    <input type="text" id="memberId" placeholder="아이디" data-focus="아이디(영문,숫자/4~18자 이내)" autocomplete="new-password" required>
+                    <input type="text" id="memberId" name="id" placeholder="아이디" data-focus="아이디(영문,숫자/4~18자 이내)" autocomplete="new-password" required>
                     <span class="placeholder">아이디</span>
                   </div>
                   <em class="error-msg" id="memberId_comment">아이디를 입력해주세요.</em>
                 </li>
                 <li>
                   <div class="input-wrap">
-                    <input type="password" id="passwd" placeholder="비밀번호" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required><button type="button" class="pw-show"></button>
+                    <input type="password" id="passwd" name="password" placeholder="비밀번호" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required><button type="button" class="pw-show"></button>
                     <span class="placeholder">비밀번호</span>
                   </div>
                   <em class="error-msg" id="passwd_comment">비밀번호를 입력해주세요.</em>
@@ -4155,14 +4155,14 @@
                 </li>
                 <li>
                   <div class="input-wrap">
-                    <input type="text" id="realName" placeholder="이름" data-focus="이름(국,영문/30자 이내)" autocomplete="new-password" required>
+                    <input type="text" id="realName" name="name" placeholder="이름" data-focus="이름(국,영문/30자 이내)" autocomplete="new-password" required>
                     <span class="placeholder">이름</span>
                   </div>
                   <em class="error-msg" id="realName_comment">이름을 입력해주세요.</em>
                 </li>
                 <li class="check_btn" id="buyer_cellNoArea">
                   <div class="input-wrap phone-num">
-                    <input type="tel" id="cellNo" placeholder="휴대폰번호" data-focus="휴대폰번호(숫자/11자리)" autocomplete="new-password" required maxlength="14">
+                    <input type="tel" id="cellNo" name="cellNo" placeholder="휴대폰번호" data-focus="휴대폰번호(숫자/11자리)" autocomplete="new-password" required maxlength="14">
                     <span class="placeholder" id="cellNoLabel">휴대폰번호</span>
                   </div>
                   <button type="button" onclick="MainMgr.requestAuthNoForCellNo();" id="auth_button">인증번호</button>
@@ -4192,12 +4192,13 @@
                 <textarea placeholder="기타 가입경로를 입력해주세요. (최대 30자)" maxlength="30" id="joinPathExt"></textarea>
               </div>
             </div>
+
+            <div class="btn_box">
+              <button type="submit" class="comm_btn" id="joinComplt" disabled>회원가입 완료</button>
+            </div>
           </form>
         </div><!-- //form-wrap -->
       </div><!-- //form_box -->
-      <div class="btn_box">
-        <button type="button" class="comm_btn" id="joinComplt" onclick="MainMgr.addMember();" disabled>회원가입 완료</button>
-      </div>
     </div><!-- //join_login -->
   </div><!-- //content -->
 </div><!-- //container -->
