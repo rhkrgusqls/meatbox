@@ -30,6 +30,6 @@
 
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
-        <url-pattern>/loginAction.do</url-pattern>
+        <url-pattern>*.do</url-pattern>
     </servlet-mapping>
 </web-app>

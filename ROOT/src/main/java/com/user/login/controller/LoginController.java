@@ -36,8 +36,11 @@ public class LoginController extends HttpServlet {
             if (command.equals("/loginAction.do")) {
                 action = new LoginAction();
                 forward = action.execute(request, response);
+            } else if (command.equals("/login.do")) {
+                forward = new ActionForward();
+                forward.setPath("./login/loginForm.jsp");
+                forward.setRedirect(false); // forward
             }
-
             // 이동 처리
             if (forward != null) {
                 if (forward.isRedirect()) {
