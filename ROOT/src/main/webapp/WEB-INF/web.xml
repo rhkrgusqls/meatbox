@@ -46,7 +46,10 @@
         <url-pattern>/registerSellerAction.do</url-pattern>
     </servlet-mapping>
 
-	
+	<servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/businessInfoAction.do</url-pattern>
+    </servlet-mapping>
 	
 	
 </web-app>

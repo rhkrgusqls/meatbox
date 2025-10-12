@@ -2,8 +2,9 @@ package com.user.register.controller;
 
 import com.Action;
 import com.ActionForward;
-import com.user.login.action.LoginAction;
-import com.user.register.action.RegisterNormalAction; 
+import com.user.register.action.BusinessInfoAction;
+import com.user.register.action.RegisterNormalAction;
+import com.user.register.action.RegisterSellerAction;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,31 +22,37 @@ public class RegisterController extends HttpServlet {
         ActionForward forward = null;
         Action action = null;
 
-        System.out.println("요청된 Command: " + command); 
+        System.out.println("RegisterController - 요청된 Command: " + command); 
 
         try {
-            // 일반 회원가입 폼으로 이동
+            // --- 일반 회원가입 ---
             if (command.equals("/registerNormal.do")) {
                 forward = new ActionForward();
-                forward.setPath("./register/registerNormalForm.jsp");
+                forward.setPath("./register/registerNormalForm.jsp"); 
                 forward.setRedirect(false);
             }
-            // 일반 회원가입 처리
             else if (command.equals("/registerNormalAction.do")) {
                 action = new RegisterNormalAction();
                 forward = action.execute(request, response);
             }
-            // 판매자 회원가입 폼으로 이동
-//            else if (command.equals("/registerSeller.do")) {
-//                forward = new ActionForward();
-//                forward.setPath("./register/registerSellerForm.jsp");
-//                forward.setRedirect(false);
-//            }
-//            // 판매자 회원가입 처리
-//            else if (command.equals("/registerSellerAction.do")) {
-//                action = new RegisterSellerAction();
-//                forward = action.execute(request, response);
-//            }
+            
+            // --- 사업자 회원가입 ---
+            // 1단계: 사업자 정보 입력 폼으로 이동
+            else if (command.equals("/registerSeller.do")) {
+                forward = new ActionForward();
+                forward.setPath("./register/registerSellerForm.jsp");
+                forward.setRedirect(false);
+            }
+            // 1단계: 사업자 정보 처리 후 2단계 폼으로 이동
+            else if (command.equals("/businessInfoAction.do")) {
+                action = new BusinessInfoAction();
+                forward = action.execute(request, response);
+            }
+            // 2단계: 최종 사업자 회원가입 처리
+            else if (command.equals("/registerSellerAction.do")) {
+                action = new RegisterSellerAction();
+                forward = action.execute(request, response);
+            }
             
 
             if (forward != null) {
@@ -71,3 +78,4 @@ public class RegisterController extends HttpServlet {
         doProcess(request, response);
     }
 }
+
