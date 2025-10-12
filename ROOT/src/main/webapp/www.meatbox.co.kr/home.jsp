@@ -21,25 +21,22 @@
 
 <script type="text/javascript" id="" charset="">kakaoPixel("6238605269161820704").pageView();</script><iframe height="0" width="0" style="display: none; visibility: hidden;"></iframe><div id="criteo-tags-div" style="display: none;"></div><div id="ch-plugin" class="notranslate" style="z-index: 10000000 !important;">      <div id="ch-plugin-entry"><div style="display: block !important;"></div></div>      <div id="ch-plugin-script" class="ch-messenger-hidden ch-desk-messenger" style="bottom: 156px !important;right: 47px !important;">        <iframe id="ch-plugin-script-iframe" title="Channel chat" style="position:relative!important;height:100%!important;width:100%!important;border:none!important;"></iframe>      </div>    <style data-styled="active" data-styled-version="5.3.11"></style></div><script>
 document.addEventListener('DOMContentLoaded', function() {
-    const observer = new MutationObserver(function(mutations) {
-        const loginButton = Array.from(document.querySelectorAll('button, a, div, span')).find(el => el.textContent.includes('로그인 하기'));
-        if (loginButton) {
-            console.log('Found the dynamically rendered login button. Attaching new click event.');
-            observer.disconnect();
-            loginButton.onclick = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                window.location.href = '/ROOT/login.do';
-            };
-            if (loginButton.tagName === 'A') {
-                loginButton.href = '/ROOT/login.do';
-            }
+    document.body.addEventListener('click', function(e) {
+        // Find the clicked element or its closest ancestor that contains the login text
+        const loginButton = e.target.closest('button, a, div, span');
+        
+        if (loginButton && loginButton.textContent.includes('로그인 하기')) {
+            console.log('Login button clicked. Intercepting and redirecting to login.do.');
+            
+            // Prevent the original link or action from firing
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation(); // Stop other handlers on the same element
+            
+            // Redirect to the correct login form URL
+            window.location.href = '/ROOT/login.do';
         }
-    });
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    }, true); // Use capture phase to intercept the event early
 });
 </script>
 
