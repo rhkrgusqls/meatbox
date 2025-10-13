@@ -25,8 +25,13 @@ public class RegisterController extends HttpServlet {
         System.out.println("RegisterController - 요청된 Command: " + command); 
 
         try {
+        	if (command.equals("/fo/member/memberAddPage.do")) { 
+                forward = new ActionForward();
+                forward.setPath("/register/memberAddForm.jsp"); 
+                forward.setRedirect(false);
+            }
             // --- 일반 회원가입 ---
-            if (command.equals("/registerNormal.do")) {
+        	else if (command.equals("/registerNormal.do")) {
                 forward = new ActionForward();
                 forward.setPath("./register/registerNormalForm.jsp"); 
                 forward.setRedirect(false);
