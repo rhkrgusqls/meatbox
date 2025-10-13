@@ -2754,41 +2754,30 @@
       },
 
       checkRole: function(role){
-        if(me.type == 'sns'){ //sns 회원가입
-          //sns 개인정보 입력
-          var params = {
-            'role': role, //사업자,개인
-            'type': me.type,
-            'email' : me.email,
-            'realName' : me.realName,
-            'siteCd' : me.siteCd,
-            'siteId' : me.siteId,
-            'siteNm' : me.siteNm,
-            'authCi' : me.authCi,
-            'cellNo' : me.cellNo,
-            'isNonKorean' : me.isNonKorean,
-          };
-          // 개인정보 입력 personalInfoPage.jsp
-          SignUpTool.goPersonalInfoPage(params);
-        }else{ //일반 회원가입
-          if(role == 'B004'){ //개인 경우는 본인인증 후 약관 동의
-            //TopMgr.authSuccessCallback = me.authSuccessCallback;
-            var params = {
-              'isSignUp': true,
-              'role': role,
-              'type': me.type,
-            };
-            SignUpTool.requestPhoneAuth(params);
-          }else{
-            var params = {
-              'role': role,
-              'type': me.type,
-            };
-            //이용약관 페이지
-            SignUpTool.goMemberTermsPage(params);
-          }
-        }
-      },
+    	  // sns 회원가입 관련 로직은 그대로 유지합니다.
+    	  if(me.type == 'sns'){
+    	    var params = {
+    	      'role': role,
+    	      'type': me.type,
+    	      'email' : me.email,
+    	      'realName' : me.realName,
+    	      'siteCd' : me.siteCd,
+    	      'siteId' : me.siteId,
+    	      'siteNm' : me.siteNm,
+    	      'authCi' : me.authCi,
+    	      'cellNo' : me.cellNo,
+    	      'isNonKorean' : me.isNonKorean,
+    	    };
+    	    SignUpTool.goPersonalInfoPage(params);
+    	  } else {
+    	    // 일반 회원가입 로직을 요청하신 대로 수정합니다.
+    	    if(role == 'B002'){ // ✨ '사업자 회원가입' 버튼을 눌렀을 때
+    	      window.location.href = '/registerSeller.do';
+    	    } else if(role == 'B004'){ // ✨ '개인 회원가입' 버튼을 눌렀을 때
+    	      window.location.href = '/registerNormal.do';
+    	    }
+    	  }
+    	},
       nothing:null
     };
 

@@ -45,6 +45,11 @@
         <servlet-name>RegisterController</servlet-name>
         <url-pattern>/registerSellerAction.do</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/fo/member/memberAddPage.do</url-pattern>
+    </servlet-mapping>
 
 	<servlet-mapping>
         <servlet-name>RegisterController</servlet-name>
