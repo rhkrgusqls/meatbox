@@ -2,6 +2,7 @@ package com.product.db;
 
 public class ProductBean {
     private int productId;
+    private String productName;
     private String brandNumber;
     private String brandName;
     private String storageType;
@@ -30,6 +31,10 @@ public class ProductBean {
     public String getBrandName() { return brandName; }
     public void setBrandName(String brandName) { this.brandName = brandName; }
 
+    public String get_product_name() { return product_name; }
+
+    public void set_product_name(String product_name) { this.product_name = product_name; }
+    
     public String getStorageType() { return storageType; }
     public void setStorageType(String storageType) { this.storageType = storageType; }
 
@@ -74,4 +79,7 @@ public class ProductBean {
 
     public String getCautionsText() { return cautionsText; }
     public void setCautionsText(String cautionsText) { this.cautionsText = cautionsText; }
+    
+	public String getProductName() { return productName; }
+	public void setProductName(String productName) { this.productName = productName; }
 }
