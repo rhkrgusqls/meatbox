@@ -1,5 +1,6 @@
 package com.my_menu.action;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.Action;
@@ -18,7 +19,7 @@ public class MyMenuAction implements Action {
         forward.setRedirect(false);
         
         // 실제로 보여줄 JSP 파일의 경로를 지정합니다.
-        forward.setPath("/www.meatbox.co.kr/fo/myMenu/myMenuMainPage.do.jsp");
+        forward.setPath("/www.meatbox.co.kr/fo/myMenu/myMenuMainPage.jsp");
         
         return forward;
     }

@@ -1,8 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+        // 세션에서 사용자 정보를 가져옵니다.
+        String userName = (String) session.getAttribute("userName");
+        System.out.print(userName + "================");
+        Object roleObject = session.getAttribute("role");
+        String userRole = (roleObject != null) ? roleObject.toString() : null;
 
+        // 로그인 여부를 판단합니다.
+        boolean isLoggedIn = (userName != null && !userName.isEmpty());
+        %>
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>미트박스 :: 1등 고기 직거래</title>
     <meta property="og:image"				content="https://www.meatbox.co.kr/img/co/meatboxOgImage.png"	/>
     <meta http-equiv="Content-Type"		content="text/html; charset=UTF-8" />
@@ -53,14 +63,6 @@
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script><!-- gnb 로띠 -->
 
     <script type="text/javascript">
-        <%
-        // 세션에서 사용자 정보를 가져옵니다.
-        String userName = (String) session.getAttribute("userName");
-        String userRole = (String) session.getAttribute("role");
-
-        // 로그인 여부를 판단합니다.
-        boolean isLoggedIn = (userName != null && !userName.isEmpty());
-        %>
 
         // JSP 변수를 JavaScript 변수로 넘겨줍니다.
         var _LOGINED_         = <%= isLoggedIn %>;
@@ -2618,7 +2620,22 @@
 						<em>4분기 (10~12월)</em>
 					</a>
 				</span>
-                            <span class="my_name"><span><%= userName != null ? userName : "고객" %></span></span>                        </div>
+                            <span class="my_name"><span class="my_name">
+						    <span>
+						        <% 
+						            if (userName != null) { 
+						        %>
+						            <%= userName %>
+						        <% 
+						            } else { 
+						        %>
+						            고객
+						        <% 
+						            } 
+						        %>
+						    </span>
+				</span></span>                        
+						</div>
                     </div>
                     <div class="have_benefit dflex">
                         <dl>
@@ -2708,7 +2725,7 @@
                 </script>
 
                 <div class="my_list">
-                    <em><a href="javascript:;" onclick="FoTool.go('/fo/myMenu/myMenuMainPage.do');"  class="on">나의 미트박스</a></em>
+                    <em><a href="javascript:;" onclick="window.location.href='/myMenu/myMenuMainPage.do';"  class="on">나의 미트박스</a></em>
                     <ul>
                         <li>
                             <ul class="small_list">
