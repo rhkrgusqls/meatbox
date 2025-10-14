@@ -2,7 +2,7 @@ package com.product.db;
 
 public class ProductBean {
     private int productId;
-	private String product_name;
+    private String productName;
     private String brandNumber;
     private String brandName;
     private String storageType;
@@ -79,4 +79,7 @@ public class ProductBean {
 
     public String getCautionsText() { return cautionsText; }
     public void setCautionsText(String cautionsText) { this.cautionsText = cautionsText; }
+    
+	public String getProductName() { return productName; }
+	public void setProductName(String productName) { this.productName = productName; }
 }
