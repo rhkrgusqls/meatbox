@@ -63,6 +63,7 @@ public class ProductDAO implements ProductInterface {
                     p.setProductId(rs.getInt("product_id"));
                     p.setBrandNumber(rs.getString("brand_number"));
                     p.setBrandName(rs.getString("brand_name"));
+                    p.set_product_name(rs.getString("product_name"));
                     p.setStorageType(rs.getString("storage_type"));
                     p.setSaleTag(rs.getString("sale_tag"));
                     p.setProductForm(rs.getString("product_form"));
