@@ -50,6 +50,13 @@
         <servlet-name>RegisterController</servlet-name>
         <url-pattern>/businessInfoAction.do</url-pattern>
     </servlet-mapping>
-	
-	
+	<servlet>
+		<servlet-name>MyMenuController</servlet-name>
+		<servlet-class>com.my_menu.controller.MyMenuController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MyMenuController</servlet-name>
+		<url-pattern>/myMenu/*</url-pattern>
+	</servlet-mapping>
+		
 </web-app>

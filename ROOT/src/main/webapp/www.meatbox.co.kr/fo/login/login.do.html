@@ -2928,10 +2928,13 @@
 		        success: function(result) {
 		            // 로그인 성공 여부 확인
 		            if (result && result.success === true) {
-		                alert("✅ 로그인 성공!");
-		                console.log("로그인 성공:", result);
-		                WebTool.goHome(); // 혹은 location.href = "/";
-		            } else {
+				    alert("✅ 로그인 성공!");
+				    console.log("로그인 성공:", result);
+				    // WebTool.goHome(); // 이 부분을 주석 처리하거나 삭제합니다.
+				    
+				    // 아래의 코드로 교체하여 마이페이지로 이동시킵니다.
+				    location.href = "/ROOT/myMenu/myMenuMainPage.do"; 
+				} else {
 		                alert("❌ 로그인 실패. 아이디나 비밀번호를 확인하세요.");
 		                console.log("로그인 실패:", result);
 		            }
