@@ -1,5 +1,17 @@
 package com.product.db;
 
+import java.util.List;
+
 public interface ProductInterface {
-	ProductBean product_detail(int productID);
+    List<ProductBean> selectProducts(
+        String brandNumber,
+        String storageType,
+        String saleTag,
+        String productForm,
+        Integer allowedMemberLv,
+        String categoryName,
+        String detailCategoryName,
+        int offset,
+        int limit
+    ) throws ProductException;
 }
