@@ -108,7 +108,7 @@
                         <div class="btn_box" style="margin-top: 30px;">
                             <a href="javascript:;" class="btn heart_btn">관심상품</a>
                             <button type="button" class="btn cart">장바구니</button>
-                            <button type="button" class="btn buy">구매하기</button>
+                            <button type="button" class="btn buy" onclick="location.href='/order.do';">구매하기</button>
                         </div>
                     </div>
                 </div>
