@@ -26,7 +26,7 @@ public class CartAddAction implements Action {
             PrintWriter out = response.getWriter();
             out.println("<script>");
             out.println("alert('장바구니에 상품을 담으려면 로그인이 필요합니다.');");
-            out.println("location.href='./MemberLogin.me';"); // 로그인 페이지 경로
+            out.println("location.href='/login.do';"); // 로그인 페이지 경로
             out.println("</script>");
             out.close(); // out 객체를 닫아줍니다.
             return null; // 더 이상 Action을 진행하지 않음
