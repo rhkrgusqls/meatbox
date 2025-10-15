@@ -65,7 +65,6 @@ public class ProductDAO implements ProductInterface {
                     p.setProductName(rs.getString("product_name"));
                     p.setBrandNumber(rs.getString("brand_number"));
                     p.setBrandName(rs.getString("brand_name"));
-                    p.set_product_name(rs.getString("product_name"));
                     p.setStorageType(rs.getString("storage_type"));
                     p.setSaleTag(rs.getString("sale_tag"));
                     p.setProductForm(rs.getString("product_form"));
@@ -229,5 +228,69 @@ public class ProductDAO implements ProductInterface {
         }
 
         return productDetail;
+    }
+    
+    /**
+     * 특정 카테고리 ID에 해당하는 상품 목록과 각 상품의 대표 이미지를 조회하는 메소드.
+     * @param categoryId 조회할 상세 카테고리의 ID (detail_category_id)
+     * @param offset 조회를 시작할 위치
+     * @param limit 조회할 상품의 개수
+     * @return 해당 카테고리의 상품 리스트 (List<ProductBean>)
+     */
+    public List<ProductBean> getProductsByCategory(int categoryId, int offset, int limit) {
+        List<ProductBean> productList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        // [수정된 부분] 
+        // product 테이블과 product_of_detail_category를 조인하고,
+        // 서브쿼리를 이용해 각 상품(p.product_id)의 첫 번째 이미지 경로를 함께 가져옵니다.
+        String sql = "SELECT p.*, " +
+                     " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) as productImage " +
+                     "FROM product p " +
+                     "JOIN product_of_detail_category podc ON p.product_id = podc.product_id " +
+                     "WHERE podc.detail_category_id = ? " +
+                     "ORDER BY p.created_at DESC " +
+                     "LIMIT ? OFFSET ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, categoryId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ProductBean p = new ProductBean();
+                p.setProductId(rs.getInt("product_id"));
+                p.setProductName(rs.getString("product_name"));
+                p.setQuantity(rs.getInt("quantity"));
+                p.setPrice(rs.getInt("price"));
+                p.setSellerNote(rs.getString("seller_note"));
+                
+                // [수정] 위에서 조회한 대표 이미지 경로를 ProductBean에 저장합니다.
+                p.setProductImage(rs.getString("productImage"));
+                
+                // ... ProductBean의 나머지 setter들을 여기에 채워주세요.
+
+                productList.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return productList;
     }
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.Action;
 import com.ActionForward;
 import com.product.action.ProductDetailAction;
+import com.product.action.ProductListAction;
 
 // URL 패턴이 *.do 로 끝나는 모든 요청을 이 서블릿이 처리하도록 설정합니다.
 @WebServlet("*.do")
@@ -53,18 +54,16 @@ public class ProductController extends HttpServlet {
                 e.printStackTrace();
             }
         } 
-        /*
-        else if (command.equals("/productList.do")) {
-            System.out.println("C: /productList.do 주소 호출됨");
-            // 나중에 상품 목록을 보여주는 Action을 만들 경우
-            // action = new ProductListAction();
-            // try {
-            //     forward = action.execute(request, response);
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
-        }
-        */
+
+	    else if (command.equals("/productList.do")) {
+	        System.out.println("C: /productList.do 주소 호출됨");
+	        action = new ProductListAction(); // 새로 만든 Action 클래스
+	        try {
+	            forward = action.execute(request, response);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
         
         // ... 여기에 다른 상품 관련 .do 주소를 추가할 수 있습니다 ...
         
