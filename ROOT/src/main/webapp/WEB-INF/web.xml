@@ -72,5 +72,14 @@
 		<servlet-name>LogoutController</servlet-name>
 		<url-pattern>/logout.do</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+        <servlet-name>OrderController</servlet-name>
+        <servlet-class>com.order.controller.OrderController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderController</servlet-name>
+        <url-pattern>/order.do</url-pattern>
+    </servlet-mapping>
 		
 </web-app>
