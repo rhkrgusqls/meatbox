@@ -62,7 +62,7 @@
                             </a>
                         </c:if>
                         <c:if test="${not empty sessionScope.userIndex}">
-                             <a href="마이페이지_URL" class="f-size12-600 flex-col-gap2">
+                             <a href="/myMenu/myMenuMainPage.do" class="f-size12-600 flex-col-gap2">
                                 <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
                                 <span class="des">MY</span>
                             </a>
