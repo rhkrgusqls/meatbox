@@ -65,7 +65,6 @@ public class ProductDAO implements ProductInterface {
                     p.setProductName(rs.getString("product_name"));
                     p.setBrandNumber(rs.getString("brand_number"));
                     p.setBrandName(rs.getString("brand_name"));
-                    p.set_product_name(rs.getString("product_name"));
                     p.setStorageType(rs.getString("storage_type"));
                     p.setSaleTag(rs.getString("sale_tag"));
                     p.setProductForm(rs.getString("product_form"));
@@ -94,6 +93,7 @@ public class ProductDAO implements ProductInterface {
         return resultList;
     }
     
+    @Override
     public List<CategoryBean> getCategoriesByParent(Integer parentId) throws SQLException {
         List<CategoryBean> list = new ArrayList<>();
 
@@ -130,6 +130,7 @@ public class ProductDAO implements ProductInterface {
      * @param productId 조회할 상품의 ID (product_id)
      * @return 상품의 모든 상세 정보가 담긴 ProductDetailBean 객체
      */
+    @Override
     public ProductDetailBean getProductDetail(int productId) {
         ProductDetailBean productDetail = null;
         Connection conn = null;
@@ -137,11 +138,11 @@ public class ProductDAO implements ProductInterface {
         ResultSet rs = null;
 
         try {
-            conn = DBConnectionManager.getConnection(); 
+            conn = DBConnectionManager.getConnection();
 
-            // 1. 상품 기본 정보 조회
-            // 'product' 테이블에 상품명이 없을 경우, join 등을 통해 가져와야 합니다.
-            String productSQL = "SELECT *, product_name FROM product WHERE product_id = ?";
+            // 1. 상품 기본 정보 조회 (수량 제외)
+            String productSQL = "SELECT product_id, product_name, price, seller_note, delivery_fee " +
+                                "FROM product WHERE product_id = ?";
             pstmt = conn.prepareStatement(productSQL);
             pstmt.setInt(1, productId);
             rs = pstmt.executeQuery();
@@ -149,28 +150,34 @@ public class ProductDAO implements ProductInterface {
             if (rs.next()) {
                 productDetail = new ProductDetailBean();
                 productDetail.setProduct_id(rs.getInt("product_id"));
-                productDetail.setName(rs.getString("product_name")); 
+                productDetail.setName(rs.getString("product_name"));
                 productDetail.setPrice(rs.getInt("price"));
-                productDetail.setQuantity(rs.getInt("quantity"));
                 productDetail.setSeller_note(rs.getString("seller_note"));
                 productDetail.setDelivery_fee(rs.getInt("delivery_fee"));
-                // ... 기타 product 테이블의 정보들을 set 합니다.
             } else {
-                // 상품 정보가 없는 경우 null을 반환합니다.
                 System.err.println("ProductDAO: " + productId + "에 해당하는 상품이 없습니다.");
                 return null;
             }
-            
-            // 사용한 ResultSet, PreparedStatement는 각 쿼리 후 닫아주는 것이 좋습니다.
             rs.close();
             pstmt.close();
 
-            // 2. 상품 이미지 리스트 조회
+            // 2. 옵션에서 종합 수량 조회
+            String quantitySQL = "SELECT SUM(quantity) AS total_quantity FROM product_option WHERE product_id = ?";
+            pstmt = conn.prepareStatement(quantitySQL);
+            pstmt.setInt(1, productId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                productDetail.setQuantity(rs.getInt("total_quantity")); // 종합 수량
+            }
+            rs.close();
+            pstmt.close();
+
+            // 3. 상품 이미지 리스트 조회
             String imageSQL = "SELECT * FROM product_image WHERE product_id = ?";
             pstmt = conn.prepareStatement(imageSQL);
             pstmt.setInt(1, productId);
             rs = pstmt.executeQuery();
-            
+
             List<ProductImageBean> imageList = new ArrayList<>();
             while(rs.next()){
                 ProductImageBean imageBean = new ProductImageBean();
@@ -183,7 +190,7 @@ public class ProductDAO implements ProductInterface {
             rs.close();
             pstmt.close();
 
-            // 3. 상품 옵션 리스트 조회
+            // 4. 상품 옵션 리스트 조회
             String optionSQL = "SELECT * FROM product_option WHERE product_id = ?";
             pstmt = conn.prepareStatement(optionSQL);
             pstmt.setInt(1, productId);
@@ -197,28 +204,26 @@ public class ProductDAO implements ProductInterface {
                 optionBean.setOption_name(rs.getString("option_name"));
                 optionBean.setOption_detail(rs.getString("option_detail"));
                 optionBean.setPrice_of_option(rs.getInt("price_of_option"));
+                optionBean.setQuantity(rs.getInt("quantity")); // 옵션별 수량
                 optionList.add(optionBean);
             }
             productDetail.setOptionList(optionList);
             rs.close();
             pstmt.close();
-            
-            // 4. 상품 상세설명 조회
+
+            // 5. 상품 상세설명 조회
             String detailSQL = "SELECT dir FROM product_detail WHERE product_id = ?";
             pstmt = conn.prepareStatement(detailSQL);
             pstmt.setInt(1, productId);
             rs = pstmt.executeQuery();
-            
+
             if (rs.next()) {
                 productDetail.setDetailDir(rs.getString("dir"));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            // 필요하다면 여기서도 ProductException을 throw 할 수 있습니다.
-            // throw new ProductException("상품 상세 정보 조회 중 오류 발생");
         } finally {
-            // 자원 해제
             try {
                 if (rs != null) rs.close();
                 if (pstmt != null) pstmt.close();
@@ -230,4 +235,107 @@ public class ProductDAO implements ProductInterface {
 
         return productDetail;
     }
+    
+    /**
+     * 특정 카테고리 ID에 해당하는 상품 목록과 각 상품의 대표 이미지를 조회하는 메소드.
+     * @param categoryId 조회할 상세 카테고리의 ID (detail_category_id)
+     * @param offset 조회를 시작할 위치
+     * @param limit 조회할 상품의 개수
+     * @return 해당 카테고리의 상품 리스트 (List<ProductBean>)
+     */
+
+    @Override
+    public List<ProductBean> getProductsByCategory(int categoryId, int offset, int limit) {
+        List<ProductBean> productList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        // [수정된 부분] 
+        // product 테이블과 product_of_detail_category를 조인하고,
+        // 서브쿼리를 이용해 각 상품(p.product_id)의 첫 번째 이미지 경로를 함께 가져옵니다.
+        String sql = "SELECT p.*, " +
+                     " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) as productImage " +
+                     "FROM product p " +
+                     "JOIN product_of_detail_category podc ON p.product_id = podc.product_id " +
+                     "WHERE podc.detail_category_id = ? " +
+                     "ORDER BY p.created_at DESC " +
+                     "LIMIT ? OFFSET ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, categoryId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ProductBean p = new ProductBean();
+                p.setProductId(rs.getInt("product_id"));
+                p.setProductName(rs.getString("product_name"));
+                p.setQuantity(rs.getInt("quantity"));
+                p.setPrice(rs.getInt("price"));
+                p.setSellerNote(rs.getString("seller_note"));
+                
+                // [수정] 위에서 조회한 대표 이미지 경로를 ProductBean에 저장합니다.
+                p.setProductImage(rs.getString("productImage"));
+                
+                // ... ProductBean의 나머지 setter들을 여기에 채워주세요.
+
+                productList.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return productList;
+    }
+
+    @Override
+    public List<ProductOptionBean> selectProductsOptionsDetail(int product_id) throws ProductException {
+        List<ProductOptionBean> options = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM product_option WHERE product_id = ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, product_id);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ProductOptionBean option = new ProductOptionBean();
+                option.setOption_id(rs.getInt("option_id"));
+                option.setProduct_id(rs.getInt("product_id"));
+                option.setOption_name(rs.getString("option_name"));
+                option.setOption_detail(rs.getString("option_detail"));
+                option.setPrice_of_option(rs.getInt("price_of_option"));
+                option.setQuantity(rs.getInt("quantity"));
+                options.add(option);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ProductException("상품 옵션 조회 실패", e);
+        } finally {
+            try { if (rs != null) rs.close(); if (pstmt != null) pstmt.close(); if (conn != null) conn.close(); } catch (Exception e) {}
+        }
+
+        return options;
+    }
+
 }

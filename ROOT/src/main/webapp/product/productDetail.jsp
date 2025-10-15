@@ -167,6 +167,7 @@
     </div>
 
     <%-- 푸터 부분은 생략합니다. --%>
+    <jsp:include page="/include/footer.jsp" />
 
     <script type="text/javascript">
         // 페이지 로드 시 이미지 갤러리 초기화
