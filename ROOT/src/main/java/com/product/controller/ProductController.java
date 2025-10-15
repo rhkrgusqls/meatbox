@@ -14,8 +14,6 @@ import com.ActionForward;
 import com.product.action.ProductDetailAction;
 import com.product.action.ProductListAction;
 
-// URL 패턴이 *.do 로 끝나는 모든 요청을 이 서블릿이 처리하도록 설정합니다.
-@WebServlet("*.do")
 public class ProductController extends HttpServlet {
 
     // GET, POST 방식 어떤 요청이든 doProcess() 메소드에서 한 번에 처리합니다.

@@ -1,5 +1,6 @@
 package com.cart.action;
 
+import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,14 +25,16 @@ public class CartPageAction implements Action {
 
         ActionForward forward = new ActionForward();
         if (userIndex == null) {
-            // 로그인이 안 된 경우, 로그인 페이지로 리다이렉트
-            // 응답에 메시지를 담아 보내면 더 좋습니다.
+            // 로그인이 되어있지 않다면 로그인 페이지로 보냅니다.
+            // (이전과 동일하게 alert 후 로그인 페이지로 이동)
             response.setContentType("text/html; charset=UTF-8");
-            response.getWriter().println("<script>");
-            response.getWriter().println("alert('로그인이 필요합니다.');");
-            response.getWriter().println("location.href='./login.do';"); // 로그인 페이지 경로
-            response.getWriter().println("</script>");
-            return null; // 컨트롤러에서 더 이상 진행하지 않도록 null 반환
+            PrintWriter out = response.getWriter();
+            out.println("<script>");
+            out.println("alert('로그인이 필요합니다.');");
+            out.println("location.href='/login.do';"); // 로그인 페이지 경로
+            out.println("</script>");
+            out.close(); // out 객체를 닫아줍니다.
+            return null; // 더 이상 Action을 진행하지 않음
         }
 
         // 2. DAO 객체 생성 및 장바구니 목록 조회
@@ -43,7 +46,7 @@ public class CartPageAction implements Action {
         request.setAttribute("cartList", cartList);
 
         // 4. 페이지 이동 설정 (forward 방식)
-        forward.setPath("./cart/cartPage.jsp"); // 장바구니를 보여줄 JSP 페이지
+        forward.setPath("/cart/cartPage.jsp"); // 장바구니를 보여줄 JSP 페이지
         forward.setRedirect(false); // request 정보를 가지고 가야 하므로 forward
 
         return forward;
