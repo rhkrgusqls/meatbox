@@ -13,8 +13,6 @@ import com.user.login.db.LoginResultBean;
 import org.json.JSONObject;
 import java.io.PrintWriter;
 
-
-
 public class LoginAction implements Action {
 
     @Override
@@ -37,41 +35,37 @@ public class LoginAction implements Action {
             LoginDAO dao = new LoginDAO();
             LoginResultBean result = dao.login(memberId, passwd);
 
+            // 사용자 이름 가져오기
+            String userName = dao.getUserName(result.getUserIndex());
+
             // 세션 저장
             HttpSession session = request.getSession();
             session.setAttribute("userIndex", result.getUserIndex());
             session.setAttribute("role", result.getRole());
+            session.setAttribute("userName", userName); // 세션에 userName 추가
 
             // JSON 응답
             json.put("success", true);
             json.put("message", "로그인 성공!");
             json.put("userIndex", result.getUserIndex());
             json.put("role", result.getRole());
-
-            // 로그인 성공 시 페이지 이동 (원하면 주석 해제)
-            forward.setRedirect(false);
-            forward.setPath("/fo/main/main.jsp");
+            json.put("userName", userName); // JSON에 userName 추가
+            json.put("redirectUrl", "/myMenu/myMenuMainPage.do"); // 리다이렉트 URL 추가
 
         } catch (LoginException e) {
             json.put("success", false);
             json.put("message", "로그인 실패: " + e.getMessage());
 
-            forward.setRedirect(false);
-            forward.setPath("/fo/main/login.jsp"); // 실패 시 다시 로그인 페이지로
-
         } catch (Exception e) {
             json.put("success", false);
             json.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
-
-            forward.setRedirect(false);
-            forward.setPath("/error.jsp"); // 에러 페이지로
         }
 
         // JSON 출력
         out.print(json.toString());
         out.flush();
 
-        // ActionForward 리턴
-        return forward;
+        // ActionForward 리턴 대신 null 리턴
+        return null;
     }
 }
