@@ -78,7 +78,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="장바구니_URL" class="f-size12-600 flex-col-gap2">
+                    	<c:if test="${not empty sessionScope.userIndex}">
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
+                            <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
+                            <span class="des">Logout</span>
+                        </a>
+                        </c:if>
+                    </li>
+                    <li>
+                        <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">
                             <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px">
                             <span class="badge _newCartCount"></span>
                             <span class="des">장바구니</span>
