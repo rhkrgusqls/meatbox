@@ -93,6 +93,7 @@ public class ProductDAO implements ProductInterface {
         return resultList;
     }
     
+    @Override
     public List<CategoryBean> getCategoriesByParent(Integer parentId) throws SQLException {
         List<CategoryBean> list = new ArrayList<>();
 
@@ -129,6 +130,7 @@ public class ProductDAO implements ProductInterface {
      * @param productId 조회할 상품의 ID (product_id)
      * @return 상품의 모든 상세 정보가 담긴 ProductDetailBean 객체
      */
+    @Override
     public ProductDetailBean getProductDetail(int productId) {
         ProductDetailBean productDetail = null;
         Connection conn = null;
@@ -241,6 +243,8 @@ public class ProductDAO implements ProductInterface {
      * @param limit 조회할 상품의 개수
      * @return 해당 카테고리의 상품 리스트 (List<ProductBean>)
      */
+
+    @Override
     public List<ProductBean> getProductsByCategory(int categoryId, int offset, int limit) {
         List<ProductBean> productList = new ArrayList<>();
         Connection conn = null;
@@ -297,4 +301,41 @@ public class ProductDAO implements ProductInterface {
 
         return productList;
     }
+
+    @Override
+    public List<ProductOptionBean> selectProductsOptionsDetail(int product_id) throws ProductException {
+        List<ProductOptionBean> options = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM product_option WHERE product_id = ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, product_id);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ProductOptionBean option = new ProductOptionBean();
+                option.setOption_id(rs.getInt("option_id"));
+                option.setProduct_id(rs.getInt("product_id"));
+                option.setOption_name(rs.getString("option_name"));
+                option.setOption_detail(rs.getString("option_detail"));
+                option.setPrice_of_option(rs.getInt("price_of_option"));
+                option.setQuantity(rs.getInt("quantity"));
+                options.add(option);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ProductException("상품 옵션 조회 실패", e);
+        } finally {
+            try { if (rs != null) rs.close(); if (pstmt != null) pstmt.close(); if (conn != null) conn.close(); } catch (Exception e) {}
+        }
+
+        return options;
+    }
+
 }
