@@ -1258,7 +1258,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/cart/cartPage.do');">
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/cart/cartPage.do');">
                             <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px" loading="lazy">
                             <span class="badge _newCartCount"></span>
                             <span class="des">장바구니</span>

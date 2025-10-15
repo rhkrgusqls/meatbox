@@ -44,7 +44,12 @@ public class CartPageAction implements Action {
 
         // 3. request 객체에 장바구니 목록 저장 (JSP에서 사용하기 위함)
         request.setAttribute("cartList", cartList);
-
+        
+        for (int i = 0; i < cartList.size(); i++) {
+        	 System.out.println(cartList.get(i).getProductId());
+        }
+       
+        
         // 4. 페이지 이동 설정 (forward 방식)
         forward.setPath("/cart/cartPage.jsp"); // 장바구니를 보여줄 JSP 페이지
         forward.setRedirect(false); // request 정보를 가지고 가야 하므로 forward

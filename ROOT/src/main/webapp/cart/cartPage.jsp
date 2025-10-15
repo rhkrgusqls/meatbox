@@ -95,12 +95,37 @@
 
 				<div class="common-pay-style">
 					<div class="cart_info_wrap">
-						<div class="cart_info">
-
-							<div class="item_none date_none">
-								<p class="date_none_txt">장바구니에 상품이 없습니다.</p>
-							</div>
-							</div>
+					
+					
+					
+					
+					<%-- ... (페이지의 다른 HTML 코드) ... --%>
+					
+					
+					<div class="cart_info">
+					
+					    <%-- cartList가 비어있는지 아닌지 확인합니다. --%>
+					    <c:choose>
+					        <%-- 1. cartList가 비어있을 경우 --%>
+					        <c:when test="${empty cartList}">
+					            <div class="item_none date_none">
+					                <p class="date_none_txt">장바구니에 상품이 없습니다.</p>
+					            </div>
+					        </c:when>
+					
+					        <%-- 2. cartList에 상품이 있을 경우 --%>
+					        <c:otherwise>
+					            <%-- forEach 반복문으로 cartList의 상품을 하나씩 꺼냅니다. --%>
+					            <h4>[테스트] 장바구니 상품 ID 목록</h4>
+					            <c:forEach var="item" items="${cartList}">
+					            
+					                <%-- 각 상품(item)의 productId 값만 화면에 출력합니다. --%>
+					                <p>상품 ID: ${item.productId}</p>
+					            </c:forEach>
+					        </c:otherwise>
+					    </c:choose>
+					    
+					</div>
 
 						<div class="common-two-btn after">
 								<button type="button" class="common-btn-style common-btn-gray" onclick="WebTool.goHome()">상품 담으러 가기</button>

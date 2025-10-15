@@ -9,10 +9,9 @@
 <title>상품 목록</title>
 <%-- 
   실제 프로젝트 경로에 맞게 CSS 파일 경로를 수정해야 합니다. 
-  '${pageContext.request.contextPath}'는 프로젝트의 최상위 경로를 자동으로 잡아줍니다.
 --%>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.min.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/renew.min.css" type="text/css">
+<link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/style.min.css" type="text/css">
+<link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/renew.min.css" type="text/css">
 
 <style>
     /* 간단한 스타일 추가 (실제 사이트와 유사하게) */
