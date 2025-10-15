@@ -139,6 +139,7 @@
     </div>
     
     <%-- 푸터는 필요 시 include --%>
+    <jsp:include page="/include/footer.jsp" />
     
 </body>
 </html>
