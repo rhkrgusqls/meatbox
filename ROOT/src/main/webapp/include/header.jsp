@@ -59,13 +59,13 @@
             <div class="user-area">
                 <ul class="flex-row-gap04">
                     <li>
-                        <c:if test="${empty sessionScope.user_id}">
+                        <c:if test="${empty sessionScope.userIndex}">
                              <a href="/ROOT/login.do" class="f-size12-600 flex-col-gap2">
                                 <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="로그인" width="24px" height="24px">
                                 <span class="des">로그인</span>
                             </a>
                         </c:if>
-                        <c:if test="${not empty sessionScope.user_id}">
+                        <c:if test="${not empty sessionScope.userIndex}">
                              <a href="마이페이지_URL" class="f-size12-600 flex-col-gap2">
                                 <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
                                 <span class="des">MY</span>
