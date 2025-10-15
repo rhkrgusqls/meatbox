@@ -2,7 +2,7 @@
 <%
         // 세션에서 사용자 정보를 가져옵니다.
         String userName = (String) session.getAttribute("userName");
-        System.out.print(userName + "================");
+        System.out.println("=== 로그인한 유저: " + userName + " ===");
         Object roleObject = session.getAttribute("role");
         String userRole = (roleObject != null) ? roleObject.toString() : null;
 
