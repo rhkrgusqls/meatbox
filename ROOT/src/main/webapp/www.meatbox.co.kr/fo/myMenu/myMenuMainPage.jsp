@@ -1208,6 +1208,7 @@
                         <a href="javascript:;" id="myLink" class="f-size12-600 flex-col-gap2 js-dropbox-btn">
                             <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px" loading="lazy">
                             <span class="des" id="myLinkText"></span>
+                            <span class="des">MY</span>
                         </a>
                         <div class="additional-category box-shadow js-dropbox">
                             <ul>
@@ -1243,6 +1244,12 @@
                                 </li>
                             </ul>
                         </div>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
+                            <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
+                            <span class="des">Logout</span>
+                        </a>
                     </li>
                     <li>
                         <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/myMenu/myOrderListPage.do');">
@@ -1480,12 +1487,12 @@
         if (myLink) {
             myLink.addEventListener('click', function(e) {
                 e.preventDefault();
-                if (_LOGINED_) {
+                if (<%= isLoggedIn %>) {
                     // 로그인 상태이면 마이페이지로 이동
-                    window.location.href = '/ROOT/fo/myMenu/myMenuMainPage.do';
+                    window.location.href = '/myMenu/myMenuMainPage.do';
                 } else {
                     // 로그아웃 상태이면 로그인 페이지로 이동
-                    window.location.href = '/ROOT/login.do';
+                    window.location.href = '/login.do';
                 }
             });
         }

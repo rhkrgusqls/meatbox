@@ -115,4 +115,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script>
+// This function removes the popup if it exists
+function removePopup() {
+    const popup = document.querySelector('.layer_popup_wrap');
+    if (popup) {
+        popup.remove();
+        console.log('MutationObserver: Forcefully REMOVED popup.');
+    }
+}
+
+// Create an observer to watch for when the popup is added to the page
+const observer = new MutationObserver(function(mutations) {
+    for (const mutation of mutations) {
+        if (mutation.addedNodes.length) {
+            const popupExists = Array.from(mutation.addedNodes).some(node => 
+                node.classList && node.classList.contains('layer_popup_wrap') || node.querySelector('.layer_popup_wrap')
+            );
+            if (popupExists) {
+                removePopup();
+            }
+        }
+    }
+});
+
+// Start observing the document body
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Also run once on initial load, just in case
+document.addEventListener('DOMContentLoaded', removePopup);
+</script>
 </body></html>
