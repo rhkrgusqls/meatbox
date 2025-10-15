@@ -9,6 +9,7 @@ public class ProductOptionBean {
     private String option_name;
     private String option_detail;
     private int price_of_option;
+    private int quantity;
 
     // --- Getters and Setters ---
 
@@ -41,5 +42,11 @@ public class ProductOptionBean {
     }
     public void setPrice_of_option(int price_of_option) {
         this.price_of_option = price_of_option;
+    }    
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
