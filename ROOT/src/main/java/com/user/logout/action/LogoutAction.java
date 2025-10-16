@@ -1,5 +1,7 @@
 package com.user.logout.action;
 
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,12 +19,15 @@ public class LogoutAction implements Action {
         if (session != null) {
             session.invalidate();
         }
-        
-        // ActionForward 객체를 생성하여 홈페이지로 리다이렉트합니다.
-        ActionForward forward = new ActionForward();
-        forward.setRedirect(true);
-        forward.setPath("/"); // 메인 페이지 경로
-        
-        return forward;
+        // (이전과 동일하게 alert 후 메인 페이지로 이동)
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>");
+        out.println("alert('로그아웃 되었습다.');");
+        out.println("location.href='/';"); // 로그인 페이지 경로
+        out.println("</script>");
+        out.close(); // out 객체를 닫아줍니다.
+
+        return null;
     }
 }
