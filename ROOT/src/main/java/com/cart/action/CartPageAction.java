@@ -46,12 +46,16 @@ public class CartPageAction implements Action {
         // userIndex를 인자로 전달합니다.
         List<CartItem> cartList = cdao.getCartList(userIndex);
 
+        // 3. request와 session 객체에 장바구니 목록 저장
+
         ProductDAO pdao = new ProductDAO();
         List<ProductDetailBean> productList = new ArrayList<ProductDetailBean>();
         List<ProductOptionBean> productOptionList = new ArrayList<ProductOptionBean>();
         
         // 3. request 객체에 장바구니 목록 저장 (JSP에서 사용하기 위함)
+
         request.setAttribute("cartList", cartList);
+        session.setAttribute("cartList", cartList); // 주문 단계에서 사용하기 위해 session에도 저장
         
         for (int i = 0; i < cartList.size(); i++) {
         	 productList.add(pdao.getProductDetail(cartList.get(i).getProductId()));
