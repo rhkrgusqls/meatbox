@@ -6,193 +6,292 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>미트박스 :: 1등 고기 직거래</title>
+    <meta property="og:image" content="https://www.meatbox.co.kr/img/co/meatboxOgImage.png" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="육류 4,500 + 식재료 2,000개! 미트박스와 최대 30% 원가절감 해볼까요?" />
+
     <%-- =============================================================================== --%>
-    <%--  실제 미트박스 사이트 CSS 및 JS 라이브러리 링크                               --%>
+    <%--  미트박스 사이트 CSS 및 JS 라이브러리 링크 (경로는 서버 환경에 맞게 절대경로 사용) --%>
     <%-- =============================================================================== --%>
+    <link rel="shortcut icon" href="https://static-cdn.meatbox.co.kr/img/fo/favicon.ico?t=20240409" type="image/x-icon" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css" type="text/css" media="all" charset="UTF-8" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css" type="text/css" media="all" charset="UTF-8" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css" type="text/css" media="all" charset="UTF-8" />
+    <link type="text/css" rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/swiper/5.2.1/swiper.min.css" media="screen" charset="UTF-8" />
+    
     <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-ui-1.12.1.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery.bpopup-0.11.0.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery.cookie-1.4.1.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/constant/Const.min.js"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/CommonTools.min.js"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ProductTool.min.js"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/FoTool.min.js"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/swiper/5.2.1/swiper-7.4.1.min.js" charset="UTF-8"></script>
 </head>
 <body>
 
 <%-- 헤더 인클루드 --%>
 <jsp:include page="/include/header.jsp" />
 
-<div id="container">
-    <div id="contents" class="inner mypage"> <%-- 클래스 추가 --%>
-        <main id="meatboxContent" class="meatbox_container">
-            <div class="inner_global">
-                <div class="cart_title top_title after"> <%-- 타이틀 구조 추가 --%>
-                    <strong class="cart_order_title">
-                        <img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/cart_top_title2.png" alt="주문/결제">
-                    </strong>
-                    <ul class="after">
-                        <li><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step01.png" alt="01"></span><em>장바구니</em></li>
-                        <li class="on"><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step02.png" alt="02"></span><em>주문/결제</em></li>
-                        <li><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step03.png" alt="03"></span><em>주문완료</em></li>
-                    </ul>
-                </div>
-                
-                <div class="order_wrap">
-                    <div class="order_content">
-                        <%-- 주문자 정보 --%>
-                        <div class="order_section">
-                            <h3 class="section_title">주문자 정보</h3>
-                            <div class="order_table type2"> <%-- type2 클래스 추가 --%>
-                                <table>
-                                    <colgroup>
-                                        <col style="width:170px;">
-                                        <col>
-                                    </colgroup>
-                                    <tbody>
-                                        <tr>
-                                            <th>주문자</th>
-                                            <td>${sessionScope.user_name}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>이메일</th>
-                                            <td>${sessionScope.user_email}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>휴대전화</th>
-                                            <td>${sessionScope.user_phone}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                <%-- 배송지 정보 --%>
-                <div class="order_section">
-                    <h3 class="section_title">배송지 정보</h3>
-                    <div class="order_table type2">
-                        <table>
-                             <colgroup>
-                                <col style="width:170px;">
-                                <col>
-                            </colgroup>
-                            <tbody>
-                                <tr>
-                                    <th>받는사람</th>
-                                    <td><input type="text" class="w200" name="recipient_name" value="${sessionScope.user_name}"></td>
-                                </tr>
-                                <tr>
-                                    <th>연락처</th>
-                                    <td><input type="text" class="w200" name="recipient_phone" value="${sessionScope.user_phone}"></td>
-                                </tr>
-                                <tr>
-                                    <th>주소</th>
-                                    <td>
-                                        <input type="text" name="recipient_zipcode" placeholder="우편번호" class="w100">
-                                        <button type="button" class="btn-ty2 gray">주소검색</button>
-                                        <br>
-                                        <input type="text" name="recipient_address1" placeholder="기본주소" class="w400 mt5">
-                                        <input type="text" name="recipient_address2" placeholder="상세주소" class="w400">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>배송메모</th>
-                                    <td><textarea name="delivery_memo" class="w_full"></textarea></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <%-- 주문상품 정보 --%>
-                <div class="order_section">
-                    <h3 class="section_title">주문상품</h3>
-                    <div class="cart_list">
-                        <%-- 장바구니 상품 목록을 반복문으로 표시 (JSTL 사용) --%>
-                        <c:forEach var="item" items="${cart_list}">
-                            <div class="cart_item">
-                                <div class="item_info">
-                                    <div class="item_thumb">
-                                        <img src="${item.product_image}" alt="${item.product_name}">
-                                    </div>
-                                    <div class="item_desc">
-                                        <p class="name">${item.product_name}</p>
-                                        <p class="option">${item.product_option}</p>
-                                    </div>
-                                </div>
-                                <div class="item_price">
-                                    <span class="price">${item.price}</span>원
-                                </div>
-                                <div class="item_quantity">
-                                    <span class="quantity">${item.quantity}</span>개
-                                </div>
-                                <div class="item_total">
-                                    <span class="total">${item.price * item.quantity}</span>원
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-
-                <%-- 결제 정보 --%>
-                <div class="order_section">
-                    <h3 class="section_title">결제 정보</h3>
-                    <div class="payment_info">
-                        <dl>
-                            <dt>총 상품금액</dt>
-                            <dd><span id="total_product_price">0</span>원</dd>
-                        </dl>
-                        <dl>
-                            <dt>배송비</dt>
-                            <dd><span id="delivery_fee">0</span>원</dd>
-                        </dl>
-                        <dl class="total">
-                            <dt>총 결제금액</dt>
-                            <dd><span id="total_payment_price">0</span>원</dd>
-                        </dl>
-                    </div>
-                    <div class="payment_method">
-                        <h4>결제수단</h4>
-                        <ul class="method_list">
-                            <li><input type="radio" name="payment_method" value="card" checked> 신용카드</li>
-                            <li><input type="radio" name="payment_method" value="bank"> 무통장입금</li>
-                            <li><input type="radio" name="payment_method" value="kakao"> 카카오페이</li>
+<%-- =============================================================================== --%>
+<%--  HTML 본문 내용 시작 (orderPage.html 기반)                                     --%>
+<%-- =============================================================================== --%>
+<div class="container tossPay_newUser_page">
+    <div id="contents" class="inner">
+        <div id="myOrderPage" class="common-pay-style">
+            <div class="cart_order">
+                <div class="cart_top">
+                    <div class="cart_title top_title after">
+                        <strong class="cart_order_title"><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/cart_top_title02.png" alt="주문/결제"></strong>
+                        <ul class="after">
+                            <li><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step01.png" alt="01"></span><em>장바구니</em></li>
+                            <li class="on"><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step02.png" alt="02"></span><em>주문/결제</em></li>
+                            <li><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step03.png" alt="03"></span><em>주문완료</em></li>
                         </ul>
                     </div>
                 </div>
+            </div>
+            <div class="pay_form">
+                <%-- 배송지 정보 --%>
+                <div class="section">
+                    <table class="pay_td">
+                        <colgroup><col width="180px"/><col width="*"/></colgroup>
+                        <tbody>
+                            <tr class="_deliveryAD09">
+                                <th class="deliv_select">배송지 선택
+                                    <button type="button" class="common-box-btn dist_edit" onclick="FoTool.openAddrSetupListPage(1, 'order');">설정</button>
+                                </th>
+                                <td class="deliv_select_td">
+                                    <ul class="radio_box after" id="addrList">
+                                        <%-- 장바구니에 담긴 주소 정보가 동적으로 이곳에 추가됩니다. --%>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="_deliveryAddr _deliveryAD09">
+                                <th>주소</th>
+                                <td>
+                                    <div class="addr_info">
+                                        <input type="hidden" value="" name="recv_zip_cd" id="recv_zip_cd"/>
+                                        <input type="text" class="addr addr1" value="" name="recv_addr1" id="recv_addr1" style="display: none;"/>
+                                        <input type="text" class="addr addr2" value="" name="recv_addr2" id="recv_addr2" style="display: none;"/>
+                                        <span class="my_addr" id="addr_text"></span>
+                                        <button type="button" onclick="DaumMgr.show({'type':'open','postcode':'recv_zip_cd','address1':'recv_addr1'});" class="btn-ty2 gray" style="margin-left: 10px;">주소검색</button>
+                                    </div>
+                                </td>
+                            </tr>
+                             <tr class="_deliveryAddr _deliveryAlways">
+                                <th class="line_height"><em>받는 분</em></th>
+                                <td>
+                                    <input type="text" class="width200 input_wid order_name" name="recv_nm" maxlength="20" placeholder="이름을 입력하세요" value="${sessionScope.user_name}"/>
+                                </td>
+                            </tr>
+                            <tr class="_notDeliveryAD09">
+                                <th class="line_height"><em>연락처</em></th>
+                                <td>
+                                    <input type="tel" class="width200 input_wid ph_num" value="${sessionScope.user_phone}" name="recv_cell_no" maxlength="13" placeholder="숫자만 입력하세요"/>
+                                </td>
+                            </tr>
+                             <tr>
+                                <th class="line_height"><em>배송 메모</em></th>
+                                <td>
+                                    <div class="deliv_memo">
+                                        <span class="memo">
+                                            <textarea maxlength="200" placeholder="배송 시 요청사항을 입력해주세요. (최대 200자)" name="recv_msg"></textarea>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <%-- 약관 동의 --%>
-                <div class="order_section">
-                    <div class="terms_agree">
-                        <input type="checkbox" id="agree_all">
+                <%-- 주문상품 정보 --%>
+                <div class="cart_order">
+                    <div class="cart_info_wrap">
+                        <div class="cart_info">
+                            <div class="order_list_wrap">
+                                <div class="order_title">
+                                    <h3>주문상품</h3>
+                                </div>
+                                <div class="new_table_wrap">
+                                    <table class="cart_td_wrap">
+                                        <colgroup>
+                                            <col width="*">
+                                            <col width="120px">
+                                            <col width="100px">
+                                            <col width="140px">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>상품정보</th>
+                                                <th>판매가</th>
+                                                <th>수량</th>
+                                                <th>주문금액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="common-pay-td">
+                                            <%-- 장바구니 상품 목록 (동적 생성) --%>
+                                            <c:forEach var="item" items="${cart_list}">
+                                                <tr class="cart_item">
+                                                    <td class="item_info_td">
+                                                        <div class="item_info_opt">
+                                                           <img src="${item.product_image}" alt="${item.product_name}" width="60" style="float:left; margin-right:10px;"/>
+                                                            <strong class="prd_name">${item.product_name}</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td class="price">
+                                                        <span><fmt:formatNumber value="${item.price}" pattern="#,###" /></span>원
+                                                    </td>
+                                                    <td class="quantity">
+                                                        <span>${item.quantity}</span>개
+                                                    </td>
+                                                    <td class="total_price">
+                                                        <span><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###" /></span>원
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <%-- 결제정보 --%>
+                <div class="my-order-info">
+                    <div class="my-order-price mPoint_price after">
+                        <dl class="amount_area mPoint_payment">
+                            <dt>총 상품금액</dt>
+                            <dd><span id="total_product_price">0</span><span>원</span></dd>
+                        </dl>
+                        <dl class="amount_area mPoint_payment">
+                            <dt>배송비</dt>
+                            <dd><span>+</span><span id="delivery_fee">0</span><span>원</span></dd>
+                        </dl>
+                        <dl class="amount_area mPoint_payment total">
+                            <dt>총 결제금액</dt>
+                            <dd><span id="total_payment_price">0</span><span>원</span></dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <%-- 결제수단 선택 --%>
+                <div class="section">
+                     <table class="pay_td">
+                        <colgroup><col width="180px"/><col width="*"/></colgroup>
+                        <tbody>
+                            <tr>
+                                <th class="line_height"><em>결제수단 선택</em></th>
+                                <td>
+                                    <div class="pay_choice">
+                                        <ul class="method_list">
+                                            <li><label><input type="radio" name="payment_method" value="card" checked> 신용카드</label></li>
+                                            <li><label><input type="radio" name="payment_method" value="bank"> 무통장입금</label></li>
+                                            <li><label><input type="radio" name="payment_method" value="kakao"> 카카오페이</label></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <%-- 약관동의 및 결제하기 --%>
+                <div class="last_pay_step">
+                    <div class="agree_box">
+                         <input type="checkbox" id="agree_all">
                         <label for="agree_all">주문내역 확인 및 결제 진행에 동의합니다.</label>
                     </div>
-                    <div class="btn_wrap">
-                        <button type="button" class="btn_order">결제하기</button>
-					</div>
+                    <button type="button" class="common-big common-btn-style common-btn-red pay btn_order"><span class="orderBtn">결제하기</span></button>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>
+<%-- =============================================================================== --%>
+<%--  HTML 본문 내용 끝                                                             --%>
+<%-- =============================================================================== --%>
+
 
 <%-- 푸터 인클루드 --%>
 <jsp:include page="/include/footer.jsp" />
 
+<%-- Daum 주소 API 스크립트 --%>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<div id="___postLayer" style="display:none;border:5px solid;position:fixed;left:1%;margin-left:0;top:50px;margin-top:0;-webkit-overflow-scrolling:touch;z-index:19999;background-color:#FFFFFF;">
+    <img src="//i1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" style="width:30px;height:30px;z-index:9999;cursor:pointer;position:absolute;right:-5px;top:-35px" alt="닫기 버튼">
+</div>
+
 <script>
-// 간단한 스크립트 예시 (실제 구현 시에는 더 많은 기능이 필요합니다.)
+// Daum 주소 API 매니저 (기존 HTML의 DaumMgr 활용)
+(function() {
+    var me = window.DaumMgr = {
+        startup: function() {
+            me.setVariables();
+            me.setEvents();
+        },
+        setVariables: function() {
+            me.$layerFld = $('#___postLayer');
+        },
+        setEvents: function() {
+            me.$layerFld.find('IMG').click(function() { me.hide(); });
+        },
+        show: function (json, callback) {
+            var daumPostcode = new daum.Postcode({
+                oncomplete: function (data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                    $('input[name="recipient_zipcode"]').val(data.zonecode); // 우편번호
+                    $('input[name="recipient_address1"]').val(data.roadAddress); // 도로명 주소
+                    $('input[name="recipient_address2"]').focus(); // 상세주소로 포커스
+                    
+                    if (typeof(callback) === 'function') {
+                        callback();
+                    }
+                    me.hide();
+                },
+                width : '100%',
+                height : '100%',
+                onclose: function() {
+                    me.hide();
+                }
+            });
+            daumPostcode.embed(me.$layerFld[0], { 'autoClose': true });
+            me.$layerFld.show();
+        },
+        hide: function() {
+            me.$layerFld.hide();
+        }
+    };
+    $(function() {
+        DaumMgr.startup();
+        // 주소검색 버튼 이벤트
+        $('.btn-ty2.gray').click(function(){
+             DaumMgr.show();
+        });
+    });
+})();
+
+
+// 주문 페이지 관련 스크립트
 $(document).ready(function(){
-    // 총 상품금액, 배송비, 총 결제금액 계산 로직
     function calculateTotalPrice() {
         let totalProductPrice = 0;
         $('.cart_item').each(function(){
-            let price = parseInt($(this).find('.price').text());
-            let quantity = parseInt($(this).find('.quantity').text());
+            // JSTL로 생성된 가격 정보에서 콤마를 제거하고 숫자로 변환
+            let priceText = $(this).find('.price span').text().replace(/,/g, '');
+            let quantityText = $(this).find('.quantity span').text().replace(/,/g, '');
+            
+            let price = parseInt(priceText) || 0;
+            let quantity = parseInt(quantityText) || 0;
+            
             totalProductPrice += price * quantity;
         });
 
-        let deliveryFee = 3000; // 예시 배송비
-        if (totalProductPrice >= 50000) { // 5만원 이상 무료배송
-            deliveryFee = 0;
-        }
-
+        let deliveryFee = totalProductPrice >= 50000 || totalProductPrice === 0 ? 0 : 3000;
         let totalPaymentPrice = totalProductPrice + deliveryFee;
 
         $('#total_product_price').text(totalProductPrice.toLocaleString());
@@ -202,15 +301,13 @@ $(document).ready(function(){
 
     calculateTotalPrice();
 
-    // 결제하기 버튼 클릭
     $('.btn_order').click(function(){
         if (!$('#agree_all').is(':checked')) {
             alert('주문내역 확인 및 결제 진행에 동의해주세요.');
             return;
         }
-
-        // 결제 로직 추가
         alert('결제를 진행합니다.');
+        // TODO: 서버로 주문 정보를 전송하는 AJAX 로직 또는 form submit 구현
     });
 });
 </script>
