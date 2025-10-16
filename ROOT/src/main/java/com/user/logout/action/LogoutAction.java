@@ -23,7 +23,7 @@ public class LogoutAction implements Action {
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
         out.println("<script>");
-        out.println("alert('로그아웃 되었습다.');");
+        out.println("alert('로그아웃 되었습니다.');");
         out.println("location.href='/';"); // 로그인 페이지 경로
         out.println("</script>");
         out.close(); // out 객체를 닫아줍니다.
