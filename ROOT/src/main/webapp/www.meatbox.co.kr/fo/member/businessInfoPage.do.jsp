@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -1033,7 +1035,7 @@
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
 
-<script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760075462417"></script>
+<script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760076176235"></script>
 
 <header class="newVer">
     <section class="header-main">
@@ -1137,21 +1139,36 @@
             </div>
             <div class="user-area">
                 <ul class="flex-row-gap04">
+                     <li>
+                        <c:if test="${empty sessionScope.userIndex}">
+                             <a href="/login.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="로그인" width="24px" height="24px">
+                                <span class="des">로그인</span>
+                            </a>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.userIndex}">
+                             <a href="/myMenu/myMenuMainPage.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
+                                <span class="des">MY</span>
+                            </a>
+                        </c:if>
+                    </li>
                     <li>
-                        <a href="javascript:;" id="myLink" class="f-size12-600 flex-col-gap2 js-dropbox-btn">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px" loading="lazy">
-                            <span class="des" id="myLinkText"></span>
+                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/myMenu/myOrderListPage.do');">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px" loading="lazy">
-                            <span class="des">주문배송</span>
+                    	<c:if test="${not empty sessionScope.userIndex}">
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
+                            <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
+                            <span class="des">Logout</span>
                         </a>
+                        </c:if>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/cart/cartPage.do');">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px" loading="lazy">
+                        <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px">
                             <span class="badge _newCartCount"></span>
                             <span class="des">장바구니</span>
                         </a>
@@ -2713,14 +2730,309 @@
     $(function() {
         HeaderMgr.startup();
     });
-</script><!-- 중복계정 리스트 -->
+</script><script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-<script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
+<script type="text/javascript">
+
+    (function() {
+
+        var me = window.DaumMgr = {
+
+
+            startup: function()
+            {
+                me.setVariables();
+                me.setEvents();
+                me.initialize();
+            },
+
+
+            setVariables: function()
+            {
+                me.$layerFld		= $('#___postLayer');
+            },
+
+
+            setEvents: function()
+            {
+                me.$layerFld.find('IMG').click (function() {
+                    me.hide();
+                });
+            },
+
+
+            initialize: function()
+            {
+            },
+
+
+            show: function (json, callback)
+            {
+                me.$layerFld.css ({
+                    'width'	: '98%'
+                    , 'height'	: '90%'
+                });
+
+                me.type				= json['type'];
+                me.$postcodeFld		= (typeof (json['postcode']) == 'string') ? $('#' +json['postcode']) : json['postcode'];
+                me.$postcode1Fld	= (typeof (json['postcode1']) == 'string') ? $('#' +json['postcode1']) : json['postcode1'];
+                me.$postcode2Fld	= (typeof (json['postcode2']) == 'string') ? $('#' +json['postcode2']) : json['postcode2'];
+                me.$address1Fld		= (typeof (json['address1']) == 'string') ? $('#' +json['address1']) : json['address1'];
+                me.$address2Fld		= (typeof (json['address2']) == 'string') ? $('#' +json['address2']) : json['address2'];
+                me.$roadAddressFld	= (typeof (json['roadAddress']) == 'string') ? $('#' +json['roadAddress']) : json['roadAddress'];
+                me.$userSelectedTypeFld = (typeof (json['userSelectedType']) == 'string') ? $('#' +json['userSelectedType']) : json['userSelectedType'];
+                me.$buildingNameFld = (typeof (json['buildingName']) == 'string') ? $('#' +json['buildingName']) : json['buildingName'];
+                me.$viewAddrFld 	= (typeof (json['viewAddr']) == 'string') ? $('#' +json['viewAddr']) : json['viewAddr'];
+
+                var daumPostcode = new daum.Postcode ({
+                    oncomplete: function (data) {
+                        $('.hidden-area').show(); //회원가입 - 주소검색
+
+                        if(typeof me.$postcodeFld !== "undefined"){
+
+                            if ($(me.$postcodeFld).prop('tagName') == 'TD'){
+                                me.$postcodeFld.html (data.zonecode);
+                                me.$postcodeFld.data('zipCd',data.zonecode);
+                            }else if($(me.$postcodeFld).prop('tagName') == 'SPAN' && $(me.$postcodeFld).attr('data-zip-cd') == 'zipCd'){ //회원가입 - 주소검색
+                                me.$postcodeFld.html (data.zonecode);
+                                me.$postcodeFld.val (data.zonecode);
+                                me.$postcodeFld.prev('input[name="zipCd"]').val(data.zonecode);
+                                me.$postcodeFld.prev('input[type="text"]').removeAttr('readonly');
+                            }else {
+                                me.$postcodeFld.val (data.zonecode);
+                            }
+
+                        }
+
+
+                        if(typeof me.$postcode1Fld !== "undefined" && typeof me.$postcode2Fld !== "undefined") {
+                            if (data.postcode1 == '')
+                            {
+
+                                if ($(me.$postcode1Fld).prop('tagName') == 'TD'){
+                                    me.$postcode1Fld.html (data.zonecode.substring(0,3));
+                                    me.$postcode1Fld.data('zipCd1',data.zonecode.substring(0,3));
+                                }
+                                else {
+                                    me.$postcode1Fld.val (data.zonecode.substring(0,3));
+                                }
+
+                                if ($(me.$postcode2Fld).prop('tagName') == 'TD'){
+                                    me.$postcode2Fld.html (data.zonecode.substring(3,5));
+                                    me.$postcode2Fld.data('zipCd2',data.zonecode.substring(3,5));
+                                }
+                                else {
+                                    me.$postcode2Fld.val (data.zonecode.substring(3,5));
+                                }
+
+                            }
+                            else
+                            {
+
+                                if ($(me.$postcode1Fld).prop('tagName') == 'TD'){
+                                    me.$postcode1Fld.html (data.postcode1);
+                                    me.$postcode1Fld.data('zipCd1',data.postcode1);
+                                }
+                                else {
+                                    me.$postcode1Fld.val (data.postcode1);
+                                }
+
+                                if ($(me.$postcode2Fld).prop('tagName') == 'TD'){
+                                    me.$postcode2Fld.html (data.postcode1);
+                                    me.$postcode2Fld.data('zipCd2',data.postcode2);
+                                }
+                                else {
+                                    me.$postcode2Fld.val (data.postcode2);
+                                }
+                            }
+                        }
+
+                        if (data.jibunAddress == null || data.jibunAddress == '')
+                        {
+                            if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                                me.$address1Fld.html (data.autoJibunAddress);
+                                me.$address1Fld.data('addr1',data.autoJibunAddress);
+                            }
+                            else {
+                                me.$address1Fld.val (data.autoJibunAddress).change();
+                            }
+                        }
+                        else
+                        {
+                            if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                                me.$address1Fld.html (data.jibunAddress);
+                                me.$address1Fld.data('addr1',data.jibunAddress);
+                            }
+                            else {
+                                me.$address1Fld.val (data.jibunAddress).change();
+                            }
+
+                        }
+
+                        /*도로명*/
+                        if (data.roadAddress == null || data.roadAddress =='') {
+                            if (typeof me.$roadAddressFld !== "undefined") {
+                                if ($(me.$address1Fld).prop('tagName') == 'TD') {
+                                    me.$roadAddressFld.html(data.autoRoadAddress);
+                                    me.$roadAddressFld.data('roadAddr1', data.autoRoadAddress);
+                                } else {
+                                    me.$roadAddressFld.val(data.autoRoadAddress).change();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (typeof me.$roadAddressFld !== "undefined") {
+                                if ($(me.$address1Fld).prop('tagName') == 'TD') {
+                                    me.$roadAddressFld.html(data.roadAddress);
+                                    me.$roadAddressFld.data('roadAddr1', data.roadAddress);
+                                } else {
+                                    me.$roadAddressFld.val(data.roadAddress).change();
+                                }
+                            }
+                        }
+
+                        /*건물명*/
+                        if(typeof me.$buildingNameFld !== "undefined") {
+                            if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                                me.$buildingNameFld.html (data.buildingName);
+                                me.$buildingNameFld.data('buildingName',data.buildingName);
+                            } else {
+                                me.$buildingNameFld.val (data.buildingName).change();
+                            }
+                        }
+
+                        /*선택한 주소 유형*/
+                        if(typeof me.$userSelectedTypeFld !== "undefined") {
+                            if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                                me.$userSelectedTypeFld.html (data.userSelectedType);
+                                me.$userSelectedTypeFld.data('addrSelectedType',data.userSelectedType);
+                            } else {
+                                me.$userSelectedTypeFld.val (data.userSelectedType).change();
+                            }
+                        }
+
+                        /*화면에 보여지는 주소*/
+                        if(typeof me.$viewAddrFld !== "undefined"){
+                            var viewAddrTxt = WebTool.getDisplayAddress(me.$roadAddressFld.val(), me.$address1Fld.val(), '', me.$buildingNameFld.val());
+                            if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                                me.$viewAddrFld.html (viewAddrTxt);
+                                me.$viewAddrFld.data('viewAddr',viewAddrTxt);
+                            } else {
+                                me.$viewAddrFld.val (viewAddrTxt).change();
+                            }
+                        }
+
+                        if( me.$address2Fld )
+                        {
+                            me.$address2Fld.val('');
+                            me.$address2Fld.focus();
+                        }
+
+                        if (typeof(callback) === 'function') {
+                            callback();
+                        }
+                    },
+                    width : '100%',
+                    height : '100%',
+                    onclose: function() {
+                        me.hide();
+                    }
+                });
+
+                if (me.type == 'open')
+                {
+                    daumPostcode.open();
+                }
+                else	// @TODO
+                {
+                    daumPostcode.embed (me.$layerFld[0], {
+                        'autoClose': true
+                    });
+                    me.$layerFld.show();
+                }
+            },
+
+            hide: function()
+            {
+                me.$layerFld.hide();
+            },
+
+
+            convertData: function(data) {
+                /* 우편번호 */
+                var zipCd = data.zonecode;
+
+                var zipCd1;
+                var zipCd2;
+                if (data.postcode1 == '') {
+                    zipCd1 = data.zonecode.substring(0,3)
+                    zipCd2 = data.zonecode.substring(3,5)
+                } else {
+                    zipCd1 = data.postcode1;
+                    zipCd2 = data.postcode2;
+                }
+
+                /* 지번주소 */
+                var jibunAddress;
+                if (data.jibunAddress == null || data.jibunAddress == '') {
+                    jibunAddress = data.autoJibunAddress;
+                } else {
+                    jibunAddress = data.jibunAddress;
+                }
+
+                /* 도로명 */
+                var roadAddress;
+                if (data.roadAddress == null || data.roadAddress =='') {
+                    roadAddress = data.autoRoadAddress
+                } else {
+                    roadAddress = data.roadAddress;
+                }
+
+                /*건물명*/
+                var buildingName = data.buildingName;
+
+                /*선택한 주소 유형*/
+                var userSelectedType = data.userSelectedType;
+
+                var viewAddrText = WebTool.getDisplayAddress(roadAddress, jibunAddress, '', buildingName);
+
+                return {
+                    zipCd: zipCd,
+                    zipCd1: zipCd1,
+                    zipCd2: zipCd2,
+                    jibunAddress: jibunAddress,
+                    roadAddress: roadAddress,
+                    buildingName: buildingName,
+                    userSelectedType: userSelectedType,
+                    viewAddrText: viewAddrText
+                };
+            },
+
+            nothing:null
+        };
+
+    })();
+
+
+    $(function() {
+        DaumMgr.startup();
+    });
+</script>
+
+<div id="___postLayer" style="display:none;border:5px solid;position:fixed;left:1%;margin-left:0;top:50px;margin-top:0;-webkit-overflow-scrolling:touch;z-index:19999;background-color:#FFFFFF;">
+    <img src="//i1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" style="width:30px;height:30px;z-index:9999;cursor:pointer;position:absolute;right:-5px;top:-35px" alt="닫기 버튼">
+</div>
 <script type="text/javascript">
 
     (function() {
 
         var me = window.MainMgr = {
+
+            canUseBussRegNos		: [],		// 중복체크 통과한 사업자 번호
+            cannotUseBussRegNos		: [],		// 이미 가입한 사업자 번호
+            validBussRegNos			: [],		// 사업자번호 유효성체크(국세청)
 
 
             startup: function()
@@ -2733,18 +3045,170 @@
 
             setVariables: function() {
                 me.type = 'default'; // 일반(default), sns(sns) 회원가입
-                me.role = 'B004'; //가입 유형 타입 (개인, 사업자)
-                me.siteCd = '';
-                me.siteId = '';
-                me.siteNm = '';
-                me.authCi = 'BuiORUQCB0EIbJMr5okihiVELHyXtxAhjZ458jm4LxtmBX+Ezc0IlrCjkCInhhxlQ3bxFIxOkk36NuVeARVInw==';
-                me.email = '';
-                me.cellNo = '010-8684-4725';
-                me.realName = '송지섭';
+
+                //사업자 등록번호 변수
+                me.$bussRegNoFld 				= $('#bussRegNo'); // 사업자 등록번호
+                me.$bussRegNoCommentFld			= $('#bussRegNo_comment'); //사업자 등록번호 코멘트
+                me.$bussRegNoCheckFld			= $('#bussRegNo_button'); //사업자 등록번호 인증버튼
+                me.$bussRegNoCheckd				= false; //사업자 등록번호 인증유무
+                me.bussRegNoErrorMsg			= SignUpConst.BUSS_ZERO_LENGTH.errorMessage; //사업자 등록번호 에러 메시지
+
+                //상호 변수
+                me.$coNameFld					= $('#coName'); //상호명
+                me.$coNameCommentFld			= $('#coName_comment'); //상호명 코멘트
+                me.coNameErrorMsg				= SignUpConst.CO_NAME_ZERO_LEN.errorMessage; //상호 에러 메시지
+
+                //대표자명 변수
+                me.$ceoNameFld					= $('#ceoName'); //대표자명
+                me.$ceoNameCommentFld			= $('#ceoName_comment'); //대표자명 코멘트
+                me.ceoNameErrorMsg				= SignUpConst.CEO_NAME_ZERO_LEN.errorMessage; //대표자명 에러 메시지
+
+                //업태 변수
+                me.$taxBillTypeFld				= $('#taxBillType'); //업태
+                me.$taxBillTypeCommentFld		= $('#taxBillType_comment'); //업태 코멘트
+                me.taxBillTypeErrorMsg			= SignUpConst.TAX_BILL_TYPE_ZERO_LEN.errorMessage; //업태 에러 메시지
+
+                //업종 변수
+                me.$taxBillKindFld				= $('#taxBillKind'); //업종
+                me.$taxBillKindCommentFld		= $('#taxBillKind_comment'); //업종 코멘트
+                me.taxBillKindErrorMsg			= SignUpConst.TAX_BILL_KIND_ZERO_LEN.errorMessage; //업종 에러 메시지
+
+                //사업장 전화번호 변수
+                me.$coTelNoFld					= $('#coTelNo'); //사업장 전화번호
+                me.$coTelNoCommentFld			= $('#coTelNo_comment'); //사업장 전화번호 코멘트
+                me.coTelNoErrorMsg				= SignUpConst.CO_TEL_NO_ZERO_LEN.errorMessage; //사업장 전화번호 에러 메시지
+
+                //사업자 소재지 - 주소
+                me.$zipCdFld 					= $('#zipCd'); //우편번호
+                me.$addr1Fld					= $('#addr1');
+                me.$addr2Fld 					= $('#addr2'); //사업장 소재지 상세주소
+                me.$zipCdArea 					= $('#zipCdArea');
+                me.$roadAddr1Fld				= $('#roadAddr1');
+                me.$addrSelectedTypeFld			= $('#addrSelectedType');
+                me.$buildingNameFld				= $('#buildingName');
+                me.$defaultUseYn				= $('#defaultUseYn'); // 기본 배송지 여부
+                me.$addr2CommentFld				= $('#addr2_comment'); //상세주소 코멘트
+                me.addr2ErrorMsg				= SignUpConst.ADDR2_ERROR.errorMessage; //상세주소 에러 메시지
+
+                //사업장 형태
+                me.$memberKindCdFld				= $('#memberKindCd');
+                me.memberDivisionErrorMsg		= SignUpConst.MEMBER_DIVISION_ERROR.errorMessage; //사업 형태 에러 메시지
+                me.memberDivisionCd 			= ''; //사업장 형태
+
+                // 워크쓰루 관련
+                me.$selectKindTxtFld			= $('#selectKindTxt');
+                me.$selectKindBtnArea			= $('#selectKindBtnArea');
+                me.$selectedKindArea			= $('#selectedKindArea');
+
+                //유효성 체크
+                me.errorStrings	= [
+                    me.bussRegNoErrorMsg, //사업자 등록번호
+                    me.coNameErrorMsg, //상호
+                    me.ceoNameErrorMsg, //대표자명
+                    me.taxBillTypeErrorMsg, //업태
+                    me.taxBillKindErrorMsg, //업종
+                    me.coTelNoErrorMsg, //사업장 전화번호
+                    me.addr2ErrorMsg, //사업장 소재지 - 상세주소
+                    me.memberDivisionErrorMsg, //사업장 형태
+                ];
+
+                me.errorFields = [
+                    me.$bussRegNoFld, //사업자 등록번호
+                    me.$coNameFld, //상호
+                    me.$ceoNameFld, //대표자명
+                    me.$taxBillTypeFld, //업태
+                    me.$taxBillKindFld, //업종
+                    me.$coTelNoFld, //사업장 전화번호
+                    me.$addr2Fld, //사업장 소재지 - 상세주소
+                    me.$memberKindCdFld, //사업장 형태
+                ];
+
+                me.idsInputToCheck = [
+                    '#bussRegNo', //사업자 등록번호
+                    '#coName', //상호
+                    '#ceoName', //대표자명
+                    '#taxBillType', //업태
+                    '#taxBillKind', //업종
+                    '#coTelNo', //사업장 전화번호
+                    '#zipCd1', //사업장 소재지 - 우편번호
+                    '#zipCd2', //사업장 소재지 - 우편번호
+                    '#addr1', //사업장 소재지  - 주소
+                    '#addr2', //사업장 소재지 - 상세주소
+                ];
+
+                me.idsButtonToCheck = [
+                    '#bussRegNo_button', //인증하기 버튼
+                    '#memberKindCd_button' //사업장 형태 선택
+                ];
             },
 
 
             setEvents: function() {
+                // 사업자번호 입력시
+                me.$bussRegNoFld.on('input blur', function() {
+                    me.bussRegNoErrorMsg = me.checkBussRegNoFormat($(this), me.$bussRegNoCommentFld);
+                });
+
+
+                me.$bussRegNoCheckFld.on('click', function() {
+                    if (me.bussRegNoErrorMsg === SignUpConst.BUSS_CHECK.errorMessage)
+                    {
+                        var bussRegNoStr = me.$bussRegNoFld.val();
+                        SignUpTool.getBussRegNoMatchCount(bussRegNoStr,function(result, textStatus){
+                            if (ResultTool.isSuccess(result)){
+                                me.bussRegNoErrorMsg = me.checkBussRegNoDuplicate(result, textStatus, me.$bussRegNoFld, me.$bussRegNoCommentFld);
+                            }else{
+                                var $input = me.$bussRegNoFld
+                                var $comment = me.$bussRegNoCommentFld
+                                $input.closest('.input-wrap').removeClass('cmplt');
+                                $input.closest('.input-wrap').removeClass('error');
+                                $comment.show();
+                                $comment.html(SignUpConst.BUSS_CHECK.errorMessage);
+                                $input.closest('.input-wrap').addClass('error');
+                            }
+                        });
+                    }
+                });
+
+
+                me.$coNameFld.on('input blur', function() {
+                    me.coNameErrorMsg = me.checkCoNameFormat($(this), me.$coNameCommentFld);
+                });
+
+
+                me.$ceoNameFld.on('input blur', function() {
+                    me.ceoNameErrorMsg = me.checkCeoNameFormat($(this), me.$ceoNameCommentFld);
+                });
+
+
+                me.$taxBillTypeFld.on('input blur', function() {
+                    me.taxBillTypeErrorMsg = me.checkTaxBillTypeFormat($(this), me.$taxBillTypeCommentFld);
+                });
+
+
+                me.$taxBillKindFld.on('input blur', function() {
+                    me.taxBillKindErrorMsg = me.checkTaxBillKindFormat($(this), me.$taxBillKindCommentFld);
+                });
+
+
+                me.$coTelNoFld.on('input blur', function() {
+                    me.coTelNoErrorMsg = me.checkCoTelNoFormat($(this), me.$coTelNoCommentFld);
+                });
+
+
+                me.$addr2Fld.on('input blur', function() {
+                    me.addr2ErrorMsg = me.checkAddr2Format($(this), me.$addr2CommentFld);
+                });
+
+
+                me.$defaultUseYn.on('click', function() {
+                    if(me.$defaultUseYn.is(':checked')) {
+                        me.$defaultUseYn.val('Y');
+                    } else {
+                        me.$defaultUseYn.val('N');
+                    }
+                });
+
                 $(function () {
                     //체크박스 ui변경
                     $('.chkeck_che input').click(function() {
@@ -2752,85 +3216,696 @@
                         $('.chkeck_che input:not(:checked)').parent().removeClass('selected');
                     });
 
-                    //로그인 하기 버튼 활성화
-                    $('.join-list input:radio').change(function(){
-
-                        var checkedLeng = $('.join-list input:radio').filter(':checked').length;
-
-                        if(checkedLeng > 0) $('.join_exist .js-login').prop('disabled', false);
-                        else $('.join_exist .js-login').prop('disabled', true);
+                    //input focus 시 읽기전용 아닐때만 placeholder 문구 변경 || (읽기 전용은 placeholder 문구 변경 필요 없음)
+                    $('.input-wrap input').focusin(function() {
+                        if(!($(this).prop('readonly'))){
+                            var focusTxt = $(this).data('focus');
+                            $(this).siblings('.placeholder').text(focusTxt);
+                        }
                     });
+
+                    //input focus 아웃된 후 에러 혹은 완료 처리 및 placeholder 문구 변경
+                    $('.input_form input').focusout(function() {
+                        //인풋 포커스 아웃되고 error 혹은 cmplt 처리 필요!!!!!!!!!!!!!!
+                        if(!($(this).closest('.input-wrap').hasClass('error'))) { //에러 없을 떄
+                            var placeholder = $(this).attr('placeholder'); //placeholder 문구 기존으로 변경
+                            $(this).siblings('.placeholder').text(placeholder);
+                        }
+                    });
+                });
+                //사업장 형태 버튼 선택 활성화 및 식당 선택 시 식당 선택 팝업 노출
+                $('.select-area button').click(function() {
+                    $('.select-area li').removeClass('active');
+                    $(this).closest('li').addClass('active');
+
+
+                    me.memberDivisionCd = $('#memberKindCd_button li.active').find('button').val();
+                    me.memberDivisionErrorMsg = null;
+
+                    if($(this).hasClass('select-store')){
+                        $('.workth_select.sikdang_recomm').fadeIn().wrap('<div class="dim-layer"></div>');
+                        //식당 선택 팝업
+                        $('.walkth_check input').change(function(e) {
+                            $('.selected_kind').empty();
+                            $('.walkth_check input:checked').each(function (i, e) {
+                                var selectedLblImg = ('<img src="' + $(this).next().find('img').attr('src') + '" width="32" height="32">')
+                                $('.selected_kind').html(function (index, oldhtml) {
+                                    return (oldhtml == '') ? selectedLblImg : oldhtml + selectedLblImg;
+                                });
+                            });
+                        });
+                        $('.select_kind_of .walkth_check').each(function() {
+                            var walkthStepTwo = $('.walkth_step_two');
+
+                            walkthStepTwo.click(function () {
+                                $('.workth_select button').prop('disabled', false);
+
+                                if ($('.walkth_step_two input[type="checkbox"]:checked').length == 0) $(".workth_select button").prop('disabled', true)
+                                //input이 3개 초과 클릭되면 disabled 처리
+                                if ($('.walkth_step_two input[type="checkbox"]:checked').length >= 3) {
+                                    $('.walkth_step_two input:checkbox:not(:checked)').prop('disabled', true);
+                                    $('.walkth_step_two input').css({'cursor':'default'});
+                                } else {
+                                    $('.walkth_step_two input:checkbox:not(:checked)').prop('disabled', false);
+                                }
+                            });
+                        });
+                    }
+                    $('.sikdang_recomm .b-close').click(function () {
+                        $(this).closest('.dim-layer').fadeOut(function() {
+                            $('.sikdang_recomm').css('display', 'none');
+                            $('.sikdang_recomm').unwrap('<div class="dim-layer"></div>');
+                        });
+                    });
+                });
+
+                function validateForm() {
+                    // 모든 필드가 입력되었는지 확인
+                    var allFilled = true;
+                    me.idsInputToCheck.forEach(function (id) {
+                        if ($.trim($(id).val()) === '') {
+                            allFilled = false;
+                            return false; // loop 중지
+                        }
+                    });
+                    // 버튼 활성화 체크
+                    me.isButtonValid(allFilled);
+                }
+
+                // 지정된 입력 필드 이벤트를 감지
+                me.idsInputToCheck.forEach(function (id) {
+                    $(id).on('input', validateForm);
+                });
+
+                // 버튼 클릭 이벤트를 감지
+                me.idsButtonToCheck.forEach(function (id) {
+                    $(id).on('click', validateForm);
                 });
             },
 
+
             initialize: function() {
-                if(me.role == 'B004'){
-                    $('#join').remove();
+                if(me.type == 'default'){
+                    $('#snsJoin').remove();
+                }else{
+                    $('#defaultJoin').remove();
+                }
+
+                //사업장 소재지 입력 후 노출 되는 영역
+                $('.hidden-area').hide();
+
+                if (PhotoMgr) {
+                    PhotoMgr.setCompleteKindInputFunction(me.completeKindInput);
+                    PhotoMgr.startup();
                 }
             },
-            goLogin: function(){
-                var selectedRadio = $('.join-list input:radio:checked');
-                var memberId = selectedRadio.siblings('.id').text().trim();
 
-                if (selectedRadio.length > 0) {
-                    var siteCdList = selectedRadio.siblings('.sns-list').find('img').map(function() {
-                        return $(this).attr('value');
-                    }).get();
-                    var siteCdCount = siteCdList.length;
+            completeKindInput: function(params) {
+                me.memberKindCdArr = params.memberKindArr;
+                me.memberKindNmArr = params.memberKindNmArr;
+                me.menuType = 'photo';
+                me.$memberKindCdFld.val(me.memberKindCdArr.join(','));
+                me.$selectKindTxtFld.val(me.memberKindNmArr.join('/'));
+                me.$selectKindBtnArea.hide();
+                me.$selectedKindArea.show();
+            },
+            /**
+             * 사업자번호 입력시
+             */
+            checkBussRegNoFormat: function ($input, $comment)
+            {
+                /* var inputStr = $input.val();
+                var errorMsg;
 
-                    if (siteCdCount === 1) {
-                        var type = siteCdList[0];
-                        SignUpTool.popupSnsLogin(type);
+                regEx = /[^0-9]/g;
+                inputStr = inputStr.replace(regEx, '');
+                $input.val(inputStr);
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkBussRegNo(inputStr);
+
+                if(result.success){
+                    if (!SignUpTool.isBussRegNoFormat(inputStr)){//사업자 번호 유효성 체크 -> 실패
+                        $comment.show();
+                        $comment.html(result.resultCode.errorMessage);
+                        $input.closest('.input-wrap').addClass('error');
+
+                        errorMsg = result.resultCode.errorMessage;
+                    }else{//사업자 번호 유효성 체크 -> 성공
+                        $comment.show();
+                        if ($.inArray(inputStr, me.canUseBussRegNos) > -1){
+                            $comment.hide();
+                            $input.closest('.input-wrap').addClass('cmplt');
+                            errorMsg = null;
+                        }else if ($.inArray(inputStr, me.cannotUseBussRegNos) > -1){ //이미 가입한 사업자 번호 유무 체크
+                            result = SignUpTool.isAlreadyBussRegNoChecked(inputStr,me.cannotUseBussRegNos);
+                            $comment.html(result.resultCode.errorMessage);
+                            $input.closest('.input-wrap').addClass('error');
+                            errorMsg = result.resultCode.errorMessage;
+                        }else if ($.inArray(inputStr, me.validBussRegNos) > -1) { //사업자 번호 유효성 체크
+                            result = SignUpTool.isValidBussRegNoChecked(inputStr, me.validBussRegNos);
+                            $comment.html(result.resultCode.errorMessage);
+                            $input.closest('.input-wrap').addClass('error');
+                            errorMsg = result.resultCode.errorMessage;
+                        }else{
+                            result = SignUpTool.isBussRegNoChecked(inputStr,me.canUseBussRegNos); //사업자 번호 인증 유무체크
+                            $comment.html(result.resultCode.errorMessage);
+                            $input.closest('.input-wrap').addClass('error');
+                            errorMsg = result.resultCode.errorMessage;
+                        }
+                    }
+                }else{
+                    if(result.resultCode.code == SignUpConst.BUSS_NOT10.code){ //사업자번호 10자리 미만
+                        $comment.show();
+                        $comment.html(result.resultCode.errorMessage);
+                        $input.closest('.input-wrap').addClass('error');
+                        errorMsg = result.resultCode.errorMessage;
+                    }else if(result.resultCode.code == SignUpConst.BUSS_NOTFORM.code) { //사업자번호 형식이 맞지 않을 경우
+                        $comment.show();
+                        $comment.html(result.resultCode.errorMessage);
+                        $input.closest('.input-wrap').addClass('error');
+                        errorMsg = result.resultCode.errorMessage;
+                    }else if(result.resultCode.code == SignUpConst.BUSS_ZERO_LENGTH.code) { //사업자번호 미입력시
+                        $comment.hide();
+                        $comment.html(result.resultCode.errorMessage);
+                        errorMsg = result.resultCode.errorMessage;
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }
+                }
+                return errorMsg; */
+            	$input.closest('.input-wrap').removeClass('error');
+                $comment.hide();
+                me.bussRegNoErrorMsg = null; // 에러 메시지를 null로 설정
+                return null;
+            },
+            /**
+             * 사업자 번호 인증 체크
+             */
+            checkBussRegNoDuplicate: function (result, textStatus, $input, $comment)
+            {
+                var errorMsg;
+                var bussRegNoStr = $input.val();
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                if (textStatus == 'success'){
+                    var data = ResultTool.getData(result);
+                    if (data['count'] > 0) {
+                        me.cannotUseBussRegNos.push(bussRegNoStr);
+                        $comment.show();
+                        $comment.html(SignUpConst.BUSS_EXIST.errorMessage);
+                        $input.closest('.input-wrap').addClass('error');
+                        errorMsg = SignUpConst.BUSS_EXIST.errorMessage;
                     }else{
-                        WebTool.submit ({
-                            'action'	: WebTool.getUrl ('/fo/main/loginPage.do')
-                            , 'inputs'	: {
-                                'memberId' : memberId,
+                        //
+                        CheckTool.validateBussRegNoPopbill(bussRegNoStr,function(success,message){
+                            if( success == false )
+                            {
+                                $comment.show();
+                                $comment.html(message);
+                                $input.closest('.input-wrap').addClass('error');
+                                errorMsg = message;
+                                me.validBussRegNos.push(bussRegNoStr);
+                            }else{
+                                me.canUseBussRegNos.push(bussRegNoStr);
+                                errorMsg = null;
+                                $comment.hide();
+                                $input.closest('.input-wrap').addClass('cmplt');
                             }
                         });
                     }
+                }else{
+                    $input.val('');
+                    $comment.show();
+                    $comment.html(ResultTool.getMessage(result));
+                    errorMsg = SignUpConst.BUSS_ZERO_LENGTH.errorMessage;
                 }
-                else {
-                    alert('로그인 할 계정을 선택하세요');
-                }
+                return errorMsg;
             },
-            // //공통으로 빼고 싶음
-            resultSnsLogin: function(params) {
-                var json = JSON.parse( params );
+            /**
+             * 상호명 입력시
+             */
+            checkCoNameFormat: function ($input, $comment)
+            {
+                /* var errorMsg = null;
+                var inputStr = $input.val();
 
-                //
-                if( json.isLogined === 'true' ) {
-                    try{
-                        // 고객 프로필 추적
-                        WebTool.setUserProperties( );
-                        WebTool.removeChannelTokUpdateCookie();
-                    }catch(err){
-                        console.log(err);
+                if(inputStr.startsWith(' ')){
+                    // 첫 번째 문자가 공백일 경우, 입력을 무효화
+                    $('#coName').val($.trim($input.val()));
+                    return;
+                }
+                if(/  /.test(inputStr)){
+                    // 연속으로 공백 입력하는 경우, 입력을 무효화
+                    $('#coName').val($input.val().replace(/ {2,}/g, ' '));
+                    return;
+                }
+
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkCoName(inputStr);
+
+                if(result.success){
+                    errorMsg = null;
+                    $comment.hide();
+                    $input.closest('.input-wrap').addClass('cmplt');
+                }else{
+                    if(result.resultCode.code == SignUpConst.CO_NAME_NOTFORM.code  //국어,영문 외 글자 입력시
+                        || result.resultCode.code == SignUpConst.CO_NAME_NOTFORM_ETC.code //상호명 허용하는 특수문자 외 특수문자 입력시
+                        || result.resultCode.code == SignUpConst.CO_NAME_NOT_ONLY_NUMBER.code) { //숫자만 입력시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.CO_NAME_NOT_LEN.code) {//30자 초과시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                        $('#coName').val($('#coName').val().slice(0, 31));
+                    }else if(result.resultCode.code == SignUpConst.CO_NAME_ZERO_LEN.code){//상호명 미입력시
+                        $comment.hide();
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }else if(result.resultCode.code == SignUpConst.WHITE_SPACE_FORM.code) {//공백 유효성
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
                     }
+                    errorMsg = result.resultCode.errorMessage;
+                    $comment.html(result.resultCode.errorMessage);
+                }
+                return errorMsg; */
+            	$input.closest('.input-wrap').removeClass('error');
+                $comment.hide();
+                me.coNameErrorMsg = null; // 에러 메시지를 null로 설정
+                return null;
+            },
+            /**
+             * 대표자명 입력시
+             */
+            checkCeoNameFormat: function ($input, $comment)
+            {
+                var errorMsg = null;
+                var inputStr = $input.val();
 
-                    if (StringTool.isNotBlank(me.redirectUrl)) {
-                        WebTool.goHome();
+                if(inputStr.startsWith(' ')){
+                    // 첫 번째 문자가 공백일 경우, 입력을 무효화
+                    $('#ceoName').val($.trim($input.val()));
+                    return;
+                }
+
+                if(/  /.test(inputStr)){
+                    // 연속으로 공백 입력하는 경우, 입력을 무효화
+                    $('#ceoName').val($input.val().replace(/ {2,}/g, ' '));
+                    return;
+                }
+
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkCeoName(inputStr);
+
+                if(result.success){
+                    errorMsg = null;
+                    $comment.hide();
+                    $input.closest('.input-wrap').addClass('cmplt');
+                }else{
+                    if(result.resultCode.code == SignUpConst.CEO_NAME_NOTFORM.code){ //대표자명 국,영문만 입력 가능
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.CEO_NAME_NOT_LEN.code) {//30자 초과시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                        $('#ceoName').val($('#ceoName').val().slice(0, 31));
+                    }else if(result.resultCode.code == SignUpConst.CEO_NAME_ZERO_LEN.code) {//대표자명 미입력시
+                        $comment.hide();
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }else if(result.resultCode.code == SignUpConst.WHITE_SPACE_FORM.code) {//공백 유효성
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }
+                    errorMsg = result.resultCode.errorMessage;
+                    $comment.html(result.resultCode.errorMessage);
+                }
+                return errorMsg;
+            },
+            /**
+             * 업태 입력시
+             */
+            checkTaxBillTypeFormat: function ($input, $comment)
+            {
+                var errorMsg = null;
+                var inputStr = $input.val();
+
+                if(inputStr.startsWith(' ')){
+                    // 첫 번째 문자가 공백일 경우, 입력을 무효화
+                    $('#taxBillType').val($.trim($input.val()));
+                    return;
+                }
+
+                if(/  /.test(inputStr)){
+                    // 연속으로 공백 입력하는 경우, 입력을 무효화
+                    $('#taxBillType').val($input.val().replace(/ {2,}/g, ' '));
+                    return;
+                }
+
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkTaxBillType(inputStr);
+
+                if(result.success){
+                    errorMsg = null;
+                    $comment.hide();
+                    $input.closest('.input-wrap').addClass('cmplt');
+                }else{
+                    if(result.resultCode.code == SignUpConst.TAX_BILL_TYPE_NOTFORM.code){ //업태 국,영문만 입력 가능
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.TAX_BILL_TYPE_NOT_LEN.code) {//30자 초과시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                        $('#taxBillType').val($('#taxBillType').val().slice(0, 31));
+                    }else if(result.resultCode.code == SignUpConst.TAX_BILL_TYPE_ZERO_LEN.code) {//업태 미입력시
+                        $comment.hide();
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }else if(result.resultCode.code == SignUpConst.WHITE_SPACE_FORM.code) {//공백 유효성
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }
+                    errorMsg = result.resultCode.errorMessage;
+                    $comment.html(result.resultCode.errorMessage);
+                }
+                return errorMsg;
+            },
+            /**
+             * 업종 입력시
+             */
+            checkTaxBillKindFormat: function ($input, $comment)
+            {
+                var errorMsg = null;
+                var inputStr = $input.val();
+
+                if(inputStr.startsWith(' ')){
+                    // 첫 번째 문자가 공백일 경우, 입력을 무효화
+                    $('#taxBillKind').val($.trim($input.val()));
+                    return;
+                }
+
+                if(/  /.test(inputStr)){
+                    // 연속으로 공백 입력하는 경우, 입력을 무효화
+                    $('#taxBillKind').val($input.val().replace(/ {2,}/g, ' '));
+                    return;
+                }
+
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkTaxBillKind(inputStr);
+
+                if(result.success){
+                    errorMsg = null;
+                    $comment.hide();
+                    $input.closest('.input-wrap').addClass('cmplt');
+                }else{
+                    if(result.resultCode.code == SignUpConst.TAX_BILL_KIND_NOTFORM.code){ //업종 국,영문만 입력 가능
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.TAX_BILL_KIND_NOT_LEN.code) {//30자 초과시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                        $('#taxBillKind').val($('#taxBillKind').val().slice(0, 31));
+                    }else if(result.resultCode.code == SignUpConst.TAX_BILL_KIND_ZERO_LEN.code) {//업종 미입력시
+                        $comment.hide();
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }else if(result.resultCode.code == SignUpConst.WHITE_SPACE_FORM.code) {//공백 유효성
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }
+                    errorMsg = result.resultCode.errorMessage;
+                    $comment.html(result.resultCode.errorMessage);
+                }
+                return errorMsg;
+            },
+            /**
+             * 사업장 전화번호 입력시
+             */
+            checkCoTelNoFormat: function ($input, $comment)
+            {
+                var errorMsg = null;
+                var inputStr = $input.val();
+                regEx = /[^0-9]/g;
+                inputStr = inputStr.replace(regEx, '');
+                $input.val(inputStr);
+
+                $input.closest('.input-wrap').removeClass('cmplt');
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkCoTelNo(inputStr);
+
+                if(result.success){
+                    errorMsg = null;
+                    $comment.hide();
+                    $input.closest('.input-wrap').addClass('cmplt');
+                }else{
+                    if(result.resultCode.code == SignUpConst.CO_TEL_NO_NOTFORM.code){ //사업장 전화번호 숫자만 입력 가능
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.CO_TEL_NO_NOT_LEN.code) {//12자 초과시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.CO_TEL_NO_ZERO_LEN.code) {//9자 미만시
+                        $comment.show();
+                        $input.closest('.input-wrap').addClass('error');
+                    }else if(result.resultCode.code == SignUpConst.CO_TEL_NO_NOT.code) {//사업장번호 미입력시
+                        $comment.hide();
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }
+                    errorMsg = result.resultCode.errorMessage;
+                    $comment.html(result.resultCode.errorMessage);
+                }
+
+                $input.val(StringTool.replaceTelNumber($input.val()));
+
+
+                return errorMsg;
+            },
+            /**
+             * 사업장 소재지 상세주소 입력시
+             */
+            checkAddr2Format: function ($input, $comment)
+            {
+                var errorMsg = null;
+                var inputStr = $input.val();
+
+                $input.closest('.input-wrap').removeClass('error');
+
+                var result = SignUpTool.checkAddr2(inputStr);
+
+                if(result.success){
+                    errorMsg = null;
+                    $comment.hide();
+                    $input.closest('.input-wrap').addClass('cmplt');
+                }else{
+                    if(result.resultCode.code == SignUpConst.ADDR2_ERROR.code) {//사업장 소재지 상세주소 미입력시
+                        errorMsg = result.resultCode.errorMessage;
+                        $comment.hide();
+                        $comment.html(result.resultCode.errorMessage);
+                        $input.closest('.input-wrap').removeClass('cmplt');
+                    }
+                }
+                return errorMsg;
+            },
+            /**
+             * 사업장 소재지 주소 검색
+             */
+            searchPost: function(){
+                DaumMgr.show({'type':'open','postcode':'zipCd','postcode1':'zipCd1','postcode2':'zipCd2', 'address1':'addr1', 'address2':'addr2', 'roadAddress':'roadAddr1', 'userSelectedType':'addrSelectedType', 'buildingName':'buildingName'});
+            },
+            /**
+             * 다음 단계 버튼 활성화 확인 -> 필드 유효성 검사
+             */
+            isButtonValid: function(allFilled){
+                me.errorStrings = [
+                    me.bussRegNoErrorMsg, //사업자 등록번호
+                    me.coNameErrorMsg, //상호
+                    me.ceoNameErrorMsg, //대표자명
+                    me.taxBillTypeErrorMsg, //업태
+                    me.taxBillKindErrorMsg, //업종
+                    me.coTelNoErrorMsg, //사업장 전화번호
+                    me.addr2ErrorMsg, //사업장 소재지 - 상세주소
+                    me.memberDivisionErrorMsg, //사업장 형태
+                ];
+
+                if(allFilled){
+                    if(me.isInputValid(me.errorStrings, me.errorFields)) {
+                        $('#nextStepButton').prop('disabled', false)
+                        $('#joinComplt').prop('disabled', false)
                     }else{
-                        WebTool.goHome();
+                        $('#nextStepButton').prop('disabled', true)
+                        $('#joinComplt').prop('disabled', true)
                     }
+                }else{
+                    $('#nextStepButton').prop('disabled', true)
+                    $('#joinComplt').prop('disabled', true)
                 }
             },
-            goJoin: function(){
-                //sns 개인정보 입력
+            /**
+             * 입력 여부 확인
+             */
+            isInputValid: function (errorStrings, errorFields)
+            {
+                var index;
+                var len;
+                var error_msg = '';
+                var hasError = false;
+                for (index = 0, len = errorStrings.length; index < len; ++index) {
+                    if (errorStrings[index] != null) {
+                        if (errorFields[index] != null) {
+                            error_msg = errorFields[index].prop('id');
+                            errorFields[index].closest('.input-wrap').addClass('error')
+                            $('#'+error_msg+'_comment').show();
+                            hasError = true;
+                        }
+                    }
+                }
+                if(hasError){
+                    return false;
+                }
+                return true;
+            },
+            /**
+             * 사업자 정보 입력 후 다음 단계 (버튼 활성화 체크 완료(isButtonValid) 후 가능)
+             */
+            checkBusinessInfo: function(){
+                me.errorStrings	= [
+                    me.bussRegNoErrorMsg, //사업자 등록번호
+                    me.coNameErrorMsg, //상호
+                    me.ceoNameErrorMsg, //대표자명
+                    me.taxBillTypeErrorMsg, //업태
+                    me.taxBillKindErrorMsg, //업종
+                    me.coTelNoErrorMsg, //사업장 전화번호
+                    me.addr2ErrorMsg, //사업장 소재지 - 상세주소
+                    me.memberDivisionErrorMsg, //사업장 형태
+                ];
+                //유효성 체크
+                if (me.isInputValid(me.errorStrings, me.errorFields))
+                {
+                    //개인정보 입력 페이지
+                    me.goPersonalInfoPage();
+                }
+            },
+            /**
+             * 개인정보 입력 페이지
+             */
+            goPersonalInfoPage: function()
+            {
+                var memberDivisionCd	= $.trim(me.memberDivisionCd);
+                var memberKindValues= $.trim(me.$memberKindCdFld.val());
+                var memberKindArr = [];
+                if (memberDivisionCd === 'HD01') {
+                    if (memberKindValues.length === 0) {
+                        alert('식당종류를 선택해주세요');
+                        return;
+                    } else {
+                        memberKindArr = memberKindValues.split(',');
+                    }
+                }
+
                 var params = {
-                    'role': me.role, //사업자,개인
-                    'type': me.type,
-                    'email' : me.email,
-                    'realName' : me.realName,
-                    'siteCd' : me.siteCd,
-                    'siteId' : me.siteId,
-                    'siteNm' : me.siteNm,
-                    'authCi' : me.authCi,
-                    'cellNo' : me.cellNo,
-                    'isExist' : true,
+                    //공통
+                    'role' 				: 'B002', //사업자, 개인
+                    'type'				: 'default', //일반, sns 회원가입
+
+                    //약관 파라미터
+                    'smsRecvYn'			: 'Y', //문자 수신 여부
+                    'emailRecvYn'		: 'Y', //이메일 수신 여부
+                    'pushRecvYn'		: 'N', //푸쉬 알림 여부
+
+                    //사업자 정보 입력 파라미터
+                    'bussRegNo'			: $.trim(me.$bussRegNoFld.val()), //사업자 등록번호
+                    'coName'			: $.trim(me.$coNameFld.val()), //상호
+                    'ceoName'			: $.trim(me.$ceoNameFld.val()), //대표자명
+                    'taxBillType'		: $.trim(me.$taxBillTypeFld.val()), //업태
+                    'taxBillKind'		: $.trim(me.$taxBillKindFld.val()), //업종
+                    'coTelNo'			: $.trim(me.$coTelNoFld.val()), //사업장 전화번호
+                    'zipCd'				: $.trim(me.$zipCdFld.val()), //사업장 우편번호
+                    'zipCd1'			: $.trim($('#zipCd1').val()),
+                    'zipCd2'			: $.trim($('#zipCd2').val()),
+                    'addr1'				: $.trim(me.$addr1Fld.val()), //사업장 주소
+                    'addr2'				: $.trim(me.$addr2Fld.val()), //사업장 상세주소
+                    'roadAddr1'			: $.trim(me.$roadAddr1Fld.val()), //도로명 주소
+                    'addrSelectedType'	: $.trim(me.$addrSelectedTypeFld.val()), //선택한 주소 타입 (J:지번, R:도로명)
+                    'buildingName'		: $.trim(me.$buildingNameFld.val()), //건물명
+                    'defaultUseYn'		: $.trim(me.$defaultUseYn.val()), //기본 배송지 여부
+                    'memberDivisionCd'  : memberDivisionCd, //사업장 형태
+                    'memberKindArr' 	: memberKindArr, //사업장 형태가 식당인 경우 //식당 종류
+
+
                 };
-                // 개인정보 입력 personalInfoPage.jsp
+
                 SignUpTool.goPersonalInfoPage(params);
+            },
+            //최종 찐 회원가입!
+            addMember: function(){
+                var memberDivisionCd	= $.trim(me.memberDivisionCd);
+                var memberKindValues= $.trim(me.$memberKindCdFld.val());
+                var memberKindArr = $.trim(me.$memberKindCdFld.val());
+                if (memberDivisionCd === 'HD01') {
+                    if (memberKindValues.length === 0) {
+                        alert('식당종류를 선택해주세요');
+                        return;
+                    }
+                }
+                var params = {
+                    //기본 정보
+                    'office'			: 'fo',
+                    'role' 				: 'B002', //사업자, 개인
+                    'type'				: 'default', //일반, sns 회원가입
+
+                    //개인 정보 입력 파라미터
+                    'memberId'			: '', //아이디
+                    'passwd'			: '', //비밀번호
+                    'realName'			: '', //이름
+                    'cellNo'			: '', //휴대폰번호
+                    'email'				: '', //이메일
+                    'joinPathCd'		: '', //가입경로
+                    'joinPath'			: '', //가입경로 - 기타 경우
+                    'authSeq'			: '',// 인증시퀀스
+                    'authNo'			: '', // 인증번호
+
+                    //사업자 정보 입력 파라미터
+                    'bussRegNo'			: $.trim(me.$bussRegNoFld.val()), //사업자 등록번호
+                    'coName'			: $.trim(me.$coNameFld.val()), //상호
+                    'ceoName'			: $.trim(me.$ceoNameFld.val()), //대표자명
+                    'taxBillType'		: $.trim(me.$taxBillTypeFld.val()), //업태
+                    'taxBillKind'		: $.trim(me.$taxBillKindFld.val()), //업종
+                    'coTelNo'			: $.trim(me.$coTelNoFld.val()), //사업장 전화번호
+                    'zipCd'				: $.trim(me.$zipCdFld.val()), //사업장 우편번호
+                    'zipCd1'			: $.trim($('#zipCd1').val()),
+                    'zipCd2'			: $.trim($('#zipCd2').val()),
+                    'addr1'				: $.trim(me.$addr1Fld.val()), //사업장 주소
+                    'addr2'				: $.trim(me.$addr2Fld.val()), //사업장 상세주소
+                    'defaultUseYn'		: $.trim(me.$defaultUseYn.val()), //기본 배송지 여부
+                    'memberDivisionCd'  : memberDivisionCd, //사업장 형태
+                    'memberKindArr' 	: memberKindArr, //사업장 형태가 식당인 경우 //식당 종류
+
+                    //약관 파라미터
+                    'smsRecvYn'			: 'Y', //문자 수신 여부
+                    'emailRecvYn'		: 'Y', //이메일 수신 여부
+                    'pushRecvYn'		: 'N', //푸쉬 알림 여부
+
+                    //sns 정보 파라미터
+                    'siteCd'			: '',
+                    'siteId'			: '',
+                    'siteNm'			: '',
+                    'authCi'			: '',
+                };
+                SignUpTool.addMember(params,function(result, textStatus){
+                    if (ResultTool.isSuccess(result)){
+                        //가입완료 페이지 이동
+                        SignUpTool.joinCmptPage(result);
+                    }else{
+                        alert (ResultTool.getMessage (result));
+                    }
+                });
             },
             nothing:null
         };
@@ -2842,38 +3917,771 @@
         MainMgr.startup();
     });
 </script>
-
-<!-- 회붠가입: 중복 계정 안내 -->
+<!-- 회원가입: 사업자 정보 입력 페이지 -->
 <div class="container white_box">
     <div class="content">
-        <div id="join_login" class="login join_exist">
+        <div id="join_login" class="join_form"><!-- //join_form: 회원가입 대표 클래스 -->
             <div class="join-form-comm">
                 <div class="join-tit">
-                    <h2>이미 가입된 계정이 있어요</h2>
-                    <p class="c8080">아래 계정으로 로그인해 주세요.</p>
+                    <h4>사업자 회원가입</h4>
+                    <h2 id="defaultJoin"><em class="ce853">사업자등록증</em>의 정보를<br>입력해주세요</h2><!-- 일반 > 사입자 회원인 경우 -->
+                    <h2 id="snsJoin">거의 다왔어요!<br><em class="ce853">사업자등록증</em>의 정보를<br>입력해주세요</h2><!-- sns > 사입자 회원인 경우 -->
                 </div>
             </div><!-- //join-form-comm -->
-            <div class="join-list">
-                <ul>
-                    <li class="chkeck_che">
-                        <label class="radio" for="publ-20240710_1" id=""><!-- 퍼블리싱 input id값, 스타일 x -->
-                            <input type="radio" class="none" name="radio" id="publ-20240710_1"><!-- 퍼블리싱 input id값, 스타일 x -->
-                            <p class="id">kakao793884</p>
-                            <p class="sns-list">
-                                <img src="https://static-cdn.meatbox.co.kr/img/mo/ico/icon-r-kakao.svg" alt="카카오" value="SN02">
-                            </p>
-                        </label>
-                    </li>
-                </ul>
-            </div><!-- //join-list -->
-            <div class="btn_box">
-                <button type="button" class="comm_btn js-login" disabled onclick="MainMgr.goLogin();">로그인 하기</button>
-                <button type="button" class="comm_btn white-b" id="join" onclick="MainMgr.goJoin();">다른 사업자로 신규 가입하기</button><!-- //사업자 회원인 경우에만 노출되는 버튼 -->
+             <div class="form_box">
+                <div class="form-wrap">
+                    <!-- [수정 1] form 태그에서 action과 method를 제거합니다. 이제 자바스크립트로 직접 전송합니다. -->
+                    <form id="businessForm">
+                        <div class="input_form">
+                            <ul>
+                                <li class="check_btn">
+                                    <div class="input-wrap">
+                                        <input type="tel" id="bussRegNo" name="businessNumber" placeholder="사업자 등록번호" data-focus="사업자 등록번호(숫자/10자리)" maxlength="10" required>
+                                        <span class="placeholder">사업자 등록번호</span>
+                                    </div>
+                                    <button type="button" id="bussRegNo_button">인증하기</button>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="coName" name="companyName" placeholder="상호" data-focus="상호(사업자 등록증 기준)" required>
+                                        <span class="placeholder">상호</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="ceoName" name="ceoName" placeholder="대표자명" data-focus="대표자명(국,영문/30자 이내)" required>
+                                        <span class="placeholder">대표자명</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="taxBillType" name="businessType" placeholder="업태(세금계산서 발행 목적으로 사용)" data-focus="업태(사업자 등록증 기준)" required>
+                                        <span class="placeholder">업태(세금계산서 발행 목적으로 사용)</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="taxBillKind" name="businessItem" placeholder="업종(세금계산서 발행 목적으로 사용)" data-focus="종목(사업자 등록증 기준)" required>
+                                        <span class="placeholder">업종(세금계산서 발행 목적으로 사용)</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="tel" id="coTelNo" name="phoneNumber" placeholder="사업장 전화번호" data-focus="사업장 전화번호(숫자/12자리)" required maxlength="15">
+                                        <span class="placeholder">사업장 전화번호</span>
+                                    </div>
+                                </li>
+                                <li class="check_btn">
+                                    <div class="input-wrap" id="zipCdArea">
+                                        <input type="text" placeholder="사업장 소재지" value="사업장 소재지" required readonly>
+                                    </div>
+                                    <button type="button" onclick="MainMgr.searchPost();">주소검색</button>
+                                    <div class="hidden-area" style="display: block;">
+                                        <div class="input-wrap">
+                                            <input type="text" name="city" id="addr1" readonly required>
+                                        </div>
+                                        <div class="input-wrap">
+                                            <input type="text" name="detailAddress" id="addr2" placeholder="상세주소" required>
+                                            <span class="placeholder">상세주소</span>
+                                        </div>
+                                        <input type="hidden" name="district" value="">
+                                        <input type="hidden" name="neighborhood" value="">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="select-area business">
+                            <b>사업장 형태 선택 <em class="ce853">*</em></b>
+                            <input type="hidden" id="storeTypeInput" name="storeType" value="">
+                            <ul id="memberKindCd_button">
+                                <li><button type="button" value="RESTAURANT" class="select-store">식당</button></li>
+                                <li><button type="button" value="DISTRIBUTION">유통</button></li>
+                                <li><button type="button" value="BUTCHER">정육점</button></li>
+                                <li><button type="button" value="ETC">기타</button></li>
+                            </ul>
+                        </div>
+
+                        <!-- [수정 2] 버튼 타입을 button으로 바꾸고, onclick 이벤트로 새로운 자바스크립트 함수를 호출합니다. -->
+                        <div class="btn_box">
+                            <button type="button" class="comm_btn" id="nextStepButton" onclick="submitBusinessInfo();">다음 단계로</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <p class="join-noti">아이디가 다르거나 가입한 적이 없을 경우<br>고객센터 <em class="ce853">1644-6689</em>로 문의주세요.</p>
-        </div><!-- //join_login -->
-    </div><!-- //content -->
-</div><!-- //container --><script type="text/javascript">
+        </div>
+    </div>
+</div>
+<script>
+    // '다음 단계로' 버튼을 눌렀을 때 실행될 함수
+    function submitBusinessInfo() {
+        // 1. form 요소 가져오기
+        const form = document.getElementById('businessForm');
+        // 2. form 안의 모든 입력 데이터를 FormData 객체로 만듦
+        const formData = new FormData(form);
+        // 3. FormData를 URL 쿼리 스트링 (?key=value&...) 형태로 변환
+        const params = new URLSearchParams(formData).toString();
+        // 4. 다음 페이지로 URL을 만들어 강제로 이동
+        window.location.href = './businessInfoAction.do?' + params;
+    }
+
+    // 페이지가 로드되면 사업장 형태 버튼 기능을 활성화합니다.
+    document.addEventListener("DOMContentLoaded", function() {
+        const storeTypeButtons = document.querySelectorAll('#memberKindCd_button button');
+        const hiddenInput = document.getElementById('storeTypeInput');
+
+        storeTypeButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // 버튼의 기본 동작 방지
+                hiddenInput.value = this.value;
+                storeTypeButtons.forEach(btn => btn.parentElement.classList.remove('active'));
+                this.parentElement.classList.add('active');
+            });
+        });
+    });
+</script>
+
+<!-- [수정 4] 기존 자바스크립트가 버튼을 비활성화하는 것을 막기 위해, 페이지 로드 시 버튼을 강제로 활성화합니다. -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var nextButton = document.getElementById('nextStepButton');
+        if (nextButton) {
+            nextButton.disabled = false;
+        }
+        
+        // 기존의 복잡한 유효성 검사 함수들을 비활성화하여 테스트를 용이하게 합니다.
+        if (window.MainMgr) {
+            window.MainMgr.checkBussRegNoFormat = function() { return null; };
+            window.MainMgr.checkCoNameFormat = function() { return null; };
+            window.MainMgr.checkCeoNameFormat = function() { return null; };
+            window.MainMgr.checkTaxBillTypeFormat = function() { return null; };
+            window.MainMgr.checkTaxBillKindFormat = function() { return null; };
+            window.MainMgr.checkCoTelNoFormat = function() { return null; };
+            window.MainMgr.checkAddr2Format = function() { return null; };
+            window.MainMgr.isButtonValid = function() {
+                $('#nextStepButton').prop('disabled', false);
+            };
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    (function() {
+
+        var me = window.PhotoMgr = {
+
+
+            photoCloseRefresh: false,
+
+
+            setCompleteKindInputFunction: function(completeKindInput) {
+                me.completeKindInputCallback = completeKindInput;
+            },
+
+
+            setCompletePhotoInputFunction: function (completePhotoInput) {
+                me.completePhotoInputCallback = completePhotoInput;
+            },
+
+
+            startup: function () {
+                me.setVariables();
+                me.setEvents();
+                me.initialize();
+            },
+
+
+            setVariables: function () {
+
+
+                me.imageMaxSize	= 1024 * 1024 * 10;
+
+                me.selectedMemberKindCnt = 0;
+                me.$walkthRestaurantWrap = $('#walkthRestaurantPhotoWrap');
+                me.$completeKindBtn = $('#completeKindBtn');
+                me.$completeBtn = $('#completePhotoBtn');
+                me.$uploadPhotoInput = $('#uploadPhotoInput');
+
+                // 업로드 할 파일
+                me.menuUploadFiles = [];
+                me.imageManagementSeqList = [];
+
+                me.possibleImageUploadFlag = true;
+            },
+
+
+            setEvents: function () {
+
+                // 사진 삭제하기
+                $(document).on('click','.btn_photo_delete', function() {
+                    var idx = $('.btn_photo_delete').index(this);
+                    me.photoSlide.removeSlide(idx + 1);
+                    me.showPhotoSlideCnt();
+                    me.checkInputComplete();
+                    me.menuUploadFiles.splice(idx, 1);
+                });
+
+                // 식당종류 클릭
+                me.$walkthRestaurantWrap.off().on('click','label', function(){
+                    var $trgCheckBox = $('#'+$(this).attr('for'));
+                    var isChecked = $trgCheckBox.is(':checked') === false;
+                    var $checkedLength = me.$walkthRestaurantWrap.find('input[type=checkbox]:checked').length;
+                    var msg = '식당 종류 (최대 3개)'
+
+                    if (isChecked && $checkedLength >= 3) {
+                        alert(msg);
+                        return;
+                    }
+
+                    //input이 3개 초과 클릭되면 disabled 처리
+                    if (isChecked && $checkedLength >= 2) {
+                        me.$walkthRestaurantWrap.find('input:checkbox:not(:checked)').not($trgCheckBox).prop("disabled", true);
+                        me.$walkthRestaurantWrap.css({'cursor':'default'});
+                    }
+                    else {
+                        me.$walkthRestaurantWrap.find('input:checkbox:not(:checked)').prop("disabled", false);
+                    }
+
+                    if (isChecked) {
+                        me.selectedMemberKindCnt = $checkedLength + 1;
+                    }
+                    else {
+                        me.selectedMemberKindCnt = $checkedLength - 1;
+                    }
+
+                    me.checkInputComplete();
+                });
+            },
+
+
+            initialize: function () {
+                if($('.loading_div').length < 1) {
+                    $('body').append ('<div class="loading_div" style="display: none"><div class="ab-bottom-box"></div></div>');
+                }
+
+                //사진첨부 슬라이드
+                me.photoSlide = new Swiper('.menu_add_popup .photo_attch_slide', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 8,
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                });
+            },
+
+
+            openLayerPopup: function () {
+                var $this = $('.sikdang_recomm');
+                $this.bPopup({
+                    modalClose: false,
+                    follow: [false, false],
+                    position: ['auto', 'auto'], //x, y
+
+                });
+            },
+
+
+            openPhotoLayerPopup: function() {
+                var $this = $('.menu_add_popup');
+                $this.bPopup({
+                    modalClose: false,
+                    follow: [false, false],
+                    position: ['auto', 'auto'], //x, y
+                });
+            },
+
+
+            closeKindLayerPopup: function(type) {
+                // if (type === 'back') {
+                // 	history.back();
+                // }
+                var $this = $('.add_store_popup');
+                $this.animate({bottom: '-100%'},100).find('.ly-dim').remove();
+                $this.removeClass('PopsOpen').closest('body').removeClass('of-hidden').closest('html').css({"overflow" : "inherit"});
+            },
+
+
+            closePhotoLayerPopup: function() {
+                if (me.photoCloseRefresh) {
+                    WebTool.refresh();
+                } else {
+                    $('#addPhotoPopup').bPopup().close();
+                }
+            },
+
+
+            setUploadPhoto: function(files) {
+                for (var idx = 0; idx < files.length; idx++) {
+                    var file = files[idx];
+                    var src  = URL.createObjectURL(file);
+
+                    var $slide  = '<li class="swiper-slide">';
+                    $slide += '   <div class="photo">';
+                    $slide += '	  <img src=' + src + '>';
+                    $slide += '	  <input class="photo_path" hidden value="">';
+                    $slide += '	  <button class="btn_photo_delete">삭제</button>';
+                    $slide += '   </div>';
+                    $slide += '</li>';
+
+                    $('ul.photo_ul').append($slide);
+
+                    me.menuUploadFiles.push(file);
+                }
+
+                me.photoSlide.update();
+                me.showPhotoSlideCnt();
+                me.checkInputComplete();
+                me.$uploadPhotoInput.val('');
+            },
+
+
+            fileChangeUploadInput: function(env) {
+                var files = $(env)[0].files;
+                for (var num = 0; num < files.length; num++) {
+                    var name = files[num].name;
+                    var nameArr = name.split('.');
+                    var type = nameArr[nameArr.length - 1];
+                    if($.inArray(type.toLowerCase(), Const.IMG_TYPE_ARR) === -1){
+                        alert('이미지 파일만 등록 가능합니다.');
+                        return false;
+                    }
+
+                    var size = files[num].size;
+                    if (size > me.imageMaxSize) {
+                        alert('첨부 가능한 사진의 최대 용량은 10MB입니다.');
+                        return false;
+                    }
+                }
+
+                if ((me.menuUploadFiles.length + files.length) > 10) {
+                    alert('최대 10장까지 등록이 가능합니다. 다른 사진 등록을 원하시는 경우 기존에 등록하신 사진을 삭제하고 등록해주세요.');
+                    return false;
+                }
+
+                me.setUploadPhoto(files);
+            },
+
+            // 사진 개수 표시변경
+            showPhotoSlideCnt : function () {
+                var $photoCount = $('.photo_select_wrap .photo_count .number');
+                var photoCnt = me.photoSlide.slides.length - 1;
+                $photoCount.text(photoCnt);
+                if (photoCnt > 0) {
+                    $photoCount.addClass('active');
+                } else {
+
+                    $photoCount.removeClass('active');
+                }
+            },
+
+            // 입력 완료 체크
+            checkInputComplete: function() {
+                // var photoCnt = me.photoSlide.slides.length - 1;
+                if (me.selectedMemberKindCnt > 0) {
+                    me.$completeKindBtn.prop('disabled', false);
+                }
+                else {
+                    me.$completeKindBtn.prop('disabled', true);
+                }
+            },
+
+
+            uploadMenuImage: function(uploadFiles, callbackFn) {
+                FoTool.showLoading();
+                if (me.possibleImageUploadFlag) {
+                    me.possibleImageUploadFlag = false;
+                } else {
+                    return;
+                }
+
+                var resultSeqList = [];
+                function uploadPhotoRecursive(idx) {
+                    if (idx < uploadFiles.length) {
+                        var file = uploadFiles[idx];
+                        var formData = new FormData();
+                        formData.append("uploadFile" + idx, file);
+
+                        $.ajax({
+                            url: 			'/fo/member/uploadMenuPhoto.json',
+                            data: 			formData,
+                            processData: 	false,
+                            contentType: 	false,
+                            type: 			'POST',
+                            async: 			false,
+                            global:			false,
+                            success: function(result){
+                                var resultData = ResultTool.getData(result);
+
+                                if (ResultTool.isSuccess(result)) {
+                                    resultSeqList = resultSeqList.concat(resultData.imageManagementSeqList);
+                                }
+                            },
+                            complete: function(jqXHR, textStatus) {
+                                uploadPhotoRecursive(idx + 1);
+                            }
+                        });
+                    }
+                    else {
+                        me.imageManagementSeqList = resultSeqList;
+                        FoTool.hideLoading();
+                        callbackFn(me.imageManagementSeqList);
+                    }
+                }
+
+                setTimeout(function() {
+                    uploadPhotoRecursive(0);
+                }, 10);
+            },
+
+
+
+            completeKindInput: function() {
+                var memberKindArr = [];
+                var memberKindNmArr = [];
+                me.$walkthRestaurantWrap.find('input[type=checkbox]:checked').each(function() {
+                    if ($(this).data('memberKindCd')) {
+                        memberKindArr.push($(this).data('memberKindCd'));
+                    }
+                    if($(this).data('memberKindNm')) {
+                        memberKindNmArr.push($(this).data('memberKindNm'));
+                    }
+                });
+
+                var params = {
+                    memberKindArr: memberKindArr,
+                    memberKindNmArr: memberKindNmArr
+                };
+
+                me.completeKindInputCallback(params);
+                me.closeKindLayerPopup();
+                //me.openPhotoLayerPopup();
+            },
+
+
+            completePhotoInput: function() {
+                if (me.menuUploadFiles.length === 0) {
+                    alert('메뉴판 사진을 등록해주세요.');
+                    return;
+                }
+                var params = {
+                    menuUploadFiles: me.menuUploadFiles
+                };
+
+                me.completePhotoInputCallback(params);
+                me.closePhotoLayerPopup();
+            },
+
+            nothing: null
+        };
+    })();
+
+
+    $(function () {
+        // PhotoMgr.startup();
+    });
+</script>
+
+<!-- 상품추천 식당 팝업 s -->
+<div class="alert-area workth_select sikdang_recomm signUpPage">
+    <div class="of-auto">
+        <div class="pop-menu content-box plr0">
+            <div class="tit-area">
+                <h1>어떤 식당을 운영중이세요?</h1>
+                <p>식당을 선택하고 맞춤 상품을 추천받으세요.</p>
+            </div>
+            <div class="select_kind_of">
+                <div id="walkthRestaurantPhotoWrap" class="walkth_step_two walkth_check after">
+                    <h2>식당 종류 (최대 3개)</h2>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two1" name="menu_kind" data-member-kind-nm="돼지구이집" data-member-kind-cd="MK01"
+
+                        >
+                        <label for="walkth_step_two1">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind1.png" alt="돼지구이집">
+                            <span>돼지구이집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two2" name="menu_kind" data-member-kind-nm="소구이집" data-member-kind-cd="MK02"
+
+                        >
+                        <label for="walkth_step_two2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind2.png" alt="소구이집">
+                            <span>소구이집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two3" name="menu_kind" data-member-kind-nm="양구이집" data-member-kind-cd="MK03"
+
+                        >
+                        <label for="walkth_step_two3">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind3.png" alt="양구이집">
+                            <span>양구이집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two4" name="menu_kind" data-member-kind-nm="정육식당" data-member-kind-cd="MK04"
+
+                        >
+                        <label for="walkth_step_two4">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind4.png" alt="정육식당">
+                            <span>정육식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two5" name="menu_kind" data-member-kind-nm="한식당" data-member-kind-cd="MK05"
+
+                        >
+                        <label for="walkth_step_two5">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind5.png" alt="한식당">
+                            <span>한식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two6" name="menu_kind" data-member-kind-nm="일식당" data-member-kind-cd="MK06"
+
+                        >
+                        <label for="walkth_step_two6">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind6.png" alt="일식당">
+                            <span>일식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two7" name="menu_kind" data-member-kind-nm="양식당" data-member-kind-cd="MK07"
+
+                        >
+                        <label for="walkth_step_two7">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind7.png" alt="양식당">
+                            <span>양식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two8" name="menu_kind" data-member-kind-nm="국,찌개,탕집" data-member-kind-cd="MK08"
+
+                        >
+                        <label for="walkth_step_two8">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind8.png" alt="국,찌개,탕집">
+                            <span>국,찌개,탕집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two9" name="menu_kind" data-member-kind-nm="요리주점" data-member-kind-cd="MK09"
+
+                        >
+                        <label for="walkth_step_two9">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind9.png" alt="요리주점">
+                            <span>요리주점</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two10" name="menu_kind" data-member-kind-nm="족발,보쌈집" data-member-kind-cd="MK10"
+
+                        >
+                        <label for="walkth_step_two10">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind10.png" alt="족발,보쌈집">
+                            <span>족발,보쌈집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two11" name="menu_kind" data-member-kind-nm="회,해물요리집" data-member-kind-cd="MK11"
+
+                        >
+                        <label for="walkth_step_two11">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind11.png" alt="회,해물요리집">
+                            <span>회,해물요리집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two12" name="menu_kind" data-member-kind-nm="면류 식당" data-member-kind-cd="MK12"
+
+                        >
+                        <label for="walkth_step_two12">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind12.png" alt="면류 식당">
+                            <span>면류 식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two13" name="menu_kind" data-member-kind-nm="중식당" data-member-kind-cd="MK13"
+
+                        >
+                        <label for="walkth_step_two13">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind13.png" alt="중식당">
+                            <span>중식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two14" name="menu_kind" data-member-kind-nm="곱창,막창집" data-member-kind-cd="MK14"
+
+                        >
+                        <label for="walkth_step_two14">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind14.png" alt="곱창,막창집">
+                            <span>곱창,막창집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two15" name="menu_kind" data-member-kind-nm="디저트,카페" data-member-kind-cd="MK15"
+
+                        >
+                        <label for="walkth_step_two15">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind15.png" alt="디저트,카페">
+                            <span>디저트,카페</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two16" name="menu_kind" data-member-kind-nm="분식집" data-member-kind-cd="MK16"
+
+                        >
+                        <label for="walkth_step_two16">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind16.png" alt="분식집">
+                            <span>분식집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two17" name="menu_kind" data-member-kind-nm="패스트푸드" data-member-kind-cd="MK17"
+
+                        >
+                        <label for="walkth_step_two17">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind17.png" alt="패스트푸드">
+                            <span>패스트푸드</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two18" name="menu_kind" data-member-kind-nm="닭,오리요리집" data-member-kind-cd="MK18"
+
+                        >
+                        <label for="walkth_step_two18">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind18.png" alt="닭,오리요리집">
+                            <span>닭,오리요리집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two19" name="menu_kind" data-member-kind-nm="아시아식당" data-member-kind-cd="MK19"
+
+                        >
+                        <label for="walkth_step_two19">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind19.png" alt="아시아식당">
+                            <span>아시아식당</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two20" name="menu_kind" data-member-kind-nm="돈가스,카레집" data-member-kind-cd="MK20"
+
+                        >
+                        <label for="walkth_step_two20">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind20.png" alt="돈가스,카레집">
+                            <span>돈가스,카레집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two21" name="menu_kind" data-member-kind-nm="치킨집" data-member-kind-cd="MK21"
+
+                        >
+                        <label for="walkth_step_two21">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind21.png" alt="치킨집">
+                            <span>치킨집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two22" name="menu_kind" data-member-kind-nm="반찬가게" data-member-kind-cd="MK22"
+
+                        >
+                        <label for="walkth_step_two22">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind22.png" alt="반찬가게">
+                            <span>반찬가게</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two23" name="menu_kind" data-member-kind-nm="샤브샤브집" data-member-kind-cd="MK23"
+
+                        >
+                        <label for="walkth_step_two23">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind23.png" alt="샤브샤브집">
+                            <span>샤브샤브집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two24" name="menu_kind" data-member-kind-nm="뷔페,무한리필집" data-member-kind-cd="MK24"
+
+                        >
+                        <label for="walkth_step_two24">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind24.png" alt="뷔페,무한리필집">
+                            <span>뷔페,무한리필집</span>
+                        </label>
+                    </div>
+                    <div class="select_walth">
+                        <input type="checkbox" id="walkth_step_two25" name="menu_kind" data-member-kind-nm="멕시코,남미음식집" data-member-kind-cd="MK25"
+
+                        >
+                        <label for="walkth_step_two25">
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/menu_kind25.png" alt="멕시코,남미음식집">
+                            <span>멕시코,남미음식집</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btngroup after">
+            <span class="selected_kind"></span>
+            <button id="completeKindBtn" type="button" class="btn-ty3 bd-red b-close" onclick="PhotoMgr.completeKindInput()" disabled>완료</button>
+        </div>
+    </div>
+</div>
+
+<!-- 메뉴판 등록 팝업 s -->
+<div id="addPhotoPopup" class="alert-area workth_select menu_add_popup signUpPage">
+    <div class="of-auto">
+        <div class="pop-menu content-box plr0">
+            <div class="tit-area">
+                <h1>좋은 상품을 추천드려요! <span>메뉴판을 등록하고 사장님께 맞는 상품을 추천 받아보세요.</span></h1>
+            </div>
+            <div class="photo_list after">
+                <div class="photo_attch_slide swiper-container">
+                    <ul class="photo_ul swiper-wrapper" class="after">
+                        <li class="photo_select_wrap swiper-slide">
+                            <label class="photo_attch_form" style="cursor: pointer;">
+                                <div class="photo_count">
+                                    <!-- 사진 갯수가 한개 이상이면 .number에 addClass('active')
+                                        0개 이면 removeClass('active')
+                                    -->
+                                    <span class="number">0</span>
+                                    <span class="slash">/</span>
+                                    <span class="total">10</span>
+                                </div>
+                                <input id="uploadPhotoInput" onchange="PhotoMgr.fileChangeUploadInput(this)" name="uploadPhoto" type="file" multiple="multiple" />
+                            </label>
+                        </li>
+                    </ul>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+                <div class="noti_info">
+                    <p>* 직접 촬영한 사진이 아니거나 사진이 선명하지 않은 경우 통보없이 삭제될 수 있으며 혜택이 제한될 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="like_this">
+                <div class="ex_photo after">
+                    <dl>
+                        <dt>벽걸이형 메뉴판</dt>
+                        <dd>
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/ex_photo1.png" alt="벽걸이형 메뉴판">
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>책자형 메뉴판</dt>
+                        <dd>
+                            <img src="https://static-cdn.meatbox.co.kr/img/fo/tmp/ex_photo2.png" alt="책자형 메뉴판">
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="btngroup after">
+            <button id="menuImageSelectLaterBtn" type="button" onclick="PhotoMgr.closePhotoLayerPopup()" class="btn-ty3 bor-red b-close">나중에 등록</button>
+            <button id="menuImageSelectCompleteBtn" type="button" onclick="PhotoMgr.completePhotoInput()" class="btn-ty3 bd-red">메뉴판 등록 완료</button>
+        </div>
+    </div>
+</div><script type="text/javascript">
     (function() {
         var me = window.BottomMgr = {
             startup: function() {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ include file="/include/header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -1035,7 +1036,7 @@
 
 <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760075176590"></script>
 
-<!-- <header class="newVer">
+<header class="newVer">
     <section class="header-main">
         <article class="main-wrap flex-row-gap032">
             <div class="inquiry flex-space-between">
@@ -1138,20 +1139,35 @@
             <div class="user-area">
                 <ul class="flex-row-gap04">
                     <li>
-                        <a href="javascript:;" id="myLink" class="f-size12-600 flex-col-gap2 js-dropbox-btn">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px" loading="lazy">
-                            <span class="des" id="myLinkText"></span>
+                        <c:if test="${empty sessionScope.userIndex}">
+                             <a href="/login.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="로그인" width="24px" height="24px">
+                                <span class="des">로그인</span>
+                            </a>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.userIndex}">
+                             <a href="/myMenu/myMenuMainPage.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
+                                <span class="des">MY</span>
+                            </a>
+                        </c:if>
+                    </li>
+                    <li>
+                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/myMenu/myOrderListPage.do');">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px" loading="lazy">
-                            <span class="des">주문배송</span>
+                    	<c:if test="${not empty sessionScope.userIndex}">
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
+                            <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
+                            <span class="des">Logout</span>
                         </a>
+                        </c:if>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/cart/cartPage.do');">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px" loading="lazy">
+                        <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px">
                             <span class="badge _newCartCount"></span>
                             <span class="des">장바구니</span>
                         </a>
@@ -1265,7 +1281,7 @@
             </nav>
         </article>
     </section>
-</header> -->
+</header>
 
 <!-- 내 등급 정보 시작-->
 <div class="grade_pop mypop popup_of">
