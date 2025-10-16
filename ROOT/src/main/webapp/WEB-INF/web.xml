@@ -105,5 +105,14 @@
         <servlet-name>OrderController</servlet-name>
         <url-pattern>/order.do</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>SearchController</servlet-name>
+        <servlet-class>com.search.controller.SearchController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchController</servlet-name>
+        <url-pattern>/search/*</url-pattern>
+    </servlet-mapping>
         
 </web-app>
