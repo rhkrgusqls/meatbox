@@ -338,5 +338,142 @@ public class ProductDAO implements ProductInterface {
         return options;
     }
     
+    @Override
+    public ProductOptionBean getProductOptionFromId(int option_id) throws ProductException {
+        ProductOptionBean option = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM product_option WHERE option_id = ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, option_id);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                option = new ProductOptionBean();
+                option.setOption_id(rs.getInt("option_id"));
+                option.setProduct_id(rs.getInt("product_id"));
+                option.setOption_name(rs.getString("option_name"));
+                option.setOption_detail(rs.getString("option_detail"));
+                option.setPrice_of_option(rs.getInt("price_of_option"));
+                option.setQuantity(rs.getInt("quantity"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ProductException("상품 옵션 조회 실패", e);
+        } finally {
+            try { 
+                if (rs != null) rs.close(); 
+                if (pstmt != null) pstmt.close(); 
+                if (conn != null) conn.close(); 
+            } catch (Exception e) {}
+        }
+
+        return option;
+    }
+
+    
+    @Override
+    public List<ProductBean> searchProducts(String keyword, int page) throws ProductException {
+        List<ProductBean> resultList = new ArrayList<>();
+
+        String sql =
+        		"SELECT " +
+        		"    p.product_id, " +
+        		"    p.price, " +
+        		"    p.storage_type, " +
+        		"    p.sale_tag, " +
+        		"    p.product_form, " +
+        		"    p.allowed_member_lv, " +
+        		"    p.expire_date, " +
+        		"    p.delivery_fee, " +
+        		"    p.seller_note, " +
+        		"    s.store_name AS brand_name, " +
+        		"    c.category_name, " +
+        		"    dc.detail_category_name, " +
+        		"    (SELECT dir FROM product_image WHERE product_id = p.product_id LIMIT 1) AS product_image, " +
+        		"    (SELECT dir FROM product_detail WHERE product_id = p.product_id LIMIT 1) AS product_detail, " +
+        		"    (SELECT cautions_text FROM cautions WHERE product_id = p.product_id LIMIT 1) AS cautions_text, " +
+        		"    po.price_of_option AS option_price, " +
+        		"    p.price + IFNULL(po.price_of_option, 0) AS total_price " +
+        		"FROM product p " +
+        		"JOIN seller_user s ON p.user_index = s.user_index " +
+        		"LEFT JOIN category_products cp ON cp.product_id = p.product_id " +
+        		"LEFT JOIN category c ON c.category_id = cp.category_id " +
+        		"LEFT JOIN product_of_detail_category pdc ON pdc.product_id = p.product_id " +
+        		"LEFT JOIN detail_category dc ON dc.detail_category_id = pdc.detail_category_id " +
+        		"LEFT JOIN ( " +
+        		"    SELECT r.product_id, r.option_id, po1.price_of_option " +
+        		"    FROM ( " +
+        		"        SELECT product_id, option_id, " +
+        		"               ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY option_id) - 1 AS rn " +
+        		"        FROM product_option " +
+        		"    ) AS r " +
+        		"    JOIN ( " +
+        		"        SELECT product_id, FLOOR((COUNT(*) - 1)/2) AS mid_index " +
+        		"        FROM product_option " +
+        		"        GROUP BY product_id " +
+        		"    ) AS mid_calc " +
+        		"    ON r.product_id = mid_calc.product_id AND r.rn = mid_calc.mid_index " +
+        		"    JOIN product_option po1 ON po1.product_id = r.product_id AND po1.option_id = r.option_id " +
+        		") AS po ON p.product_id = po.product_id " +
+        		"WHERE " +
+        		"    ? IS NULL OR ( " +
+        		"        s.store_name LIKE CONCAT('%', ?, '%') OR " +
+        		"        c.category_name LIKE CONCAT('%', ?, '%') OR " +
+        		"        p.product_id IN (SELECT product_id FROM product_option WHERE option_name LIKE CONCAT('%', ?, '%')) OR " +
+        		"        p.product_name LIKE CONCAT('%', ?, '%') " +
+        		"    ) " +
+        		"LIMIT 20 OFFSET ?;";
+
+
+
+
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, keyword);
+            stmt.setString(2, keyword);
+            stmt.setString(3, keyword);
+            stmt.setString(4, keyword);
+            stmt.setString(5, keyword);
+            stmt.setInt(6, (page - 1) * 20);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ProductBean p = new ProductBean();
+                    p.setProductId(rs.getInt("product_id"));
+                    p.setBrandName(rs.getString("brand_name"));
+                    p.setCategoryName(rs.getString("category_name"));
+                    p.setDetailCategoryName(rs.getString("detail_category_name"));
+                    p.setStorageType(rs.getString("storage_type"));
+                    p.setSaleTag(rs.getString("sale_tag"));
+                    p.setProductForm(rs.getString("product_form"));
+                    p.setAllowedMemberLv(rs.getInt("allowed_member_lv"));
+                    p.setExpireDate(rs.getString("expire_date"));
+                    p.setDeliveryFee(rs.getInt("delivery_fee"));
+                    p.setSellerNote(rs.getString("seller_note"));
+                    p.setProductImage(rs.getString("product_image"));
+                    p.setProductDetail(rs.getString("product_detail"));
+                    p.setCautionsText(rs.getString("cautions_text"));
+                    p.setPrice(rs.getInt("price"));
+                    p.setUnitPrice(rs.getInt("option_price"));
+                    resultList.add(p);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ProductException("상품 검색 중 오류가 발생했습니다.");
+        }
+
+        return resultList;
+    }
+
     
 }
