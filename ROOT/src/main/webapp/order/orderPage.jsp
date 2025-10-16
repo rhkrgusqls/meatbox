@@ -9,86 +9,98 @@
     <meta charset="UTF-8">
     <title>미트박스 :: 1등 고기 직거래</title>
     <%-- =============================================================================== --%>
-    <%--  공통 CSS 및 JS 라이브러리 링크 (프로젝트 내부 경로)                              --%>
+    <%--  실제 미트박스 사이트 CSS 및 JS 라이브러리 링크                               --%>
     <%-- =============================================================================== --%>
-    <link rel="stylesheet" href="<c:url value='/www.meatbox.co.kr/_next/static/css/5daa461e9f2acd13.css'/>" type="text/css" media="all" charset="UTF-8" />
-    <link rel="stylesheet" href="<c:url value='/www.meatbox.co.kr/_next/static/css/301e6ae4682e6b6b.css'/>" type="text/css" media="all" charset="UTF-8" />
-    <link rel="stylesheet" href="<c:url value='/www.meatbox.co.kr/_next/static/css/b7f7e2f11f5ab5a9.css'/>" type="text/css" media="all" charset="UTF-8" />
-    <script type="text/javascript" src="<c:url value='/www.meatbox.co.kr/_next/static/chunks/fd9d1056-12c7034d2a06563c.js'/>" charset="UTF-8"></script>
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css" type="text/css" media="all" charset="UTF-8" />
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
 </head>
 <body>
 
 <%-- 헤더 인클루드 --%>
 <jsp:include page="/include/header.jsp" />
 
-<main id="meatboxContent" class="meatbox_container">
-    <div class="inner_global">
-        <h2 class="page_title">주문/결제</h2>
-        <div class="order_wrap">
-            <div class="order_content">
-                <%-- 주문자 정보 --%>
-                <div class="order_section">
-                    <h3 class="section_title">주문자 정보</h3>
-                    <div class="order_table">
-                        <table>
-                            <colgroup>
-                                <col style="width:150px;">
-                                <col>
-                            </colgroup>
-                            <tbody>
-                                <tr>
-                                    <th>주문자</th>
-                                    <td>${sessionScope.user_name}</td>
-                                </tr>
-                                <tr>
-                                    <th>이메일</th>
-                                    <td>${sessionScope.user_email}</td>
-                                </tr>
-                                <tr>
-                                    <th>휴대전화</th>
-                                    <td>${sessionScope.user_phone}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+<div id="container">
+    <div id="contents" class="inner mypage"> <%-- 클래스 추가 --%>
+        <main id="meatboxContent" class="meatbox_container">
+            <div class="inner_global">
+                <div class="cart_title top_title after"> <%-- 타이틀 구조 추가 --%>
+                    <strong class="cart_order_title">
+                        <img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/cart_top_title2.png" alt="주문/결제">
+                    </strong>
+                    <ul class="after">
+                        <li><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step01.png" alt="01"></span><em>장바구니</em></li>
+                        <li class="on"><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step02.png" alt="02"></span><em>주문/결제</em></li>
+                        <li><span><img src="https://static-cdn.meatbox.co.kr/img/fo/cart_order/order_step03.png" alt="03"></span><em>주문완료</em></li>
+                    </ul>
                 </div>
+                
+                <div class="order_wrap">
+                    <div class="order_content">
+                        <%-- 주문자 정보 --%>
+                        <div class="order_section">
+                            <h3 class="section_title">주문자 정보</h3>
+                            <div class="order_table type2"> <%-- type2 클래스 추가 --%>
+                                <table>
+                                    <colgroup>
+                                        <col style="width:170px;">
+                                        <col>
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th>주문자</th>
+                                            <td>${sessionScope.user_name}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>이메일</th>
+                                            <td>${sessionScope.user_email}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>휴대전화</th>
+                                            <td>${sessionScope.user_phone}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                 <%-- 배송지 정보 --%>
                 <div class="order_section">
                     <h3 class="section_title">배송지 정보</h3>
-                    <div class="order_table">
+                    <div class="order_table type2">
                         <table>
-                            <colgroup>
-                                <col style="width:150px;">
+                             <colgroup>
+                                <col style="width:170px;">
                                 <col>
                             </colgroup>
                             <tbody>
                                 <tr>
                                     <th>받는사람</th>
-                                    <td><input type="text" name="recipient_name" value="${sessionScope.user_name}"></td>
+                                    <td><input type="text" class="w200" name="recipient_name" value="${sessionScope.user_name}"></td>
                                 </tr>
                                 <tr>
                                     <th>연락처</th>
-                                    <td><input type="text" name="recipient_phone" value="${sessionScope.user_phone}"></td>
+                                    <td><input type="text" class="w200" name="recipient_phone" value="${sessionScope.user_phone}"></td>
                                 </tr>
                                 <tr>
                                     <th>주소</th>
                                     <td>
-                                        <input type="text" name="recipient_zipcode" placeholder="우편번호">
-                                        <button type="button" class="btn_search_zipcode">주소검색</button>
-                                        <input type="text" name="recipient_address1" placeholder="기본주소">
-                                        <input type="text" name="recipient_address2" placeholder="상세주소">
+                                        <input type="text" name="recipient_zipcode" placeholder="우편번호" class="w100">
+                                        <button type="button" class="btn-ty2 gray">주소검색</button>
+                                        <br>
+                                        <input type="text" name="recipient_address1" placeholder="기본주소" class="w400 mt5">
+                                        <input type="text" name="recipient_address2" placeholder="상세주소" class="w400">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>배송메모</th>
-                                    <td><textarea name="delivery_memo"></textarea></td>
+                                    <td><textarea name="delivery_memo" class="w_full"></textarea></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
                 <%-- 주문상품 정보 --%>
                 <div class="order_section">
                     <h3 class="section_title">주문상품</h3>
@@ -154,15 +166,15 @@
                     </div>
                     <div class="btn_wrap">
                         <button type="button" class="btn_order">결제하기</button>
-                    </div>
+					</div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-</main>
+</div>
 
-<%-- 푸터 인클루드 (푸터 파일이 있다면) --%>
-<%-- <jsp:include page="/include/footer.jsp" /> --%>
+<%-- 푸터 인클루드 --%>
+<jsp:include page="/include/footer.jsp" />
 
 <script>
 // 간단한 스크립트 예시 (실제 구현 시에는 더 많은 기능이 필요합니다.)

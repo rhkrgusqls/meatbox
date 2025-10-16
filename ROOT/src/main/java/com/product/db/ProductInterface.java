@@ -55,4 +55,8 @@ public interface ProductInterface {
     List<ProductOptionBean> selectProductsOptionsDetail(
         	int product_index
     ) throws ProductException;
+
+	List<ProductBean> searchProducts(String keyword, int page) throws ProductException;
+
+	ProductOptionBean getProductOptionFromId(int option_id) throws ProductException;
 }
