@@ -1,6 +1,6 @@
 package com.cart.action;
 
-import java.io.PrintWriter;
+import java.io.PrintWriter; 
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +13,7 @@ import com.cart.db.CartDAO;
 import com.cart.db.CartItem;
 import com.product.db.ProductDAO;
 import com.product.db.ProductDetailBean; 
+import com.product.db.ProductOptionBean; 
 // import com.member.db.MemberDTO; // 만약 MemberDTO에 userIndex가 있다면 그걸 사용하는 것이 더 좋습니다.
 
 public class CartPageAction implements Action {
@@ -47,16 +48,21 @@ public class CartPageAction implements Action {
 
         ProductDAO pdao = new ProductDAO();
         List<ProductDetailBean> productList = new ArrayList<ProductDetailBean>();
+        List<ProductOptionBean> productOptionList = new ArrayList<ProductOptionBean>();
         
         // 3. request 객체에 장바구니 목록 저장 (JSP에서 사용하기 위함)
         request.setAttribute("cartList", cartList);
         
         for (int i = 0; i < cartList.size(); i++) {
         	 productList.add(pdao.getProductDetail(cartList.get(i).getProductId()));
+        	 productOptionList.add(pdao.getProductOptionFromId(cartList.get(i).getOptionId()));
+        	 System.out.print(pdao.getProductOptionFromId(cartList.get(i).getOptionId()).getOption_name());
+        	 
         }
         request.setAttribute("productList", productList);
+        request.setAttribute("productOptionList", productOptionList);
        
-        
+       
         // 4. 페이지 이동 설정 (forward 방식)
         forward.setPath("/cart/cartPage.jsp"); // 장바구니를 보여줄 JSP 페이지
         forward.setRedirect(false); // request 정보를 가지고 가야 하므로 forward
