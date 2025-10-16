@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -1033,7 +1035,7 @@
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
 
-<script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760076619594"></script>
+<script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760075601799"></script>
 
 <header class="newVer">
   <section class="header-main">
@@ -1137,25 +1139,40 @@
       </div>
       <div class="user-area">
         <ul class="flex-row-gap04">
-          <li>
-            <a href="javascript:;" id="myLink" class="f-size12-600 flex-col-gap2 js-dropbox-btn">
-              <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px" loading="lazy">
-              <span class="des" id="myLinkText"></span>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/myMenu/myOrderListPage.do');">
-              <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px" loading="lazy">
-              <span class="des">주문배송</span>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/cart/cartPage.do');">
-              <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px" loading="lazy">
-              <span class="badge _newCartCount"></span>
-              <span class="des">장바구니</span>
-            </a>
-          </li>
+           <li>
+                        <c:if test="${empty sessionScope.userIndex}">
+                             <a href="/login.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="로그인" width="24px" height="24px">
+                                <span class="des">로그인</span>
+                            </a>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.userIndex}">
+                             <a href="/myMenu/myMenuMainPage.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
+                                <span class="des">MY</span>
+                            </a>
+                        </c:if>
+                    </li>
+                    <li>
+                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
+                        </a>
+                    </li>
+                    <li>
+                    	<c:if test="${not empty sessionScope.userIndex}">
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
+                            <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
+                            <span class="des">Logout</span>
+                        </a>
+                        </c:if>
+                    </li>
+                    <li>
+                        <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px">
+                            <span class="badge _newCartCount"></span>
+                            <span class="des">장바구니</span>
+                        </a>
+                    </li>
         </ul>
       </div>
     </article>
@@ -1205,7 +1222,7 @@
                 </li>
                 <li>
                   <a href="/fo/event/productListPage.do?collectionSeq=6">
-                    <img src="https://static-cdn.meatbox.co.kr/img/renew/dangdang-chick.svg" alt="당당한닭 width="36px" height="36px" loading="lazy">
+                    <img src="https://static-cdn.meatbox.co.kr/img/renew/dangdang-chick.svg" alt="당당한닭" width="36px" height="36px" loading="lazy">
                     <img src="https://static-cdn.meatbox.co.kr/img/renew/dangdang-chick-txt.svg" alt="당당한닭" width="auto" height="16px" loading="lazy">
                     <span class="alt">당당한닭</span>
                   </a>
@@ -2713,18 +2730,14 @@
   $(function() {
     HeaderMgr.startup();
   });
-</script><script src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-placeholders-4.0.1.min.js" charset="UTF-8"></script>
-<script type="text/javascript" src="/js/jquery/jquery.countdown-2.2.0.min.js"></script>
+</script><script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script type="text/javascript">
 
   (function() {
 
-    var me = window.MainMgr = {
-
-
-      AUTH_TIME_MILLI_SEC: 		180000,
-      INPUT_SUCCESS_COLOR:		'#777777',
-      INPUT_FAIL_COLOR:			'#ff5353',
+    var me = window.DaumMgr = {
 
 
       startup: function()
@@ -2737,781 +2750,264 @@
 
       setVariables: function()
       {
-        me.$findIdName					= $('#findIdName');
-        me.$findIdCellNo				= $('#findIdCellNo');
-        me.$findIdCertNoBox				= $('#findIdCertNoBox');
-        me.$findIdCertNo				= $('#findIdCertNo');
-        me.$findIdResult				= $('#findIdResult');
-        me.$findIdCheck					= $('#findIdCheck');
-        me.$findIdCertCheck				= $('#findIdCertCheck');
-        me.$findIdRemainTime			= $('#findIdRemainTime');
-        me.$foundMemberId				= $('#memberId');
-
-        me.$findPwId					= $('#findPwId');
-        me.$findPwName					= $('#findPwName');
-        me.$findPwCellNo				= $('#findPwCellNo');
-        me.$findPwCertNoBox				= $('#findPwCertNoBox');
-        me.$findPwCertNo				= $('#findPwCertNo');
-
-        me.$findPwRequest				= $('#findPwRequest');
-        me.$findPwResult				= $('#findPwResult');
-        me.$findPwCheck					= $('#findPwCheck');
-        me.$findPwCertCheck				= $('#findPwCertCheck');
-        me.$findPwRemainTime			= $('#findPwRemainTime');
-
-        me.$passwd						= $('#passwd');
-        me.$passwdConfirm				= $('#passwdConfirm');
-        me.$passwdComment				= $('#passwd_comment');
-        me.$passwdConfirmComment		= $('#passwdConfirm_comment');
-
-        me.memberSeq					= 0;
-        me.authSeq						= 0 || 0;
-
-        me.findType						= "id";
-
-        me.siteCd						= '';
-        me.siteId						= '';
-        me.snsLinkYn					= '';
-      },
-
-
-      /**
-       * 아이디 체크
-       */
-      checkIdFormat: function ($input)
-      {
-        var error = null;
-        var inputStr = $input.val();
-
-        if( inputStr.length < 4 || inputStr.length > 18 )
-        {
-          if (inputStr.length == 0)
-          {
-            error = '아이디를 입력해 주세요.';
-          }
-          else
-          {
-            error = '아이디는 4~18자 이어야 합니다.';
-          }
-        }
-        else
-        {
-          var idRegExp = /^[0-9|a-z|A-Z]+$/;
-
-          if (idRegExp.test(inputStr) == false)
-          {
-            error = '아이디에 특수문자, 공백 사용은 불가합니다.';
-          }
-        }
-        return error;
-      },
-
-      /**
-       * 이름 체크
-       */
-      checkNameFormat: function ($input)
-      {
-        var nameError = null;
-        var inputStr = $input.val();
-
-        if ($.trim(inputStr).length > 0) {
-          nameError = null;
-        }
-        else {
-          nameError = '이름을 입력해 주세요.';
-        }
-
-        return nameError;
-      },
-
-      /**
-       * 휴대폰 번호 체크
-       */
-      checkCellNoFormat: function ($input)
-      {
-        var cellNoError = null;
-
-        var str = $input.val();
-
-        var regEx = /[^0-9]/g;
-        str = str.replace(regEx, '');
-        if (str.length == 10 || str.length == 11)
-        {
-          cellNoError = null;
-        }
-        else if (str.length == 0)
-        {
-          cellNoError = '휴대폰번호를 입력해 주세요.';
-        }
-        else
-        {
-          cellNoError = '휴대폰번호 형식에 맞지 않습니다.';
-        }
-
-        var tmp = '';
-        if (str.length < 4)
-        {
-          $input.val(str);
-        }
-        else if(str.length < 7)
-        {
-          tmp += str.substr(0, 3);
-          tmp += '-';
-          tmp += str.substr(3);
-          $input.val(tmp);
-        }
-        else if(str.length < 11)
-        {
-          tmp += str.substr(0, 3);
-          tmp += '-';
-          tmp += str.substr(3, 3);
-          tmp += '-';
-          tmp += str.substr(6);
-          $input.val(tmp);
-        }
-        else
-        {
-          tmp += str.substr(0, 3);
-          tmp += '-';
-          tmp += str.substr(3, 4);
-          tmp += '-';
-          tmp += str.substr(7);
-          $input.val(tmp);
-        }
-
-        return cellNoError;
-      },
-
-      /**
-       * 인증 번호 체크
-       */
-      checkCertNoFormat: function ($input)
-      {
-        var error = null;
-
-        var str = $input.val();
-
-        var regEx = /[^0-9]/g;
-        str = str.replace(regEx, '');
-        $input.val(str);
-        if (str.length == 0)
-        {
-          error = '인증번호를 입력해 주세요.';
-        }
-
-        return error;
-      },
-
-      /*
-	 * 비밀번호 체크
-	 */
-      checkPasswdFormat: function ($input, $comment)
-      {
-        var error;
-        var passwdStr = $input.val();
-        var errorMsg = CheckTool.isValidPwdIntgr(passwdStr);
-
-        if (passwdStr.length == 0)
-        {
-          $comment.css('visibility', 'hidden');
-          error = '비밀번호를 입력해 주세요.';
-        }
-        else if (errorMsg != "")
-        {
-          $comment.css('visibility', 'visible');
-          $comment.html(errorMsg);
-
-          error = errorMsg;
-        }
-        else
-        {
-          $comment.css('visibility', 'hidden');
-          error = null;
-        }
-        return error;
-      },
-
-      /*
-	 * 비밀번호 확인 체크
-	 */
-      checkPasswdConfirm: function ($passwd, $passwdConfirm, $comment)
-      {
-        var error;
-
-        $comment.css('color', me.INPUT_FAIL_COLOR);
-
-        if ($passwdConfirm.val().length == 0)
-        {
-          error = '비밀번호를 한번 더 입력해 주세요.';
-          $comment.css('visibility', 'hidden');
-
-          return error;
-        }
-
-        if ($passwd.val() == $passwdConfirm.val())
-        {
-          error = null;
-          $comment.html('비밀번호가 확인되었습니다.');
-          $comment.css('color', me.INPUT_SUCCESS_COLOR);
-        }
-        else
-        {
-          error = '비밀번호가 다릅니다. 다시 확인해 주세요.';
-          $comment.css('visibility', 'visible');
-          $comment.html('비밀번호가 일치하지 않습니다.');
-        }
-
-        return error;
-      },
-
-
-      _initialize: function ()
-      {
-        me.idError						= "아이디를 입력해 주세요.";
-        me.nameError					= "이름을 입력해 주세요.";
-        me.cellNoError					= "휴대폰번호를 입력해 주세요.";
-        me.certNoError					= "인증번호를 입력해 주세요.";
-
-        if (me.findType == 'id')
-        {
-          $('#findIdTab').parent().addClass('on');
-          $('#findPwTab').parent().removeClass('on');
-          $('.tab_con1').show();
-          $('.tab_con2').hide();
-
-          me.$findIdName.val('');
-          me.$findIdCellNo.val('');
-          me.$findIdCertNo.val('');
-          me.$findIdCertNoBox.hide();
-          me.$findIdResult.hide();
-          me.$findIdRemainTime.hide();
-          me.$findIdCheck.html('인증번호요청');
-
-          me.$findIdName.focus();
-
-        }
-        else
-        {
-          $('#findIdTab').parent().removeClass('on');
-          $('#findPwTab').parent().addClass('on');
-          $('.tab_con1').hide();
-          $('.tab_con2').show();
-
-          me.$findPwId.val('');
-          me.$findPwName.val('');
-          me.$findPwCellNo.val('');
-          me.$findPwCertNo.val('');
-          me.$findPwCertNoBox.hide();
-          me.$findPwRequest.show();
-          me.$findPwResult.hide();
-          me.$findPwRemainTime.hide();
-          me.$findPwCheck.html('인증번호요청');
-
-          me.$findPwId.focus();
-
-          me.memberSeq = 0;
-          me.authNo = '';
-          me.authPhone = '';
-          if (me.memberSeq > 0)
-          {
-            me.showPasswdReset();
-          }
-        }
-      },
-
-      _initPasswdReset: function()
-      {
-        me.$passwd.val('');
-        me.$passwdConfirm.val('');
-        me.$passwdComment.html('');
-        me.$passwdConfirmComment.html('');
-        me.$passwd.focus();
-
-        me.passwdError					= "비밀번호를 입력해 주세요.";
-        me.passwdConfirmError			= "비밀번호를 한번 더 입력해 주세요.";
-      },
-
-
-      requestAuthNoForFindId: function ()
-      {
-        if (me.nameError !== null)
-        {
-          me.$findIdName.focus();
-          alert(me.nameError);
-          return;
-        }
-
-        if (me.cellNoError != null)
-        {
-          me.$findIdCellNo.focus();
-          alert(me.cellNoError);
-          return;
-        }
-
-        var params = {
-          'matchType'		: 'findId',
-          'name'			: $.trim(me.$findIdName.val()),
-          'cellNo' 		: $.trim(me.$findIdCellNo.val()),
-        };
-
-        me.authSeq = 0;
-        $.ajax ({
-          url: WebTool.getUrl('/fo/member/requestAuthNo.json'),
-          dataType: 'json',
-          type: 'POST',
-          data: params,
-          async: false,
-          global: false,
-          success: function (result, textStatus, jqXHR)
-          {
-            me.$findIdResult.hide();
-
-            if (ResultTool.isSuccess(result))
-            {
-              var data = ResultTool.getData(result);
-              if (data.count > 0)
-              {
-                me.authSeq = data.seq;
-
-                me.$findIdCertNoBox.show();
-                me.$findIdCertNo.val('').trigger('blur');
-
-                me.$findIdRemainTime.show();
-                alert('인증번호를 전송하였습니다.\n인증번호는 3분간 유효합니다.');
-                me.$findIdCheck.html('인증번호재요청');
-                me.$findIdRemainTime.stop();
-                me.$findIdRemainTime.countdown(new Date().getTime() + me.AUTH_TIME_MILLI_SEC, function(e) {
-                  if (e.elapsed) {
-                    $(this).text("인증번호 유효시간이 초과되었습니다.")
-                  }
-                  else
-                  {
-                    $(this).text(e.strftime('%M분 %S초'));
-                  }
-                });
-              }
-              else
-              {
-                me.$findIdCertNoBox.hide();
-                alert('가입된 정보가 아닙니다.\n이름과 휴대폰번호를 다시 확인해 주세요.');
-                me.$findIdName.focus();
-              }
-            }
-            else
-            {
-              me.$findIdCertNoBox.hide();
-              alert(ResultTool.getMessage(result));
-              me.$findIdName.focus();
-            }
-          }
-        });
-      },
-
-
-      requestAuthNoForFindPasswd: function ()
-      {
-        if (me.idError !== null)
-        {
-          me.$findPwId.focus();
-          alert(me.idError);
-          return;
-        }
-
-        if (me.nameError !== null)
-        {
-          me.$findPwName.focus();
-          alert(me.nameError);
-          return;
-        }
-
-        if (me.cellNoError != null)
-        {
-          me.$findPwCellNo.focus();
-          alert(me.cellNoError);
-          return;
-        }
-
-        var params = {
-          'matchType'		: 'findPasswd',
-          'memberId'		: $.trim(me.$findPwId.val()),
-          'name'			: $.trim(me.$findPwName.val()),
-          'cellNo' 		: $.trim(me.$findPwCellNo.val()),
-        };
-
-        me.authSeq = 0;
-        $.ajax ({
-          url: WebTool.getUrl('/fo/member/requestAuthNo.json'),
-          dataType: 'json',
-          type: 'POST',
-          data: params,
-          async: false,
-          global: false,
-          success: function (result, textStatus, jqXHR)
-          {
-            me.$findPwResult.hide();
-
-            if (ResultTool.isSuccess(result))
-            {
-              var data = ResultTool.getData(result);
-              if (data.count > 0)
-              {
-                me.authSeq = data.seq;
-
-                me.$findPwCertNoBox.show();
-                me.$findPwCertNo.val('').trigger('blur');
-
-                me.$findPwRemainTime.show();
-                alert('인증번호를 전송하였습니다.\n인증번호는 3분간 유효합니다.');
-                me.$findPwCheck.html('인증번호재요청');
-                me.$findPwRemainTime.stop();
-                me.$findPwRemainTime.countdown(new Date().getTime() + me.AUTH_TIME_MILLI_SEC, function(e) {
-                  if (e.elapsed) {
-                    $(this).text("인증번호 유효시간이 초과되었습니다.")
-                  }
-                  else
-                  {
-                    $(this).text(e.strftime('%M분 %S초'));
-                  }
-                });
-              }
-              else
-              {
-                me.$findPwCertNoBox.hide();
-                alert('가입된 정보가 아닙니다.\n아이디, 이름, 휴대폰번호를 다시 확인해 주세요.');
-                me.$findPwId.focus();
-              }
-            }
-            else
-            {
-              me.$findPwCertNoBox.hide();
-              alert(ResultTool.getMessage(result));
-              me.$findPwId.focus();
-            }
-          }
-        });
-      },
-
-
-      confirmAuthNoForFindId: function ()
-      {
-        if (me.nameError !== null)
-        {
-          me.$findIdName.focus();
-          alert(me.nameError);
-          return;
-        }
-
-        if (me.cellNoError != null)
-        {
-          me.$findIdCellNo.focus();
-          alert(me.cellNoError);
-          return;
-        }
-
-        if (me.certNoError != null)
-        {
-          me.$findIdCertNo.focus();
-          alert(me.certNoError);
-          return;
-        }
-
-        var params = {
-          'seq' 			: me.authSeq,
-          'authNo'  		: $.trim(me.$findIdCertNo.val())
-        };
-
-        $.ajax ({
-          url: WebTool.getUrl('/fo/member/confirmAuthNo.json'),
-          dataType: 'json',
-          type: 'POST',
-          data: params,
-          async: false,
-          global: false,
-          success: function (result, textStatus, jqXHR)
-          {
-            if (ResultTool.isSuccess(result))
-            {
-              me.$findIdRemainTime.stop().hide();
-              me.$findIdResult.show();
-              var data = ResultTool.getData(result);
-              me.$foundMemberId.html(me.showIdResult(data["foundMemberId"]));
-              $("#resultFindNm").text($("#findIdName").val());
-            }
-            else
-            {
-              alert(ResultTool.getMessage(result));
-            }
-          }
-        });
-      },
-
-
-      showIdResult: function(foundMemberIds) {
-        let html = "";
-        if(foundMemberIds.length == 1) {
-          me.$foundMemberId.attr('class', 'id-find-result id_check_onlyone')
-          html = `<p class="id_check id_check_onlyone">
-						<strong>` + foundMemberIds[0].member_id + `<br><span>` + foundMemberIds[0].role + `</span></strong>
-					</p>
-					<p class="noti">다른 고객분께서 가입정보에 휴대폰 번호를 잘못 기입하신 경우<br>본인 외의 ID가 확인될 수도 있습니다.</p>`
-        } else {
-          let num = 1
-          for(let foundMemberId of foundMemberIds) {
-            html += `<li>
-							<input type="radio" name="id_check" id="id_check0` + num + `">
-							<label for="id_check0` + num++ + `" class="id_check">
-								<strong>` + foundMemberId['member_id'] + `<br><span>` + foundMemberId['role'] + `</span></strong>
-							</label>
-						</li>`
-          }
-        }
-        return html
-      },
-
-
-      showPasswdReset: function()
-      {
-        me.$findPwRequest.hide();
-        me.$findPwResult.show();
-        me._initPasswdReset();
-      },
-
-      confirmAuthNoForFindPasswd: function ()
-      {
-        if (me.idError !== null)
-        {
-          me.$findPwId.focus();
-          alert(me.idError);
-          return;
-        }
-
-        if (me.nameError !== null)
-        {
-          me.$findPwName.focus();
-          alert(me.nameError);
-          return;
-        }
-
-        if (me.cellNoError != null)
-        {
-          me.$findPwCellNo.focus();
-          alert(me.cellNoError);
-          return;
-        }
-
-        if (me.certNoError != null)
-        {
-          me.$findPwCertNo.focus();
-          alert(me.certNoError);
-          return;
-        }
-
-        var params = {
-          'seq' 			: me.authSeq,
-          'authNo'  		: $.trim(me.$findPwCertNo.val())
-        };
-
-        $.ajax ({
-          url: WebTool.getUrl('/fo/member/confirmAuthNo.json'),
-          dataType: 'json',
-          type: 'POST',
-          data: params,
-          async: false,
-          global: false,
-          success: function (result, textStatus, jqXHR)
-          {
-            if (ResultTool.isSuccess(result))
-            {
-              me.$findPwRemainTime.stop().hide();
-              var data = ResultTool.getData(result);
-
-              me.memberSeq = data.member.memberSeq;
-              me.authNo = params.authNo;
-              me.authPhone = $.trim(me.$findPwCellNo.val());
-
-              if (data.member.accountLockYn === 'Y') {
-                me.showPasswdReset();
-              } else if (data.member.status == 'AA01')
-              {
-                me.showPasswdReset();
-              }
-              else if (data.member.status == 'AA04')
-              {
-                var formData = {
-                  'action'	: WebTool.getUrl ('/fo/member/withdrawMemberPage.do')
-                  , 'inputs'	: {'memberId' : data.member.memberId}
-                };
-                WebTool.submit (formData);
-              }
-              else if (data.member.status == 'AA05')
-              {
-                var formData = {
-                  'action'	: WebTool.getUrl ('/fo/member/sleepMemberPage.do')
-                  , 'inputs'	: {'memberId' : data.member.memberId,
-                    'redirectUrl' : '/fo/member/findLoginInfoPage.do?findType=passwd',
-                    'memberSeq' : data.member.memberSeq,
-                    'authSeq' : me.authSeq,
-                    'authNo' : me.authNo,
-                    'authPhone' : me.authPhone}
-                };
-                WebTool.submit (formData);
-              }
-              else
-              {
-                alert('고객님의 계정은 승인대기, 탈퇴 등으로\n정상적인 이용이 불가능한 상태입니다.\n정상적인 이용을 위하여\n고객센터(1644-6689)로 문의 부탁드립니다.');
-              }
-            }
-            else
-            {
-              alert(ResultTool.getMessage(result));
-            }
-          }
-        });
+        me.$layerFld		= $('#___postLayer');
       },
 
 
       setEvents: function()
       {
-
-        $('#findIdTab').on('click', function() {
-          me.findType = 'id';
-          me._initialize();
+        me.$layerFld.find('IMG').click (function() {
+          me.hide();
         });
-
-        $('#findPwTab').on('click', function() {
-          me.findType = 'passwd';
-          me._initialize();
-        });
-
-
-        me.$findPwId.on('input blur', function() {
-          me.idError = me.checkIdFormat($(this));
-        });
-
-
-        me.$findIdName.on('input blur', function() {
-          me.nameError = me.checkNameFormat($(this));
-        });
-
-        me.$findPwName.on('input blur', function() {
-          me.nameError = me.checkNameFormat($(this));
-        });
-
-
-        me.$findIdCellNo.on('input blur', function() {
-          me.cellNoError = me.checkCellNoFormat($(this));
-        });
-
-        me.$findPwCellNo.on('input blur', function() {
-          me.cellNoError = me.checkCellNoFormat($(this));
-        });
-
-
-        me.$findIdCertNo.on('input blur', function() {
-          me.certNoError = me.checkCertNoFormat($(this));
-        })
-
-        me.$findPwCertNo.on('input blur', function() {
-          me.certNoError = me.checkCertNoFormat($(this));
-        })
-
-
-        me.$findIdCheck.on('click', function() {
-          me.requestAuthNoForFindId();
-        });
-
-        me.$findPwCheck.on('click', function() {
-          me.requestAuthNoForFindPasswd();
-        });
-
-
-        me.$findIdCertCheck.on('click', function() {
-          me.confirmAuthNoForFindId();
-        });
-
-        me.$findPwCertCheck.on('click', function() {
-          me.confirmAuthNoForFindPasswd();
-        });
-
-
-        me.$passwd.on('input blur', function() {
-          me.passwdError = me.checkPasswdFormat($(this), me.$passwdComment);
-          me.passwdCommentError = me.checkPasswdConfirm($(this), me.$passwdConfirm, me.$passwdConfirmComment);
-        });
-
-        me.$passwdConfirm.on('input blur', function() {
-          me.passwdConfirmError = me.checkPasswdConfirm(me.$passwd, me.$passwdConfirm, me.$passwdConfirmComment);
-        });
-
-        $('#modifyPw').on('click', function() {
-          if (me.passwdError != null)
-          {
-            alert(me.passwdError);
-            me.$passwd.focus();
-            return;
-          }
-          else if (me.passwdConfirmError != null)
-          {
-            alert(me.passwdConfirmError);
-            me.$passwdConfirm.focus();
-            return;
-          }
-
-          var params = {
-            'authSeq'				: me.authSeq,
-            'memberSeq' 			: me.memberSeq,
-            'authNo'				: me.authNo,
-            'passwd'				: $.trim(me.$passwd.val()),
-          };
-          $.ajax ({
-            url: WebTool.getUrl('/fo/member/modifyPasswd.json'),
-            dataType: 'json',
-            type: 'POST',
-            data: params,
-            async: false,
-            global: false,
-            success: function (result, textStatus, jqXHR)
-            {
-              if (ResultTool.isSuccess(result))
-              {
-                alert('비밀번호 변경에 성공하였습니다.\n확인을 누르시면 로그인 화면으로 이동합니다.');
-
-                WebTool.submit ({
-                  'action'	: WebTool.getUrl( '/fo/main/loginPage.do' )
-                  , 'inputs'	: {
-                    'siteCd'		: me.siteCd,
-                    'siteId'		: me.siteId,
-                    'snsLinkYn'		: me.snsLinkYn
-                  }
-                });
-              }
-              else
-              {
-                alert(ResultTool.getMessage(result));
-              }
-            }
-          });
-        });
-      },
-
-      //
-      goLoginPage: function() {
-        var formData = {
-          'action'	: WebTool.getUrl( '/fo/main/loginPage.do' )
-          , 'inputs'	: {
-            siteCd: me.siteCd,
-            siteId: me.siteId,
-            snsLinkYn: me.snsLinkYn
-          }
-        }
-
-        WebTool.submit( formData );
       },
 
 
       initialize: function()
       {
-        me._initialize();
+      },
+
+
+      show: function (json, callback)
+      {
+        me.$layerFld.css ({
+          'width'	: '98%'
+          , 'height'	: '90%'
+        });
+
+        me.type				= json['type'];
+        me.$postcodeFld		= (typeof (json['postcode']) == 'string') ? $('#' +json['postcode']) : json['postcode'];
+        me.$postcode1Fld	= (typeof (json['postcode1']) == 'string') ? $('#' +json['postcode1']) : json['postcode1'];
+        me.$postcode2Fld	= (typeof (json['postcode2']) == 'string') ? $('#' +json['postcode2']) : json['postcode2'];
+        me.$address1Fld		= (typeof (json['address1']) == 'string') ? $('#' +json['address1']) : json['address1'];
+        me.$address2Fld		= (typeof (json['address2']) == 'string') ? $('#' +json['address2']) : json['address2'];
+        me.$roadAddressFld	= (typeof (json['roadAddress']) == 'string') ? $('#' +json['roadAddress']) : json['roadAddress'];
+        me.$userSelectedTypeFld = (typeof (json['userSelectedType']) == 'string') ? $('#' +json['userSelectedType']) : json['userSelectedType'];
+        me.$buildingNameFld = (typeof (json['buildingName']) == 'string') ? $('#' +json['buildingName']) : json['buildingName'];
+        me.$viewAddrFld 	= (typeof (json['viewAddr']) == 'string') ? $('#' +json['viewAddr']) : json['viewAddr'];
+
+        var daumPostcode = new daum.Postcode ({
+          oncomplete: function (data) {
+            $('.hidden-area').show(); //회원가입 - 주소검색
+
+            if(typeof me.$postcodeFld !== "undefined"){
+
+              if ($(me.$postcodeFld).prop('tagName') == 'TD'){
+                me.$postcodeFld.html (data.zonecode);
+                me.$postcodeFld.data('zipCd',data.zonecode);
+              }else if($(me.$postcodeFld).prop('tagName') == 'SPAN' && $(me.$postcodeFld).attr('data-zip-cd') == 'zipCd'){ //회원가입 - 주소검색
+                me.$postcodeFld.html (data.zonecode);
+                me.$postcodeFld.val (data.zonecode);
+                me.$postcodeFld.prev('input[name="zipCd"]').val(data.zonecode);
+                me.$postcodeFld.prev('input[type="text"]').removeAttr('readonly');
+              }else {
+                me.$postcodeFld.val (data.zonecode);
+              }
+
+            }
+
+
+            if(typeof me.$postcode1Fld !== "undefined" && typeof me.$postcode2Fld !== "undefined") {
+              if (data.postcode1 == '')
+              {
+
+                if ($(me.$postcode1Fld).prop('tagName') == 'TD'){
+                  me.$postcode1Fld.html (data.zonecode.substring(0,3));
+                  me.$postcode1Fld.data('zipCd1',data.zonecode.substring(0,3));
+                }
+                else {
+                  me.$postcode1Fld.val (data.zonecode.substring(0,3));
+                }
+
+                if ($(me.$postcode2Fld).prop('tagName') == 'TD'){
+                  me.$postcode2Fld.html (data.zonecode.substring(3,5));
+                  me.$postcode2Fld.data('zipCd2',data.zonecode.substring(3,5));
+                }
+                else {
+                  me.$postcode2Fld.val (data.zonecode.substring(3,5));
+                }
+
+              }
+              else
+              {
+
+                if ($(me.$postcode1Fld).prop('tagName') == 'TD'){
+                  me.$postcode1Fld.html (data.postcode1);
+                  me.$postcode1Fld.data('zipCd1',data.postcode1);
+                }
+                else {
+                  me.$postcode1Fld.val (data.postcode1);
+                }
+
+                if ($(me.$postcode2Fld).prop('tagName') == 'TD'){
+                  me.$postcode2Fld.html (data.postcode1);
+                  me.$postcode2Fld.data('zipCd2',data.postcode2);
+                }
+                else {
+                  me.$postcode2Fld.val (data.postcode2);
+                }
+              }
+            }
+
+            if (data.jibunAddress == null || data.jibunAddress == '')
+            {
+              if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                me.$address1Fld.html (data.autoJibunAddress);
+                me.$address1Fld.data('addr1',data.autoJibunAddress);
+              }
+              else {
+                me.$address1Fld.val (data.autoJibunAddress).change();
+              }
+            }
+            else
+            {
+              if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                me.$address1Fld.html (data.jibunAddress);
+                me.$address1Fld.data('addr1',data.jibunAddress);
+              }
+              else {
+                me.$address1Fld.val (data.jibunAddress).change();
+              }
+
+            }
+
+            /*도로명*/
+            if (data.roadAddress == null || data.roadAddress =='') {
+              if (typeof me.$roadAddressFld !== "undefined") {
+                if ($(me.$address1Fld).prop('tagName') == 'TD') {
+                  me.$roadAddressFld.html(data.autoRoadAddress);
+                  me.$roadAddressFld.data('roadAddr1', data.autoRoadAddress);
+                } else {
+                  me.$roadAddressFld.val(data.autoRoadAddress).change();
+                }
+              }
+            }
+            else
+            {
+              if (typeof me.$roadAddressFld !== "undefined") {
+                if ($(me.$address1Fld).prop('tagName') == 'TD') {
+                  me.$roadAddressFld.html(data.roadAddress);
+                  me.$roadAddressFld.data('roadAddr1', data.roadAddress);
+                } else {
+                  me.$roadAddressFld.val(data.roadAddress).change();
+                }
+              }
+            }
+
+            /*건물명*/
+            if(typeof me.$buildingNameFld !== "undefined") {
+              if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                me.$buildingNameFld.html (data.buildingName);
+                me.$buildingNameFld.data('buildingName',data.buildingName);
+              } else {
+                me.$buildingNameFld.val (data.buildingName).change();
+              }
+            }
+
+            /*선택한 주소 유형*/
+            if(typeof me.$userSelectedTypeFld !== "undefined") {
+              if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                me.$userSelectedTypeFld.html (data.userSelectedType);
+                me.$userSelectedTypeFld.data('addrSelectedType',data.userSelectedType);
+              } else {
+                me.$userSelectedTypeFld.val (data.userSelectedType).change();
+              }
+            }
+
+            /*화면에 보여지는 주소*/
+            if(typeof me.$viewAddrFld !== "undefined"){
+              var viewAddrTxt = WebTool.getDisplayAddress(me.$roadAddressFld.val(), me.$address1Fld.val(), '', me.$buildingNameFld.val());
+              if ($(me.$address1Fld).prop('tagName') == 'TD'){
+                me.$viewAddrFld.html (viewAddrTxt);
+                me.$viewAddrFld.data('viewAddr',viewAddrTxt);
+              } else {
+                me.$viewAddrFld.val (viewAddrTxt).change();
+              }
+            }
+
+            if( me.$address2Fld )
+            {
+              me.$address2Fld.val('');
+              me.$address2Fld.focus();
+            }
+
+            if (typeof(callback) === 'function') {
+              callback();
+            }
+          },
+          width : '100%',
+          height : '100%',
+          onclose: function() {
+            me.hide();
+          }
+        });
+
+        if (me.type == 'open')
+        {
+          daumPostcode.open();
+        }
+        else	// @TODO
+        {
+          daumPostcode.embed (me.$layerFld[0], {
+            'autoClose': true
+          });
+          me.$layerFld.show();
+        }
+      },
+
+      hide: function()
+      {
+        me.$layerFld.hide();
+      },
+
+
+      convertData: function(data) {
+        /* 우편번호 */
+        var zipCd = data.zonecode;
+
+        var zipCd1;
+        var zipCd2;
+        if (data.postcode1 == '') {
+          zipCd1 = data.zonecode.substring(0,3)
+          zipCd2 = data.zonecode.substring(3,5)
+        } else {
+          zipCd1 = data.postcode1;
+          zipCd2 = data.postcode2;
+        }
+
+        /* 지번주소 */
+        var jibunAddress;
+        if (data.jibunAddress == null || data.jibunAddress == '') {
+          jibunAddress = data.autoJibunAddress;
+        } else {
+          jibunAddress = data.jibunAddress;
+        }
+
+        /* 도로명 */
+        var roadAddress;
+        if (data.roadAddress == null || data.roadAddress =='') {
+          roadAddress = data.autoRoadAddress
+        } else {
+          roadAddress = data.roadAddress;
+        }
+
+        /*건물명*/
+        var buildingName = data.buildingName;
+
+        /*선택한 주소 유형*/
+        var userSelectedType = data.userSelectedType;
+
+        var viewAddrText = WebTool.getDisplayAddress(roadAddress, jibunAddress, '', buildingName);
+
+        return {
+          zipCd: zipCd,
+          zipCd1: zipCd1,
+          zipCd2: zipCd2,
+          jibunAddress: jibunAddress,
+          roadAddress: roadAddress,
+          buildingName: buildingName,
+          userSelectedType: userSelectedType,
+          viewAddrText: viewAddrText
+        };
       },
 
       nothing:null
@@ -3521,114 +3017,1186 @@
 
 
   $(function() {
-    MainMgr.startup();
+    DaumMgr.startup();
   });
 </script>
 
-<div class="container">
-  <div class="content">
-    <div id="join_login" class="find_idpw">
-      <div class="intro_top">
-        <strong><img src="https://static-cdn.meatbox.co.kr/img/fo/main/findLoginInfo_txt.png" alt="아이디/비밀번호 찾기" /></strong>
-      </div>
-
-      <div class="tab_style tab_box">
-        <ul class="after">
-          <li  class="on" >
-            <a href="javascript:" id="findIdTab">아이디찾기</a></li>
-          <li >
-            <a href="javascript:" id="findPwTab">비밀번호 찾기</a></li>
-        </ul>
-      </div>
-
-      <div class="tab_contents">
-        <div class="tab_con1">
-          <em class="note">미트박스에 가입하신 이름과 휴대폰번호를 입력해 주세요.</em>
-          <form>
-            <ul class="input_form">
-              <li>
-                <input type="text" id="findIdName" placeholder="이름 또는 대표자명" value="" maxlength="50">
-              </li>
-              <li class="check_btn">
-                <div>
-                  <input type="tel" id="findIdCellNo" placeholder="휴대폰번호" value="" maxlength="20">
-                  <button type="button" id="findIdCheck">인증번호전송</button> <!-- 인증번호재전송 -->
-                </div>
-              </li>
-              <li class="check_btn" id="findIdCertNoBox">
-                <div>
-                  <input type="text" id="findIdCertNo" placeholder="인증번호" value="" maxlength="4">
-                  <button type="button" id="findIdCertCheck">인증번호확인</button>
-                </div>
-                <em id="findIdRemainTime">남은시간 : 2분 27초</em>
-              </li>
-            </ul>
-          </form>
-          <div class="result" id="findIdResult">
-            <P><span id="resultFindNm">미트박스</span> 님의 정보와 일치하는 아이디는 아래와 같습니다.</P>
-            <ul class="id-find-result" id="memberId"></ul>
-
-            <div class="two_btn">
-              <ul class="after">
-                <li class="bg_red"><a href="javascript:WebTool.goHome();"><img src="https://static-cdn.meatbox.co.kr/img/fo/main/find_login_txt02.png" alt="홈으로 이동" /></a></li>
-                <li class="bg_black"><a href="javascript:;" onclick="MainMgr.goLoginPage();"><img src="https://static-cdn.meatbox.co.kr/img/fo/main/find_login_txt01.png" alt="로그인하러 가기" /></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="find_notice">휴대폰번호가 변경되었거나 직접 찾기가 힘든 경우 <br> <span>고객센터((1644-6689))</span>로 문의 부탁드립니다.</p>
-        </div>
-
-        <div class="tab_con2">
-          <div class="find_pw" id="findPwRequest">
-            <em class="note">미트박스에 가입하신 아이디, 이름, 휴대폰번호를 입력해 주세요.</em>
-            <form>
-              <ul class="input_form">
-                <li>
-                  <input type="text" id="findPwId" placeholder="아이디" value="" maxlength="24">
-                </li>
-                <li>
-                  <input type="text" id="findPwName" placeholder="이름 또는 대표자명" value="" maxlength="50">
-                </li>
-                <li class="check_btn">
-                  <div>
-                    <input type="tel" id="findPwCellNo" placeholder="휴대폰번호" value="" maxlength="20">
-                    <button type="button" id="findPwCheck">인증번호전송</button> <!-- 인증번호재전송 -->
-                  </div>
-                </li>
-                <li class="check_btn" id="findPwCertNoBox">
-                  <div>
-                    <input type="text" id="findPwCertNo" placeholder="인증번호" value="" maxlength="4">
-                    <button type="button" id="findPwCertCheck">인증번호확인</button>
-                  </div>
-                  <em id="findPwRemainTime">남은시간 : 2분 27초</em>
-                </li>
-              </ul>
-            </form>
-            <p class="find_notice">휴대폰번호가 변경되었거나 직접 찾기가 힘든 경우 <br> <span>고객센터(1644-6689)</span>로 문의 부탁드립니다.</p>
-          </div>
-
-          <div class="new_pw" id="findPwResult">
-            <em class="note">새로운 비밀번호를 입력해 주세요.</em>
-            <form>
-              <ul class="input_form">
-                <li>
-                  <input type="password" id="passwd" placeholder="비밀번호 (8~28자 대소문자/숫자/특수문자)" value="" maxlength="28">
-                  <em id="passwd_comment">비밀번호는 8~28자 이어야 합니다.</em>
-                </li>
-                <li>
-                  <input type="password" id="passwdConfirm" placeholder="비밀번호 확인" value="" maxlength="28">
-                  <em id="passwdConfirm_comment">비밀번호가 일치하지 않습니다.</em>
-                </li>
-              </ul>
-            </form>
-            <button type="button" class="comm_btn" id="modifyPw"><img src="https://static-cdn.meatbox.co.kr/img/fo/main/find_login_txt03.png" alt="확인" /></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="___postLayer" style="display:none;border:5px solid;position:fixed;left:1%;margin-left:0;top:50px;margin-top:0;-webkit-overflow-scrolling:touch;z-index:19999;background-color:#FFFFFF;">
+  <img src="//i1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" style="width:30px;height:30px;z-index:9999;cursor:pointer;position:absolute;right:-5px;top:-35px" alt="닫기 버튼">
 </div>
+<script type="text/javascript" src="/js/jquery/jquery.countdown-2.2.0.min.js"></script>
+<script type="text/javascript">
 
+  (function() {
+
+    var me = window.MainMgr = {
+
+      canUseMemberIds 		: [],		// 중복체크 통과한 Id
+      cannotUseMemberIds 		: [],		// 이미 가입한 Id
+
+      canUseEmails 			: [],		// 중복체크 통과한 이메일
+      cannotUseEmails 		: [],		// 이미 가입한 이메일
+
+      canUseCellNos 			: [],		// 인증 통과한 휴대폰번호
+
+
+      startup: function()
+      {
+        me.setVariables();
+        me.setEvents();
+        me.initialize();
+      },
+
+
+      setVariables: function() {
+        me.type = 'default'; // 일반(default), sns(sns) 회원가입
+        me.role = 'B004'; //사업자, 개인
+        me.joinTitle = '회원가입';
+        me.isNonKorean = false ? false : false;
+
+        if (me.role === 'B002') {
+          me.joinTitle = '사업자 회원가입';
+        } else if (me.role === 'B004') {
+          me.joinTitle = '개인 회원가입';
+        }
+
+        me.resultCd = '';
+        me.authCi = '';
+        me.sexType = '';
+        me.juminFirst = '';
+        me.authDi = '';
+        me.retry = false;
+
+        //아이디 변수
+        me.$memberIdFld					= $('#memberId'); //아이디
+        me.$memberIdCommentFld			= $('#memberId_comment'); //아이디 코멘트
+        me.memberIdErrorMsg				= SignUpConst.MEM_ID_ZERO_LEN.errorMessage; //아이디 에러 메시지
+
+        //비밀번호 변수
+        me.$passwdFld					= $('#passwd'); //비밀번호
+        me.$passwdConfirmFld			= $('#passwdConfirm'); //비밀번호 확인
+        me.$passwdCommentFld			= $('#passwd_comment'); //비밀번호 코멘트
+        me.$passwdConfirmCommentFld		= $('#passwdConfirm_comment'); //비밀번호 확인 코멘트
+        me.passwdErrorMsg				= SignUpConst.PASS_ZERO_LEN.errorMessage; //비밀번호 에러 메시지
+        me.passwdConfirmErrorMsg		= SignUpConst.PASS_ZERO_LEN.errorMessage; //비밀번호 확인 에러 메시지
+
+        //이름 변수
+        me.$realNameFld					= $('#realName'); //이름
+        me.$realNameCommentFld			= $('#realName_comment'); //이름 코멘트
+        me.realNameErrorMsg				= SignUpConst.REAL_NAME_ZERO_LEN.errorMessage; //이름 에러 메시지
+
+        //휴대폰번호 변수
+        me.$cellNoFld				= $('#cellNo');	//휴대폰번호
+        me.$cellNoCommentFld		= $('#cellNo_comment'); //휴대폰번호 코멘트
+        me.cellNoErrorMsg			= SignUpConst.CELLNO_ZERO_LEN.errorMessage; //휴대폰번호 에러 메시지
+        me.authCellNoValidationYn 		= false;
+
+        //휴대폰번호 점유 인증번호 변수
+        me.authTiemMilliSec 			= 180000;//180000; //10000 10초 테스트용
+        me.authSeq 						= 0; //인증시퀀스
+        me.authNo 						= 0; //인증번호
+        me.lastRequestTime 				= 0; //인증번호 요청 시간
+        me.$authNoFld					= $('#authNo');	//인증번호
+        me.$authNoTextFld				= $('#auth_button'); //인증번호 버튼
+        me.$authNoArea 					= $('#authNoArea');
+        me.$authNoLabel 				= $('#authNoLabel');
+        me.$authSubMsg 					= $('#authSubMsg');
+        me.$authNoCommentFld 			= $('#authNo_comment'); //인증번호 코멘트
+        me.authNoErrorMsg				= SignUpConst.CELLNO_AUTH_ZERO_LEN.errorMessage; //인증번호 에러 메시지
+        me.isAuthNoCountdown			= true;
+
+        //이메일 변수
+        me.$emailFld					= $('#email'); //이메일
+        me.$emailCommentFld				= $('#email_comment'); //이메일 코멘트
+        me.emailErrorMsg				= SignUpConst.EMAIL_ZERO_LEN.errorMessage; //이메일 에러 메시지
+
+        //가입경로 변수
+        //$('#joinPath .active button[type="button"]').val()
+        me.$joinPathFld					= $('#joinPath'); //가입경로
+        me.$joinPathExtFld				= $('#joinPathExt') //가입경로 - 기타시 선택사항
+
+        //유효성 체크
+        me.errorStrings	= [
+          me.memberIdErrorMsg, //아이디
+          me.passwdErrorMsg, //비밀번호
+          me.passwdConfirmErrorMsg, //비밀번호 확인
+          me.realNameErrorMsg, //이름
+          me.cellNoErrorMsg, //휴대폰번호
+          me.emailErrorMsg, //이메일
+        ];
+
+        me.errorFields = [
+          me.$memberIdFld, //아이디
+          me.$passwdFld, //비밀번호
+          me.$passwdConfirmFld, //비밀번호 확인
+          me.$realNameFld, //이름
+          me.$cellNoFld, //휴대폰번호
+          me.$emailFld, //이메일
+        ];
+
+        if(me.type == 'default'){ //일반 회원가입
+          me.idsInputToCheck = [
+            '#memberId', //아이디
+            '#passwd', //비밀번호
+            '#passwdConfirm', //비밀번호확인
+            '#realName', //이름
+          ];
+        }else{//sns 회원가입
+          me.idsInputToCheck = [
+            '#realName', //이름
+          ];
+        }
+
+        me.idsButtonToCheck = [
+          '#auth_button', //인증번호 요청 버튼
+          '#authConfirm_button', //인증번호 확인 버튼
+        ];
+
+      },
+
+
+      setEvents: function() {
+        window.onload = function(){
+          if(me.isNonKorean){
+            if(confirm("해외번호로는 미트박스 회원가입이 불가하며,\n국내 휴대전화 번호로 인증하여 가입하실 수 있습니다.\n계속 진행 하시겠어요?") == true){
+              return;
+            }else{
+              WebTool.go('/fo/main/loginPage.do');
+            }
+          }
+        };
+
+
+        me.$memberIdFld.on('input blur', function() {
+          me.memberIdErrorMsg = me.checkIdFormat($(this), me.$memberIdCommentFld);
+        });
+
+        me.$memberIdFld.on('blur', function() {
+          if(me.memberIdErrorMsg == null) {
+            var inputStr = me.$memberIdFld.val();
+            var $comment = me.$memberIdCommentFld;
+            // 아이디 중복체크
+            me.getMemberIdMatchCount();
+
+            if ($.inArray(inputStr, me.cannotUseMemberIds) > -1) { //중복 아이디 존재할 경우
+              result = SignUpTool.isAlreadyMemberIdChecked(inputStr, me.cannotUseMemberIds);
+              $comment.html(result.resultCode.errorMessage);
+              me.$memberIdFld.closest('.input-wrap').addClass('error');
+              errorMsg = result.resultCode.errorMessage;
+            } else {
+              errorMsg = null;
+              $comment.hide();
+              me.$memberIdFld.closest('.input-wrap').addClass('cmplt');
+            }
+          }
+        });
+
+
+        me.$passwdFld.on('input blur', function() {
+          me.passwdErrorMsg = me.checkPasswdFormat($(this), me.$passwdCommentFld);
+          //비밀번호 입력칸에 에러가 없을 경우 && 비밀번호 입력칸에 값이 있을 때 => 비밀번호 입력칸 확인 필요
+          if(me.passwdErrorMsg == null && me.$passwdConfirmFld.val() != '' ){
+            me.passwdConfirmErrorMsg = me.checkPasswdConfirm(me.$passwdFld, me.$passwdConfirmFld, me.$passwdConfirmCommentFld);
+          }
+        });
+
+
+        me.$passwdConfirmFld.on('input blur', function() {
+          me.passwdConfirmErrorMsg = me.checkPasswdConfirm(me.$passwdFld, me.$passwdConfirmFld, me.$passwdConfirmCommentFld);
+        });
+
+
+        me.$realNameFld.on('input blur', function() {
+          me.realNameErrorMsg = me.checkNameFormat($(this), me.$realNameCommentFld);
+        });
+
+
+        me.$cellNoFld.on('input blur', function() {
+          me.cellNoErrorMsg = me.checkCellNoFormat($(this), me.$cellNoCommentFld);
+        });
+
+
+        me.$authNoFld.on('input blur', function() {
+          me.authNoErrorMsg = me.checkAuthNoFormat($(this), me.$authNoCommentFld);
+        });
+
+
+        me.$emailFld.on('input blur', function() {
+          me.emailErrorMsg = me.checkEmailFormat($(this), me.$emailCommentFld);
+        });
+
+
+        // me.$joinPathFld.on('click', function() {
+        // 	me.joinPathError = me.checkJoinPath($("#joinPath .active button[type='button']"), me.$joinPathExtFld);
+        // });
+
+        //input focus 시 읽기전용 아닐때만 placeholder 문구 변경 || (읽기 전용은 placeholder 문구 변경 필요 없음)
+        $('.input-wrap input').focusin(function() {
+          if(!($(this).prop('readonly'))){
+            var focusTxt = $(this).data('focus');
+            $(this).siblings('.placeholder').text(focusTxt);
+          }
+        });
+
+        //input focus 아웃된 후 에러 혹은 완료 처리 및 placeholder 문구 변경
+        $('.input_form input').focusout(function() {
+          //인풋 포커스 아웃되고 error 혹은 cmplt 처리 필요!!!!!!!!!!!!!!
+          if(!($(this).closest('.input-wrap').hasClass('error'))) { //에러 없을 떄
+            var placeholder = $(this).attr('placeholder'); //placeholder 문구 기존으로 변경
+            $(this).siblings('.placeholder').text(placeholder);
+          }
+        });
+
+        //가입 경로 선택
+        $('.select-area button').click(function() {
+          if(!($(this).closest('li').hasClass('active'))) {
+            $('.select-area li').removeClass('active');
+            $(this).closest('li').addClass('active');
+            if($(this).hasClass('etc')) {
+              $(this).closest('.select-area').find('.textarea').css({'display': 'block'});
+            } else {
+              $(this).closest('.select-area').find('.textarea').css({'display': 'none'});
+            }
+          } else {
+            $(this).closest('li').removeClass('active');
+            $(this).closest('.select-area').find('.textarea').css({'display': 'none'});
+          }
+        });
+
+        //비밀번호, 비밀번호 확인 show/hide 동작
+        $('.pw-show').click(function() {
+          if($(this).siblings('input').attr('type') == 'password') {
+            $(this).addClass('show').siblings('input').attr('type', 'text');
+          } else {
+            $(this).removeClass('show').siblings('input').attr('type', 'password');
+          }
+        });
+
+        function validateForm() {
+          // 모든 필드가 입력되었는지 확인
+          var allFilled = true;
+          me.idsInputToCheck.forEach(function (id) {
+            if ($.trim($(id).val()) === '') {
+              allFilled = false;
+              return false; // loop 중지
+            }
+          });
+          // 버튼 활성화 체크
+          me.isButtonValid(me.type,allFilled);
+        }
+
+        // 지정된 입력 필드 이벤트를 감지
+        me.idsInputToCheck.forEach(function (id) {
+          $(id).on('input', validateForm);
+        });
+
+        // 버튼 클릭 이벤트를 감지
+        me.idsButtonToCheck.forEach(function (id) {
+          $(id).on('click', validateForm);
+        });
+      },
+
+
+      initialize: function() {
+        //join-tit
+        $('.join-tit h4').text(me.joinTitle);
+
+        //일반 회원가입
+        if(me.type == 'default'){
+          $('#default_join').show();
+          $('#sns_join').hide();
+          if(me.role == 'B004'){ //개인
+            $('#normal_cellNoArea').show();
+            $('#buyer_cellNoArea').hide();
+            $('#joinPathArea').hide();
+            $('#cellNo').val($('#normal_cellNo').val());
+            if ($('#cellNo').val() != null) {
+              me.canUseCellNos.push($('#cellNo').val());
+            }
+          }else{//사업자
+            // 사업자 회원가입 경우 : 휴대폰번호 점유인증 - 인증번호 입력칸 처음에는 미노출
+            $('#normal_cellNoArea').hide();
+            $('#buyer_cellNoArea').show();
+            $('#authNoArea').hide();
+          }
+        }else{ //sns 회원가입
+          $('#default_join').hide();
+          $('#sns_join').show();
+
+          if(me.role == 'B004') { //개인
+            //점유 인증번호가 아닌 본인인증PASS
+            $('#auth_button').hide();
+            $('#auth_pass_button').show();
+          }
+          //sns api로 해당 데이터들이 모두 넘어왔을 때 //아이디 //이름 //휴대폰번호 //이메일 //CI
+          if(MainMgr.$realNameFld.val() != ''
+                  && MainMgr.$cellNoFld.val() != ''
+                  && MainMgr.$emailFld.val() != ''
+                  && 'k14TufRzxjI+Fu7itRawqIYwRE3eVHqVCoI98FAirYcAHzhSVBeP5ELw4jgGGEU9X3W/8eRACS+7BH6qyWE53A==' != ''){
+            $('#nextStepButton').prop('disabled', false).removeClass('disabled');
+          }
+
+          //이름
+          if(MainMgr.$realNameFld.val() != ''){
+            me.realNameErrorMsg = null;
+            $('#realName').attr('disabled',true);
+          }
+          //휴대폰번호와 CI값이 모두 있는 경우
+          if(MainMgr.$cellNoFld.val() != '' && 'k14TufRzxjI+Fu7itRawqIYwRE3eVHqVCoI98FAirYcAHzhSVBeP5ELw4jgGGEU9X3W/8eRACS+7BH6qyWE53A==' != ''){
+            $('#cellNo').attr('disabled',true);
+            $('#auth_button').hide();
+            $('#auth_pass_button').hide();
+            me.cellNoErrorMsg = null;
+          }else{
+            //휴대폰번호 또는 CI값이 둘 중 하나라도 없을 경우는 본인인증 PASS 필요
+            if(MainMgr.$cellNoFld.val() == '' || 'k14TufRzxjI+Fu7itRawqIYwRE3eVHqVCoI98FAirYcAHzhSVBeP5ELw4jgGGEU9X3W/8eRACS+7BH6qyWE53A==' == ''){
+              if(me.role == 'B004' && me.type == 'sns') { //개인
+                $('#cellNo').attr('disabled',true);
+                $('#cellNo').attr('value','휴대폰번호');
+              }
+            }
+            $('#sns_cellNoArea').addClass('check_btn');
+            me.cellNoErrorMsg = null;
+          }
+          //이메일
+          if(MainMgr.$emailFld.val() != ''){
+            $('#email').attr('disabled',true);
+            me.emailErrorMsg = null;
+          }
+        }
+      },
+      /**
+       * 아이디 입력시
+       */
+      checkIdFormat: function ($input, $comment){
+        var errorMsg = null;
+        var inputStr = $input.val();
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        var result = SignUpTool.checkMemberId(inputStr);
+
+        if(result.success){
+          errorMsg = null;
+          $comment.hide();
+          $input.closest('.input-wrap').addClass('cmplt');
+        }else{
+          // 4자 미만 입력시  || 대,소문자 숫자 외 글자 입력시
+          if(result.resultCode.code == SignUpConst.MEM_ID_TOO_SHORT_LEN.code
+                  || result.resultCode.code == SignUpConst.MEM_ID_NOTFORM.code) {
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.MEM_ID_TOO_LONG_LEN.code){//18자 초과시
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+            $('#memberId').val($('#memberId').val().slice(0, 19));
+          }else if(result.resultCode.code == SignUpConst.MEM_ID_ZERO_LEN.code){ //아이디 미입력시
+            $comment.hide();
+            $input.closest('.input-wrap').removeClass('cmplt');
+          }
+          errorMsg = result.resultCode.errorMessage;
+          $comment.html(result.resultCode.errorMessage);
+        }
+        return errorMsg;
+      },
+      /**
+       * 아이디 중복 유무 체크
+       */
+      getMemberIdMatchCount: function() {
+        var memberId = $('#memberId').val(); //아이디
+
+        SignUpTool.getMemberIdMatchCount(memberId,function(result, textStatus){
+          if (ResultTool.isSuccess(result)){
+            me.memberIdErrorMsg = me.checkMemberIdDuplicate(result, textStatus, me.$memberIdFld, me.$memberIdCommentFld);
+          }else{
+            var $input = me.$memberIdFld
+            var $comment = me.$memberIdCommentFld
+            $input.closest('.input-wrap').removeClass('cmplt');
+            $input.closest('.input-wrap').removeClass('error');
+            $comment.show();
+            $comment.html(SignUpConst.MEM_ID_ZERO_LEN.errorMessage);
+            $input.closest('.input-wrap').addClass('error');
+          }
+        });
+      },
+      /**
+       * 아이디 중복 체크
+       */
+      checkMemberIdDuplicate: function (result, textStatus, $input, $comment){
+        var errorMsg = null;
+        var inputStr = $input.val();
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        if (textStatus == 'success'){
+          var data = ResultTool.getData(result);
+          if (data['count'] > 0) {
+            me.cannotUseMemberIds.push(inputStr);
+            $comment.show();
+            $comment.html(SignUpConst.MEM_ID_EXIST.errorMessage);
+            $input.closest('.input-wrap').addClass('error');
+            errorMsg = SignUpConst.MEM_ID_EXIST.errorMessage;
+          }else{
+            me.canUseMemberIds.push(inputStr);
+            errorMsg = null;
+            $comment.hide();
+            $input.closest('.input-wrap').addClass('cmplt');
+          }
+        }else{
+          $input.val('');
+          $comment.show();
+          $comment.html(ResultTool.getMessage(result));
+          errorMsg = SignUpConst.MEM_ID_ZERO_LEN.errorMessage;
+        }
+        return errorMsg;
+      },
+      /*
+	 * 비밀번호 입력시
+	 */
+      checkPasswdFormat: function ($input, $comment)
+      {
+        var errorMsg = null;
+        var inputStr = $input.val();
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        var result = SignUpTool.checkPassword(inputStr);
+
+        if(result.success){
+          errorMsg = null;
+          $comment.hide();
+          //$input.closest('.input-wrap').addClass('cmplt');
+        }else{
+          if(result.errorMessage != undefined) { // 8자 미만 입력시 || 대,소문자,숫자,특수문자 조합 아닐 경우 || 동일 문자 3호 연속인 경우 || 키보드 배열 3회 연속 입력인 경우
+            $comment.show();
+            $comment.html(result.errorMessage);
+            errorMsg = result.errorMessage;
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.PASS_TOO_LONG_LEN.code){ //28자 초과 입력시
+            $comment.show();
+            $comment.html(result.resultCode.errorMessage);
+            errorMsg = result.resultCode.errorMessage;
+            $input.closest('.input-wrap').addClass('error');
+            $('#passwd').val($('#passwd').val().slice(0, 29));
+          }else if(result.resultCode.code == SignUpConst.PASS_ZERO_LEN.code){ //비밀번호 미입력시
+            $comment.hide();
+            $comment.html(result.resultCode.errorMessage);
+            errorMsg = result.resultCode.errorMessage;
+            //$input.closest('.input-wrap').removeClass('cmplt');
+          }
+        }
+        return errorMsg;
+      },
+      /*
+	 * 비밀번호 확인 입력시
+	 */
+      checkPasswdConfirm: function ($input, $inputConfirm, $comment)
+      {
+        var errorMsg = null;
+        var inputStr = $.trim($input.val());
+        var inputConfirmStr = $.trim($inputConfirm.val());
+        $inputConfirm.closest('.input-wrap').removeClass('cmplt');
+        $inputConfirm.closest('.input-wrap').removeClass('error');
+
+        var result = SignUpTool.checkPasswordConfirm(inputStr,inputConfirmStr);
+
+        if(result.success){
+          errorMsg = null;
+          $comment.hide();
+          //$inputConfirm.closest('.input-wrap').addClass('cmplt');
+        }else{
+          if(result.resultCode.code == SignUpConst.PASS_CONF_NOT_SAME.code) { //비밀번호가 일치하지 않을 때
+            $comment.show();
+            $inputConfirm.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.PASS_TOO_LONG_LEN.code){ //28자 초과 입력시
+            $comment.show();
+            $inputConfirm.closest('.input-wrap').addClass('error');
+            $('#passwdConfirm').val($('#passwdConfirm').val().slice(0, 29));
+          }else if(result.resultCode.code == SignUpConst.PASS_CONF_ZERO_LEN.code) { //비밀번호 미입력시
+            $comment.hide();
+            //$inputConfirm.closest('.input-wrap').removeClass('cmplt');
+          }
+          errorMsg = result.resultCode.errorMessage;
+          $comment.html(result.resultCode.errorMessage);
+        }
+        return errorMsg;
+      },
+      /**
+       * 이름 입력시
+       */
+      checkNameFormat: function ($input, $comment)
+      {
+        var errorMsg = null;
+        var inputStr = $input.val();
+
+        if(inputStr.startsWith(' ')){
+          // 첫 번째 문자가 공백일 경우, 입력을 무효화
+          $('#realName').val($.trim($input.val()));
+          return;
+        }
+        if(/  /.test(inputStr)){
+          // 연속으로 공백 입력하는 경우, 입력을 무효화
+          $('#realName').val($input.val().replace(/ {2,}/g, ' '));
+          return;
+        }
+
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        var result = SignUpTool.checkRealName(inputStr);
+
+        if(result.success){
+          errorMsg = null;
+          $comment.hide();
+          $input.closest('.input-wrap').addClass('cmplt');
+        }else{
+          if(result.resultCode.code == SignUpConst.REAL_NAME_NOTFORM.code) { //국,영문 외 글자 입력시
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.REAL_NAME_TOO_LONG_LEN.code){ //30자 초과 입력시
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+            $('#realName').val($('#realName').val().slice(0, 31));
+          }else if(result.resultCode.code == SignUpConst.REAL_NAME_ZERO_LEN.code) { //이름 미입력시
+            $comment.hide();
+            $input.closest('.input-wrap').removeClass('cmplt');
+          }else if(result.resultCode.code == SignUpConst.WHITE_SPACE_FORM.code) {//공백 유효성
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }
+          errorMsg = result.resultCode.errorMessage;
+          $comment.html(result.resultCode.errorMessage);
+        }
+        return errorMsg;
+      },
+      /**
+       * 휴대폰 번호 체크
+       */
+      checkCellNoFormat: function ($input, $comment) {
+        var errorMsg = null;
+        var inputStr = $input.val();
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        var result = SignUpTool.checkCellNo(inputStr);
+
+        if(result.success && !$('#authNoArea').is(':visible')){ //인증번호 입력 칸 미노출 인 경우
+          result = SignUpTool.isCellNoChecked(inputStr,me.canUseCellNos);
+          if(result){ //휴대폰번호 인증 유무체크
+            $comment.show();
+            $comment.html(result.resultCode.errorMessage);
+            $input.closest('.input-wrap').addClass('error');
+            errorMsg = result.resultCode.errorMessage;
+          }else{
+            errorMsg = null;
+            $comment.hide();
+          }
+        }else{
+          if(result.resultCode.code == SignUpConst.CELLNO_ONLY_NUM.code){//입력된게 숫자가 아닌 경우
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.CELLNO_NOTFORM.code //10자리 이하 입력시
+                  || result.resultCode.code == SignUpConst.CELLNO_AUTH_CHECK) { //인증하기 버튼 미클릭시
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.CELLNO_TOO_LONG_LEN.code){ //11자 초과 입력시
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.CELLNO_ZERO_LEN.code) {//휴대폰번호 미입력시
+            $comment.hide();
+          }
+          errorMsg = result.resultCode.errorMessage;
+          $comment.html(result.resultCode.errorMessage);
+        }
+
+        var tmp = '';
+        var regEx = /[^0-9]/g;
+        inputStr = inputStr.replace(regEx, '');
+
+        if (inputStr.length < 4) {
+          $input.val(inputStr);
+        } else if (inputStr.length < 7) {
+          tmp += inputStr.substr(0, 3);
+          tmp += '-';
+          tmp += inputStr.substr(3);
+          $input.val(tmp);
+        } else if (inputStr.length < 11) {
+          tmp += inputStr.substr(0, 3);
+          tmp += '-';
+          tmp += inputStr.substr(3, 3);
+          tmp += '-';
+          tmp += inputStr.substr(6);
+          $input.val(tmp);
+        } else {
+          tmp += inputStr.substr(0, 3);
+          tmp += '-';
+          tmp += inputStr.substr(3, 4);
+          tmp += '-';
+          tmp += inputStr.substr(7);
+          $input.val(tmp);
+        }
+
+        return errorMsg;
+      },
+      //휴대폰번호 - 점유인증
+      requestAuthNoForCellNo: function(){
+        // 현재 시간 가져오기
+        var currentTime = new Date().getTime();
+
+        var $input = me.$cellNoFld;
+        var $comment = me.$cellNoCommentFld;
+        var $inputAuth = me.$authNoFld;
+        var $commentAuth = me.$authNoCommentFld;
+
+        me.canUseCellNos = [];  // 재설정하여 초기화
+        me.cellNoErrorMsg = null;
+
+        //다른번호인증 텍스트일 경우는 초기화면으로 리셋
+        if($('#auth_button').html() == '다른번호 인증'){ //Const로 빼기
+          $('#cellNo').prop('disabled', false);
+          $('#auth_button').html('인증하기');
+          $('#cellNo').val('');
+          $input.closest('.input-wrap').removeClass('cmplt');
+          $input.closest('.input-wrap').removeClass('error');
+          me.lastRequestTime = 0;
+          return;
+        }else{
+          // 1분 이내 재클릭시 return
+          if (currentTime - me.lastRequestTime < 60000) {
+            alert(SignUpConst.CELLNO_AUTH_TOO_QUICK.errorMessage);
+            return;
+          }
+        }
+
+        var cellNo = $.trim(me.$cellNoFld.val());
+        var result = SignUpTool.checkCellNo(cellNo);
+
+        //휴대폰번호 영역
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+        $comment.hide();
+
+        //인증번호 영역
+        $inputAuth.closest('.input-wrap').removeClass('cmplt');
+        $inputAuth.closest('.input-wrap').removeClass('error');
+        $commentAuth.hide();
+
+        me.authCellNoValidationYn = false;
+
+        if(result.success){
+          SignUpTool.requestAuthNoForSignup(cellNo,function(result, textStatus){
+            // 마지막 요청 시간 업데이트
+            me.lastRequestTime = currentTime;
+
+            if (ResultTool.isSuccess(result)){
+              var data = ResultTool.getData(result);
+              me.authSeq = data.authSeq;
+
+              //인증번호 입력 칸 노출
+              $('#authNoArea').show();
+              //버튼 텍스트 변경
+              me.$authNoTextFld.html('재요청');
+
+
+
+              me.$authSubMsg.stop();
+              me.isAuthNoCountdown = true;
+
+              var countdownEndTime = new Date().getTime() + me.authTiemMilliSec;
+              me.$authSubMsg.countdown(countdownEndTime, function (e) {
+                if (e.elapsed) {
+                  $comment.hide();
+                  $input.closest('.input-wrap').removeClass('error');
+                  me.isAuthNoCountdown = false;
+                  me.authCellNoValidationYn = true;
+                  //me.authSeq = 0;
+                  $commentAuth.html(SignUpConst.CELLNO_AUTH_TIMEOUT.errorMessage);
+                  $commentAuth.show();
+                  me.$authSubMsg.html('');
+                  $inputAuth.closest('.input-wrap').addClass('error');
+                } else {
+                  me.$authSubMsg.html(e.strftime('%M:%S'));
+                }
+              });
+            }else{
+              MoTool.alert(ResultTool.getMessage(result));
+            }
+          });
+        }else{
+          $comment.show();
+          $input.closest('.input-wrap').addClass('error');
+          errorMsg = result.resultCode.errorMessage;
+          $comment.html(result.resultCode.errorMessage);
+        }
+      },
+      /**
+       * 개인 본인인증 PASS
+       */
+      requestPhoneAuth: function(){
+        var params = {
+          'isSignUp': true,
+          'retry': true,
+          'role': me.role,
+          'type': me.type,
+        };
+        SignUpTool.requestPhoneAuth(params);
+      },
+      /**
+       * 인증번호 입력시
+       */
+      checkAuthNoFormat: function ($input, $comment)
+      {
+        var errorMsg = null;
+        var inputStr = $input.val();
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        //인증번호 초과 되면 에러메시지 그대로 노출하기 위해서
+        if(! me.authCellNoValidationYn ){
+          var result = SignUpTool.checkAuthNo(inputStr);
+
+          if(result.success){
+            errorMsg = null;
+            $comment.hide();
+          }else{
+            if(result.resultCode.code == SignUpConst.CELLNO_AUTH_NOTFORM.code) { //4자 이하 입혁시
+              $comment.show();
+              $input.closest('.input-wrap').addClass('error');
+            }else if(result.resultCode.code == SignUpConst.CELLNO_AUTH_TOO_LONG_LEN.code){ //4자 초과 입력시
+              $comment.show();
+              $input.closest('.input-wrap').addClass('error');
+              $('#authNo').val($('#authNo').val().slice(0, 4));
+            }else if(result.resultCode.code == SignUpConst.REAL_NAME_ZERO_LEN.code) { //인증번호 미입력시
+              $comment.hide();
+            }
+            errorMsg = result.resultCode.errorMessage;
+            $comment.html(result.resultCode.errorMessage);
+          }
+          return errorMsg;
+        }else{
+          //입력 제한시간 초과시
+          $input.closest('.input-wrap').addClass('error');
+          errorMsg = $('#authNo_comment').html();
+        }
+      },
+      /*
+	* 인증번호 확인 버튼 클릭시
+	*/
+      isValidAuthNo: function(){
+        var errorMsg = null;
+        var finalResult = true;
+        var authNo = $('#authNo').val(); //인증번호
+        var cellNo = $.trim(me.$cellNoFld.val()); //휴대폰번호
+        var $input = me.$cellNoFld;
+        var $comment = me.$cellNoCommentFld;
+
+        //입력 제한시간 초과시
+        if(!me.isAuthNoCountdown){
+          alert(SignUpConst.CELLNO_AUTH_TIMEOUT2.errorMessage);
+          return;
+        }
+
+        var result = SignUpTool.checkAuthNo(authNo);
+
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+        $comment.hide();
+
+        if(result.success){
+          var params = {
+            seq		: me.authSeq
+            ,authNo	: authNo
+            ,cellNo	: cellNo
+          };
+
+          SignUpTool.confirmAuthNoForSignup(params,function(result, textStatus){
+            if (ResultTool.isSuccess(result)){
+              //버튼 텍스트 변경
+              me.$authNoTextFld.html('다른번호 인증');
+
+              $('#cellNo').prop('disabled', true);
+              me.authCellNoValidationYn = true;
+              $input.closest('.input-wrap').addClass('cmplt');
+              $comment.hide();
+              //인증번호 입력 칸 미노출
+              $('#authNoArea').hide();
+              errorMsg = null;
+              alert(SignUpConst.CELLNO_AUTH_SUCCESS.message);
+
+              //인증번호 통과 되었을 떄 해당 번호 넣고, 인증번호 요청 하기 전에 빼서 다시 인증확인 유무 체크
+              me.canUseCellNos.push($('#cellNo').val());
+            }else{
+              me.authCellNoValidationYn =false;
+              finalResult = false;
+
+              me.$authNoCommentFld.show();
+              me.$authNoCommentFld.html(result.message);
+              me.$authNoFld.closest('.input-wrap').addClass('error');
+              errorMsg = result.message;
+            }
+          });
+        }else{
+          me.$authNoCommentFld.show();
+          me.$authNoCommentFld.html(result.resultCode.errorMessage);
+          me.$authNoFld.closest('.input-wrap').addClass('error');
+          errorMsg = result.resultCode.errorMessage;
+          finalResult = false;
+        }
+
+        return errorMsg;
+      },
+      /*
+	* 이메일 입력시
+	*/
+      checkEmailFormat: function ($input, $comment)
+      {
+        var errorMsg = null;
+        var inputStr = $.trim($input.val());
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        var result = SignUpTool.checkEmail(inputStr);
+
+        if(result.success){
+          errorMsg = null;
+          $comment.hide();
+          $input.closest('.input-wrap').addClass('cmplt');
+        }else{
+          if(result.resultCode.code == SignUpConst.EMAIL_INVALID_FORM.code) { //유효한 이메일 형식이 아닐때
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+          }else if(result.resultCode.code == SignUpConst.EMAIL_TOO_LONG_LEN.code){ //50자 초과 입력시
+            $comment.show();
+            $input.closest('.input-wrap').addClass('error');
+            $('#email').val($('#email').val().slice(0, 51));
+          }else if(result.resultCode.code == SignUpConst.EMAIL_ZERO_LEN.code) { //이메일 미입력시
+            $comment.hide();
+            $input.closest('.input-wrap').removeClass('cmplt');
+          }
+          errorMsg = result.resultCode.errorMessage;
+          $comment.html(result.resultCode.errorMessage);
+        }
+
+        return errorMsg;
+      },
+      /**
+       * 이메일 중복 유무 체크
+       */
+      getEmailMatchCount: function() {
+        var email = $('#email').val(); //아이디
+
+        SignUpTool.getEmailMatchCount(email,function(result, textStatus){
+          if (ResultTool.isSuccess(result)){
+            me.emailErrorMsg = me.checkEmailDuplicate(result, textStatus, me.$emailFld, me.$emailCommentFld);
+          }else{
+            var $input = me.$emailFld
+            var $comment = me.$emailCommentFld
+            $input.closest('.input-wrap').removeClass('cmplt');
+            $input.closest('.input-wrap').removeClass('error');
+            $comment.show();
+            $comment.html(SignUpConst.EMAIL_ZERO_LEN.errorMessage);
+            $input.closest('.input-wrap').addClass('error');
+          }
+        });
+      },
+      /**
+       * 이메일 중복 체크
+       */
+      checkEmailDuplicate: function (result, textStatus, $input, $comment){
+        var errorMsg = null;
+        var inputStr = $input.val();
+        $input.closest('.input-wrap').removeClass('cmplt');
+        $input.closest('.input-wrap').removeClass('error');
+
+        if (textStatus == 'success'){
+          var data = ResultTool.getData(result);
+          if (data['count'] > 0) {
+            me.cannotUseEmails.push(inputStr);
+            $comment.show();
+            $comment.html(SignUpConst.EMAIL_EXIST.errorMessage);
+            $input.closest('.input-wrap').addClass('error');
+            errorMsg = SignUpConst.EMAIL_EXIST.errorMessage;
+          }else{
+            me.canUseEmails.push(inputStr);
+            errorMsg = null;
+            $comment.hide();
+            $input.closest('.input-wrap').addClass('cmplt');
+          }
+        }else{
+          $input.val('');
+          $comment.show();
+          $comment.html(ResultTool.getMessage(result));
+          errorMsg = SignUpConst.EMAIL_ZERO_LEN.errorMessage;
+        }
+        return errorMsg;
+      },
+      /**
+       * 회원가입 버튼 활성화 확인 -> 필드 유효성 검사
+       */
+      isButtonValid: function(type,allFilled){
+        if(type == 'default'){ //일반 회원가입
+          if(me.role == 'B004'){ //개인
+            me.cellNoErrorMsg = null;
+          }
+          me.errorStrings	= [
+            me.memberIdErrorMsg, //아이디
+            me.passwdErrorMsg, //비밀번호
+            me.passwdConfirmErrorMsg, //비밀번호 확인
+            me.realNameErrorMsg, //이름
+          ];
+        }else{//sns 회원가입
+          me.errorStrings	= [
+            me.realNameErrorMsg, //이름
+            me.cellNoErrorMsg, //휴대폰번호
+            me.emailErrorMsg, //이메일
+          ];
+          me.errorFields = [
+            me.$realNameFld, //이름
+          ];
+        }
+
+        if(allFilled){
+          if(me.isInputValid(me.errorStrings, me.errorFields)) {
+            $('#joinComplt').prop('disabled', false)
+          }else{
+            $('#joinComplt').prop('disabled', true)
+          }
+        }else{
+          $('#joinComplt').prop('disabled', true)
+        }
+      },
+      /**
+       * 입력 여부 확인
+       */
+      isInputValid: function (errorStrings, errorFields)
+      {
+        var index;
+        var len;
+        var error_msg = '';
+        var hasError = false;
+        for (index = 0, len = errorStrings.length; index < len; ++index) {
+          if (errorStrings[index] != null) {
+            if (errorFields[index] != null) {
+              error_msg = errorFields[index].prop('id');
+              errorFields[index].closest('.input-wrap').addClass('error')
+              $('#'+error_msg+'_comment').show();
+              hasError = true;
+            }
+          }
+        }
+        if(hasError){
+          return false;
+        }
+        return true;
+      },
+      //최종 찐 회원가입!
+      addMember: function(){
+        var params = {
+          //기본 정보
+          'office'			: 'fo',
+          'role' 				: 'B004', //사업자, 개인
+          'type'				: 'default', //일반, sns 회원가입
+
+          //개인 정보 입력 파라미터
+          'memberId'			: $.trim(me.$memberIdFld.val()), //아이디
+          'passwd'			: $.trim(me.$passwdFld.val()), //비밀번호
+          'realName'			: $.trim(me.$realNameFld.val()), //이름
+          'cellNo'			: $.trim(me.$cellNoFld.val()), //휴대폰번호 -> 개인/사업자 경우 필드 영역이 다르다
+          'email'				: $.trim(me.$emailFld.val()), //이메일
+          'joinPathCd'		: $.trim($('#joinPath .active button[type="button"]').val()), //가입경로
+          'joinPath'			: $.trim(me.$joinPathExtFld.val()), //가입경로 - 기타 경우
+          'authSeq'			: me.authSeq,// 인증시퀀스
+          'authNo'			: me.authNo,// 인증번호
+
+          //사업자 정보 입력 파라미터
+          'bussRegNo'			: '', //사업자 등록번호
+          'coName'			: '', //상호
+          'ceoName'			: '', //대표자명
+          'taxBillType'		: '', //업태
+          'taxBillKind'		: '', //업종
+          'coTelNo'			: '', //사업장 전화번호
+          'zipCd'				: '', //사업장 우편번호
+          'zipCd1'			: '', //사업장 우편번호
+          'zipCd2'			: '', //사업장 우편번호
+          'addr1'				: '', //사업장 주소
+          'addr2'				: '', //사업장 상세주소
+          'roadAddr1'			: '', //도로명 주소
+          'addrSelectedType'	: '', //선택한 주소 타입 (J:지번, R:도로명)
+          'buildingName'		: '', //건물명
+          'defaultUseYn'		: '', //기본 배송지 여부
+          'memberDivisionCd'  : '', //사업장 형태
+          'memberKindArr' 	: '', //사업장 형태가 식당인 경우 //식당 종류
+
+          //약관 파라미터
+          'smsRecvYn'			: 'N', //문자 수신 여부
+          'emailRecvYn'		: 'N', //이메일 수신 여부
+          'pushRecvYn'		: 'N', //푸쉬 알림 여부
+
+          //본인인증 PASS 파라미터
+          'resultCd'			: '00',
+          'sexType'			: 'M',
+          'juminFirst'		: '021116',
+          'authCi'			: 'k14TufRzxjI+Fu7itRawqIYwRE3eVHqVCoI98FAirYcAHzhSVBeP5ELw4jgGGEU9X3W/8eRACS+7BH6qyWE53A==',
+          'authDi'			: 'MC0GCCqGSIb3DQIJAyEA7zNiUXyFY+VfVKdL/cYSRNxvpYgEk3lSQNKaAailn/Y=',
+
+          //sns정보 파라미터
+          'siteCd'			: '',
+          'siteId'			: '',
+          'siteNm'			: '',
+
+        };
+        SignUpTool.addMember(params,function(result, textStatus){
+          if (ResultTool.isSuccess(result)){
+            //가입완료 페이지 이동
+            SignUpTool.joinCmptPage(result);
+          }else{
+            alert (ResultTool.getMessage (result));
+          }
+        });
+      },
+      checkPersonalInfoPage: function (){
+        var authCi = 'k14TufRzxjI+Fu7itRawqIYwRE3eVHqVCoI98FAirYcAHzhSVBeP5ELw4jgGGEU9X3W/8eRACS+7BH6qyWE53A==' ? 'k14TufRzxjI+Fu7itRawqIYwRE3eVHqVCoI98FAirYcAHzhSVBeP5ELw4jgGGEU9X3W/8eRACS+7BH6qyWE53A==' : me.authCi;
+
+        var params = {
+          //공통
+          'role': me.role, //사업자,개인
+          'type': me.type, //일반, sns
+
+          //개인정보
+          'memberId'		: me.$memberIdFld.val(), //아이디
+          'realName'		: me.$realNameFld.val(), //이름
+          'cellNo'		: me.$cellNoFld.val(), //휴대폰번호
+          'email'			: me.$emailFld.val(),	//이메일
+          'joinPathCd' 	: $.trim($('#joinPath .active button[type="button"]').val()), //가입경로
+          'joinPath'		: $.trim(me.$joinPathExtFld.val()), //가입경로 - 기타 경우
+
+          //sns api 정보
+          'siteCd'	: '',
+          'siteId'	: '',
+          'siteNm'	: '',
+          'authCi'	: authCi,
+
+          //본인인증PASS 정보
+          'resultCd'	: me.resultCd,
+          'sexType'	: me.sexType,
+          'juminFirst' : me.juminFirst,
+          'authDi'	: me.authDi,
+          'retry'		: me.retry,
+        };
+        // 이용약관 페이지 memberTermsPage.jsp
+        SignUpTool.goMemberTermsPage(params);
+      },
+      nothing:null
+    };
+  })();
+
+  function setCellNo(param){
+    var params = JSON.parse(param);
+    var cellNo = params.cellNo;
+    if(cellNo != ''){
+      MainMgr.canUseCellNos.push($('#cellNo').val());
+      MainMgr.cellNoErrorMsg = null;
+      $('#cellNo').attr('value',cellNo);
+      $('#sns_cellNoArea').removeClass('check_btn');
+      $('#auth_pass_button').hide();
+    }
+
+    MainMgr.resultCd = params.resultCd;
+    MainMgr.sexType = params.sexType;
+    MainMgr.juminFirst = params.juminFirst;
+    MainMgr.authCi = params.authCi;
+    MainMgr.authDi = params.authDi;
+    MainMgr.retry = params.retry;
+
+    //버튼 활성화 유무
+    MainMgr.isButtonValid(MainMgr.type,true);
+  }
+
+  function goDuplAccount(param){
+    var params = JSON.parse(param);
+
+    SignUpTool.goMemberExistPage(params); //중복계정안내 페이지
+  }
+
+  $(function() {
+    MainMgr.startup();
+  }); 
+</script>
+<!-- 회원가입: 개인 정보 입력 페이지 -->
+<div class="container white_box">
+    <div class="content">
+        <div id="join_login" class="join_form">
+            <div class="join-form-comm">
+                <div class="join-tit">
+                    <h4>일반 회원가입</h4>
+                    <h2 id="default_join">거의 다왔어요!<br><em class="ce853">개인 정보</em>를 입력해주세요</h2>
+                </div>
+            </div><div class="form_box">
+                <div class="form-wrap">
+                    <form action="./registerNormalAction.do" method="post" onsubmit="return validatePassword();">
+                        <div class="input_form">
+                            <ul>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="memberId" name="id" placeholder="아이디" data-focus="아이디(영문,숫자/4~18자 이내)" autocomplete="off" required>
+                                        <span class="placeholder">아이디</span>
+                                    </div>
+                                    <em class="error-msg" id="memberId_comment"></em>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="password" id="passwd" name="password" placeholder="비밀번호" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required>
+                                        <button type="button" class="pw-show"></button>
+                                        <span class="placeholder">비밀번호</span>
+                                    </div>
+                                    <em class="error-msg" id="passwd_comment"></em>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="password" id="passwdConfirm" placeholder="비밀번호 확인" data-focus="비밀번호(영문,숫자,특수문자/28자 이내)" autocomplete="new-password" required>
+                                        <button type="button" class="pw-show"></button>
+                                        <span class="placeholder">비밀번호 확인</span>
+                                    </div>
+                                    <em class="error-msg" id="passwdConfirm_comment"></em>
+                                </li>
+                                <li>
+                                    <div class="input-wrap">
+                                        <input type="text" id="realName" name="name" placeholder="이름" data-focus="이름(국,영문/30자 이내)" autocomplete="new-password" required>
+                                        <span class="placeholder">이름</span>
+                                    </div>
+                                    <em class="error-msg" id="realName_comment"></em>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="btn_box">
+                            <button type="submit" class="comm_btn" id="joinComplt">회원가입 완료</button>
+                        </div>
+
+                        <div id="error-message" style="color: red; text-align: center; margin-top: 20px; font-weight: bold;"></div>
+                    </form>
+                </div></div></div></div></div><script>
+    // 비밀번호 일치 여부 확인
+    function validatePassword() {
+        var password = document.getElementById("passwd").value;
+        var confirmPassword = document.getElementById("passwdConfirm").value;
+
+        if (password !== confirmPassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return false; // form 제출 막기
+        }
+        return true; // form 제출 허용
+    }
+
+    // 페이지 로드 시 URL 파라미터 확인하여 에러 메시지 표시
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            const errorMessage = decodeURIComponent(urlParams.get('error'));
+            document.getElementById('error-message').textContent = errorMessage;
+        }
+    });
+</script>
 <script type="text/javascript">
   (function() {
     var me = window.BottomMgr = {
