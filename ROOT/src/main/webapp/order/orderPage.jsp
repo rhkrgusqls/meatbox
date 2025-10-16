@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%-- JSTL 사용을 위한 태그 라이브러리 선언 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -85,13 +86,13 @@
                              <tr class="_deliveryAddr _deliveryAlways">
                                 <th class="line_height"><em>받는 분</em></th>
                                 <td>
-                                    <input type="text" class="width200 input_wid order_name" name="recv_nm" maxlength="20" placeholder="이름을 입력하세요" value="${sessionScope.user_name}"/>
+                                    <input type="text" class="width200 input_wid order_name" name="recv_nm" maxlength="20" placeholder="이름을 입력하세요" value="${requestScope.user_name}"/>
                                 </td>
                             </tr>
                             <tr class="_notDeliveryAD09">
                                 <th class="line_height"><em>연락처</em></th>
                                 <td>
-                                    <input type="tel" class="width200 input_wid ph_num" value="${sessionScope.user_phone}" name="recv_cell_no" maxlength="13" placeholder="숫자만 입력하세요"/>
+                                    <input type="tel" class="width200 input_wid ph_num" value="${requestScope.user_phone}" name="recv_cell_no" maxlength="13" placeholder="숫자만 입력하세요"/>
                                 </td>
                             </tr>
                              <tr>
@@ -134,22 +135,23 @@
                                         </thead>
                                         <tbody class="common-pay-td">
                                             <%-- 장바구니 상품 목록 (동적 생성) --%>
-                                            <c:forEach var="item" items="${cart_list}">
+                                            <c:forEach var="item" items="${order_product_list}" varStatus="status">
                                                 <tr class="cart_item">
                                                     <td class="item_info_td">
                                                         <div class="item_info_opt">
-                                                           <img src="${item.product_image}" alt="${item.product_name}" width="60" style="float:left; margin-right:10px;"/>
-                                                            <strong class="prd_name">${item.product_name}</strong>
+                                                           <%-- ProductDetailBean에는 대표 이미지가 없으므로 일단 비워둠 --%>
+                                                           <img src="" alt="${item.name}" width="60" style="float:left; margin-right:10px;"/>
+                                                            <strong class="prd_name">${item.name}</strong>
                                                         </div>
                                                     </td>
                                                     <td class="price">
                                                         <span><fmt:formatNumber value="${item.price}" pattern="#,###" /></span>원
                                                     </td>
                                                     <td class="quantity">
-                                                        <span>${item.quantity}</span>개
+                                                        <span>${cart_list[status.index].quantity}</span>개
                                                     </td>
                                                     <td class="total_price">
-                                                        <span><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###" /></span>원
+                                                        <span><fmt:formatNumber value="${item.price * cart_list[status.index].quantity}" pattern="#,###" /></span>원
                                                     </td>
                                                 </tr>
                                             </c:forEach>
