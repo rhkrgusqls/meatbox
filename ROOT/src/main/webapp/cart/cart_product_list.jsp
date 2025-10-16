@@ -56,17 +56,22 @@
 		            <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 16px;">
 		                ${product.name}
 		            </p>
-		            <p style="margin: 0; font-size: 14px; color: #666;">
-		                가격 : <fmt:formatNumber value="${product.price}" pattern="#,###" />원
-		            </p>
+		           	<p style="margin: 0; font-size: 14px; color: #666;">
+					    중량 : ${productOptionList[status.index].option_detail}
+					</p>
 		        </div>
 		
 		        <div style="width: 150px; text-align: right; font-weight: bold; font-size: 16px; margin-right: 30px;">
-		            <fmt:formatNumber value="${product.price}" pattern="#,###" />원
+		           금액: <fmt:formatNumber value="${productOptionList[status.index].price_of_option}" pattern="#,###" />원
 		        </div>
 		    </div>
 		
-		    <c:set var="totalPrice" value="${totalPrice + product.price}" />
+		    <c:set var="totalPrice" value="0" /> <!-- 초기값 0 설정 -->
+
+			<c:forEach var="productOption" items="${productOptionList}" varStatus="status">
+			    <c:set var="totalPrice" 
+			           value="${totalPrice + productOption.price_of_option}" />
+			</c:forEach>
 		</c:forEach>
 
         <div style="text-align: right; padding: 20px; font-size: 18px; background-color: #f9f9f9;">
