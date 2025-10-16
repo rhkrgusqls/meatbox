@@ -1,20 +1,131 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%-- JSTL 사용을 위한 태그 라이브러리 선언 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <%-- =============================================================================== --%>
-    <%--  공통 CSS 및 JS 라이브러리 링크                                                 --%>
-    <%--  이 경로들은 실제 프로젝트 구조에 맞게 수정해야 할 수 있습니다.                 --%>
-    <%-- =============================================================================== --%>
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css" type="text/css" media="all" charset="UTF-8" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css" type="text/css" media="all" charset="UTF-8" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css" type="text/css" media="all" charset="UTF-8" />
     <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
-    <%-- 필요한 추가 JS 파일들을 여기에 링크할 수 있습니다. --%>
+
+<style>
+    /* 드롭다운 메뉴 스타일 (수정 없음) */
+    .category-menu, .dseries-menu {
+        position: relative;
+    }
+    .category-dropdown {
+        display: none;
+        position: absolute;
+        background-color: #ffffff;
+        min-width: 200px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1000;
+        border: 1px solid #ddd;
+    }
+    .category-dropdown a, .category-dropdown span {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+    .category-dropdown a:last-child, .category-dropdown span:last-child {
+        border-bottom: none;
+    }
+    .category-dropdown a:hover, .category-dropdown span:hover {
+        background-color: #f1f1f1;
+    }
+    .category-menu-item:hover > .category-dropdown {
+        display: block;
+    }
+    .category-menu-item {
+        position: relative;
+    }
+    .category-dropdown .category-menu-item .category-dropdown {
+        top: 0;
+        left: 100%;
+        margin-top: -1px; /* 테두리 겹침 방지 */
+    }
+</style>
+
+<script>
+$(function() {
+    const contextPath = "${pageContext.request.contextPath}";
+
+    function createDropdown(parentId, $parentElement) {
+        if ($parentElement.children('.category-dropdown').length > 0) {
+            return;
+        }
+
+        const parentIdParam = parentId === null ? 'null' : parentId;
+        const url = contextPath + '/GetCategories.cbo?parentId=' + parentIdParam;
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.length > 0) {
+                    const $dropdown = $('<div class="category-dropdown"></div>');
+
+                    $.each(data, function(index, category) {
+                        const $item = $('<div class="category-menu-item"></div>');
+                        let $element;
+
+                        if (category.isLeaf) {
+                            // [수정된 부분] 클릭 시 이동할 경로를 '/productList.do'로 변경했습니다.
+                            $element = $('<a></a>')
+                                .attr('href', contextPath + '/productList.do?category=' + category.id)
+                                .text(category.name);
+                        } else {
+                            $element = $('<span></span>').text(category.name);
+                            $item.on('mouseover', function(e) {
+                                e.stopPropagation();
+                                createDropdown(category.id, $(this));
+                            });
+                        }
+                        
+                        $item.append($element);
+                        $dropdown.append($item);
+                    });
+
+                    $parentElement.append($dropdown);
+                    $dropdown.show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+
+    // '카테고리' 메뉴: parentId를 null로 하여 최상위 카테고리 호출
+    $('.category-menu').on('mouseover', function() {
+        createDropdown(null, $(this));
+    });
+
+    // '당당시리즈' 메뉴: 별개의 ID로 호출
+    $('.dseries-menu').on('mouseover', function() {
+        // DB의 category_hierarchy 테이블에서 '당당시리즈'의 실제 category_id를 확인하여 아래 값을 수정해야 합니다.
+        const dangdangSeriesCategoryId = 2; // <- '당당시리즈'의 실제 ID로 수정
+        createDropdown(dangdangSeriesCategoryId, $(this));
+    });
+    
+    // 메뉴에서 마우스가 벗어났을 때 드롭다운 제거
+    $('.category-menu, .dseries-menu').on('mouseleave', function() {
+        const $menuElement = $(this);
+        setTimeout(function() {
+            if (!$menuElement.is(':hover')) {
+                $menuElement.find('.category-dropdown').remove();
+            }
+        }, 300);
+    });
+});
+</script>
+
 </head>
 <body>
 
@@ -33,7 +144,6 @@
                         <a href="tel:1644-6689" class="tel">주문 문의 1644-6689</a>
                     </li>
                     <li class="member">
-                        <%-- 로그인 여부에 따라 분기 처리 --%>
                         <c:if test="${empty sessionScope.userIndex}">
                             <button type="button" class="inline-round join" onclick="location.href='/fo/member/memberAddPage.do';"> <span>회원가입</span> </button>
                         </c:if>
@@ -41,7 +151,7 @@
                 </ul>
             </div>
             <div class="logo flex-col">
-                <a href="/"> <%-- 메인 페이지 URL로 변경 --%>
+                <a href="/">
                     <img src="https://static-cdn.meatbox.co.kr/img/renew/logo-row-ko.svg" alt="미트박스 로고" width="139px" height="32px">
                 </a>
             </div>
@@ -96,14 +206,19 @@
         <article class="gnb-wrap">
             <nav class="flex-row-gap032 f-size16-700">
                 <ul class="depth01 depth-main flex-row-gap016 f-size16-700">
-                    <li class="gnb-all">
+                    
+                    <%-- ================== [수정된 부분 1] ================== --%>
+                    <li class="gnb-all category-menu">
                         <a href="javascript:;">
                             <span class="alt">카테고리 전체보기</span>
                         </a>
                     </li>
-                    <li class="gnb-tab more ">
+                    
+                    <%-- ================== [수정된 부분 2] ================== --%>
+                    <li class="gnb-tab more dseries-menu">
                         <a href="당당시리즈_URL" class="dangdang"><span class="txt">당당시리즈</span></a>
                     </li>
+
                     <li class="gnb-tab">
                         <a href="멤버십전용_URL">
                             <em class="sm-txt">멤버십 전용</em>
