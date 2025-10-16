@@ -69,17 +69,17 @@
                         </c:if>
                     </li>
                     <li>
-                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
-                        </a>
-                    </li>
-                    <li>
                     	<c:if test="${not empty sessionScope.userIndex}">
                         <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
                             <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
                             <span class="des">Logout</span>
                         </a>
                         </c:if>
+                    </li>
+                    <li>
+                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
+                        </a>
                     </li>
                     <li>
                         <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">
