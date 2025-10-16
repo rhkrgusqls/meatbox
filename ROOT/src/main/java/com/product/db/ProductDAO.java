@@ -251,11 +251,11 @@ public class ProductDAO implements ProductInterface {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        // [수정된 부분] 
         // product 테이블과 product_of_detail_category를 조인하고,
-        // 서브쿼리를 이용해 각 상품(p.product_id)의 첫 번째 이미지 경로를 함께 가져옵니다.
+        // 서브쿼리를 이용해 첫 번째 이미지 경로와 옵션 수량 합계를 가져옵니다.
         String sql = "SELECT p.*, " +
-                     " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) as productImage " +
+                     " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
+                     " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
                      "FROM product p " +
                      "JOIN product_of_detail_category podc ON p.product_id = podc.product_id " +
                      "WHERE podc.detail_category_id = ? " +
@@ -275,14 +275,15 @@ public class ProductDAO implements ProductInterface {
                 ProductBean p = new ProductBean();
                 p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
-                p.setQuantity(rs.getInt("quantity"));
+                
+                // 옵션에서 합산된 수량 사용
+                p.setQuantity(rs.getInt("totalQuantity"));
+                
                 p.setPrice(rs.getInt("price"));
                 p.setSellerNote(rs.getString("seller_note"));
-                
-                // [수정] 위에서 조회한 대표 이미지 경로를 ProductBean에 저장합니다.
                 p.setProductImage(rs.getString("productImage"));
-                
-                // ... ProductBean의 나머지 setter들을 여기에 채워주세요.
+
+                // 필요하다면 나머지 setter 추가
 
                 productList.add(p);
             }
@@ -301,6 +302,7 @@ public class ProductDAO implements ProductInterface {
 
         return productList;
     }
+
 
     @Override
     public List<ProductOptionBean> selectProductsOptionsDetail(int product_id) throws ProductException {
@@ -337,5 +339,6 @@ public class ProductDAO implements ProductInterface {
 
         return options;
     }
-
+    
+    
 }

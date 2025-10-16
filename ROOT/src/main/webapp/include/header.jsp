@@ -34,12 +34,8 @@
                     </li>
                     <li class="member">
                         <%-- 로그인 여부에 따라 분기 처리 --%>
-                        <c:if test="${empty sessionScope.user_id}">
+                        <c:if test="${empty sessionScope.userIndex}">
                             <button type="button" class="inline-round join" onclick="location.href='/fo/member/memberAddPage.do';"> <span>회원가입</span> </button>
-                        </c:if>
-                        <c:if test="${not empty sessionScope.user_id}">
-                            <span>${sessionScope.user_name}님 환영합니다!</span>
-                            <button type="button" class="inline-round" onclick="location.href='로그아웃_URL';"> <span>로그아웃</span> </button>
                         </c:if>
                     </li>
                 </ul>
@@ -59,23 +55,18 @@
             <div class="user-area">
                 <ul class="flex-row-gap04">
                     <li>
-                        <c:if test="${empty sessionScope.user_id}">
-                             <a href="/ROOT/login.do" class="f-size12-600 flex-col-gap2">
+                        <c:if test="${empty sessionScope.userIndex}">
+                             <a href="/login.do" class="f-size12-600 flex-col-gap2">
                                 <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="로그인" width="24px" height="24px">
                                 <span class="des">로그인</span>
                             </a>
                         </c:if>
-                        <c:if test="${not empty sessionScope.user_id}">
-                             <a href="마이페이지_URL" class="f-size12-600 flex-col-gap2">
+                        <c:if test="${not empty sessionScope.userIndex}">
+                             <a href="/myMenu/myMenuMainPage.do" class="f-size12-600 flex-col-gap2">
                                 <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
                                 <span class="des">MY</span>
                             </a>
                         </c:if>
-                    </li>
-                    <li>
-                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
-                        </a>
                     </li>
                     <li>
                     	<c:if test="${not empty sessionScope.userIndex}">
@@ -84,6 +75,11 @@
                             <span class="des">Logout</span>
                         </a>
                         </c:if>
+                    </li>
+                    <li>
+                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
+                        </a>
                     </li>
                     <li>
                         <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">

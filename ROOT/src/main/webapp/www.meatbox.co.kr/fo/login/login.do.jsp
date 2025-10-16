@@ -1,9 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>미트박스 :: 1등 고기 직거래</title>
-    <meta property="og:image"				content="https://www.meatbox.co.kr/img/co/meatboxOgImage.png"	/>
     <meta http-equiv="Content-Type"		content="text/html; charset=UTF-8" />
     <meta http-equiv="Cache-Control"	content="no-cache" />
     <meta http-equiv="Pragma"			content="no-cache" />
@@ -21,7 +22,7 @@
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css?20251001124312135" type="text/css" media="all" charset="UTF-8" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css?20251001124312135" type="text/css" media="all" charset="UTF-8" />
     <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css?20251001124312135" type="text/css" media="all" charset="UTF-8" />
-    <link type="text/css" rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/swiper/5.2.1/swiper.min.css" media="screen" charset="UTF-8" />
+    <link type="text/css" rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/swiper/5.2.1/swiper.min.css" media="screen" charset="UTF-8">
     <script type="application/ld+json">
         {
             "@context": "https://schema.org/",
@@ -1033,7 +1034,7 @@
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
 
-<script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760075462417"></script>
+<script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760075176590"></script>
 
 <header class="newVer">
     <section class="header-main">
@@ -1102,24 +1103,24 @@
                 </div>
                 <div class="search-result-area box-shadow">
                     <div class="search-wrapper">
-                        <div class="search-keyword-not-result flex-justify-center" style="display: none;"><!-- 검색결과 없음 -->
+                        <div class="search-keyword-not-result flex-justify-center" style="display: none;">검색결과 없음
                             <p>일치하는 검색어가 없습니다</p>
                         </div>
-                        <div class="search-keyword-box" style="display: none;"><!-- 검색결과 -->
+                        <div class="search-keyword-box" style="display: none;">검색결과
                             <ul class="search-keyword-inner"></ul>
                         </div>
-                        <div class="search-defalut-box flex-col-gap24"><!-- 검색창 디폴트 -->
+                        <div class="search-defalut-box flex-col-gap24">검색창 디폴트
                             <div class="search-keyword-list">
-                                <h6 class="search-title">최근 검색어 <button type="button" class="all-delete">전체삭제</button></h6><!-- 최근검색어 -->
+                                <h6 class="search-title">최근 검색어 <button type="button" class="all-delete">전체삭제</button></h6>최근검색어
                                 <ul class="search-keyword-inner"></ul>
                                 <button type="button" class="more-list none"><span>최근 검색어 더보기</span></button>
                             </div>
                             <div class="search-recommend-list">
-                                <h6 class="search-title">추천 검색어</h6><!-- 추천검색어 -->
+                                <h6 class="search-title">추천 검색어</h6>추천검색어
                                 <ul class="search-list-inner flex-row-gap4"></ul>
                             </div>
                             <div class="search-exhibition-list">
-                                <h6 class="search-title">기획전</h6><!-- 기획전 -->
+                                <h6 class="search-title">기획전</h6>기획전
                                 <div class="swiper-container">
                                     <ul class="search-list-inner swiper-wrapper"></ul>
                                 </div>
@@ -1138,20 +1139,35 @@
             <div class="user-area">
                 <ul class="flex-row-gap04">
                     <li>
-                        <a href="javascript:;" id="myLink" class="f-size12-600 flex-col-gap2 js-dropbox-btn">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px" loading="lazy">
-                            <span class="des" id="myLinkText"></span>
+                        <c:if test="${empty sessionScope.userIndex}">
+                             <a href="/login.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="로그인" width="24px" height="24px">
+                                <span class="des">로그인</span>
+                            </a>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.userIndex}">
+                             <a href="/myMenu/myMenuMainPage.do" class="f-size12-600 flex-col-gap2">
+                                <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-person.svg" alt="내 정보" width="24px" height="24px">
+                                <span class="des">MY</span>
+                            </a>
+                        </c:if>
+                    </li>
+                    <li>
+                        <a href="주문배송_URL" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px"><span class="des">주문배송</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/myMenu/myOrderListPage.do');">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-truck.svg" alt="주문/배송" width="24px" height="24px" loading="lazy">
-                            <span class="des">주문배송</span>
+                    	<c:if test="${not empty sessionScope.userIndex}">
+                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="location.href='/logout.do';">
+                            <img src="https://www.shutterstock.com/image-vector/logout-vector-icon-illustration-web-260nw-1888955368.jpg" alt="로그아웃" width="24px" height="24px" loading="lazy">
+                            <span class="des">Logout</span>
                         </a>
+                        </c:if>
                     </li>
                     <li>
-                        <a href="javascript:;" class="f-size12-600 flex-col-gap2" onclick="FoTool.go ('/fo/cart/cartPage.do');">
-                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px" loading="lazy">
+                        <a href="/cart/cartPage.do" class="f-size12-600 flex-col-gap2">
+                            <img src="https://static-cdn.meatbox.co.kr/img/renew/icon-cart.svg" alt="장바구니" width="24px" height="24px">
                             <span class="badge _newCartCount"></span>
                             <span class="des">장바구니</span>
                         </a>
@@ -1235,9 +1251,9 @@
                             </span>
                         </a>
                     </li>
-                    <!-- <li class="gnb-tab icon-dotted">
+                    <li class="gnb-tab icon-dotted">
                         <a href="/fo/event/publicEventPage.do?year=2025&name=chuseokGift"><span class="txt">추석선물세트</span></a>
-                    </li> -->
+                    </li>
                     <li class="gnb-tab">
                         <a href="/fo/event/productListPage.do?collectionSeq=10"><span class="txt">낱개</span></a>
                     </li>
@@ -2713,15 +2729,16 @@
     $(function() {
         HeaderMgr.startup();
     });
-</script><!-- 중복계정 리스트 -->
-
+</script><script src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-placeholders-4.0.1.min.js" charset="UTF-8"></script>
 <script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
+
 <script type="text/javascript">
 
     (function() {
-
         var me = window.MainMgr = {
 
+            saveCookieName:	'savedId20190409',
+            autoCookieName: Const.COOKIE_AUTO_LOGIN,
 
             startup: function()
             {
@@ -2730,147 +2747,360 @@
                 me.initialize();
             },
 
+            setVariables: function()
+            {
+                me.expireSeconds	= 86400 * 365 * 5;	//
 
-            setVariables: function() {
-                me.type = 'default'; // 일반(default), sns(sns) 회원가입
-                me.role = 'B004'; //가입 유형 타입 (개인, 사업자)
-                me.siteCd = '';
-                me.siteId = '';
-                me.siteNm = '';
-                me.authCi = 'BuiORUQCB0EIbJMr5okihiVELHyXtxAhjZ458jm4LxtmBX+Ezc0IlrCjkCInhhxlQ3bxFIxOkk36NuVeARVInw==';
-                me.email = '';
-                me.cellNo = '010-8684-4725';
-                me.realName = '송지섭';
+                me.$memberIdFld		= $('#memberId');
+                me.$passwdFld		= $('#passwd');
+                me.$savingYnFld		= $('input[name="savingYn"]');
+                me.$autoLoginYnFld	= $('input[name="autoLoginYn"]');
+
+                me.$loginComment	= $('#loginComment');
+
+                me.memberIdError	= '아이디를 입력해 주세요.';
+                me.passwdError		= '비밀번호를 입력해 주세요.';
+
+                me.siteCd			= '';
+                me.siteId			= '';
+                me.snsLinkYn		= '';
+                me.memberId			= '';
+
+                me.redirectUrl		= '/fo/myMenu/myMenuMainPage.do';
             },
 
+            setEvents: function()
+            {
+                //비밀번호 show/hide 동작
+                $('.pw-show').click(function() {
+                    if($(this).siblings('input').attr('type') == 'password') {
+                        $(this).addClass('show').siblings('input').attr('type', 'text');
+                    } else {
+                        $(this).removeClass('show').siblings('input').attr('type', 'password');
+                    }
+                });
 
-            setEvents: function() {
-                $(function () {
-                    //체크박스 ui변경
-                    $('.chkeck_che input').click(function() {
-                        $('.chkeck_che input:checked').parent().addClass('selected');
-                        $('.chkeck_che input:not(:checked)').parent().removeClass('selected');
-                    });
+                me.$memberIdFld.on('blur', function() {
+                    me.memberIdError = me.checkIdFormat($(this));
+                });
 
-                    //로그인 하기 버튼 활성화
-                    $('.join-list input:radio').change(function(){
+                me.$passwdFld.on('blur', function() {
+                    me.passwdError = me.checkPasswdFormat($(this));
+                });
 
-                        var checkedLeng = $('.join-list input:radio').filter(':checked').length;
+                me.$savingYnFld.on('click', function() {
+                    if($(this).is(':checked')) {
+                        $(this).parent().addClass( 'selected');
+                    } else {
+                        $(this).parent().removeClass( 'selected');
+                    }
+                });
 
-                        if(checkedLeng > 0) $('.join_exist .js-login').prop('disabled', false);
-                        else $('.join_exist .js-login').prop('disabled', true);
+                me.$autoLoginYnFld.on('click', function() {
+                    if($(this).is(':checked')) {
+                        $(this).parent().addClass( 'selected');
+                    } else {
+                        $(this).parent().removeClass( 'selected');
+                    }
+                });
+
+                me.$memberIdFld.keyup (function (evt) {
+                    if (evt.keyCode == Const.ENTER && $.trim(me.$memberIdFld.val()).length > 0)
+                    {
+                        evt.preventDefault();
+                        me.$passwdFld.focus();
+                    }
+                });
+
+                me.$passwdFld.keyup (function (evt) {
+                    if (evt.keyCode == Const.ENTER && $.trim(me.$passwdFld.val()).length > 0)
+                    {
+                        evt.preventDefault();
+                        me.prepareLogin();
+                    }
+                });
+                $(window).on('load', function() {
+                    var observer = new MutationObserver(function (mutations) {
+                        mutations.forEach(function (mutation) {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+                                me.$passwdFld.focus();
+                                me.$memberIdFld.focus();
+                            }
+                        });
                     });
                 });
             },
 
-            initialize: function() {
-                if(me.role == 'B004'){
-                    $('#join').remove();
+            initialize: function()
+            {
+
+
+                //memberExistPage.jsp에서 이미 있는 아이디로 로그인 하려고 넘어 온 경우
+                if(me.memberId.length > 0){
+                    me.$memberIdFld.val(me.memberId);
+                }else {
+                    me.$memberIdFld.val('');
+                }
+                me.$passwdFld.val('');
+
+                me.$loginComment.hide();
+
+                var savedId	= $.cookie (me.saveCookieName);
+                if (StringTool.isNotBlank (savedId) && me.memberId == '') // me.memberId == '' : memberExistPage.jsp에서 이미 있는 아이디로 로그인 하려고 넘어온게 아닌 경우
+                {
+                    me.$memberIdFld.val (savedId).change();
+                    me.$savingYnFld.attr ('checked', true); //아이디 저장
+                    me.$savingYnFld.parent().addClass('selected'); //아이디 저장
+                    me.$passwdFld.focus();
+                    me.memberIdError = null;
+                }
+                else
+                {
+                    me.$memberIdFld.focus();
+                }
+                //
+                var autoLogin = $.cookie(me.autoCookieName);
+                if(autoLogin == 'Y' || autoLogin === undefined) {
+                    me.$autoLoginYnFld.click();
                 }
             },
-            goLogin: function(){
-                var selectedRadio = $('.join-list input:radio:checked');
-                var memberId = selectedRadio.siblings('.id').text().trim();
 
-                if (selectedRadio.length > 0) {
-                    var siteCdList = selectedRadio.siblings('.sns-list').find('img').map(function() {
-                        return $(this).attr('value');
-                    }).get();
-                    var siteCdCount = siteCdList.length;
+            /**
+             * 아이디 체크
+             */
+            checkIdFormat: function ($input)
+            {
+                var memberIdError = null;
+                var inputStr = $.trim($input.val());
 
-                    if (siteCdCount === 1) {
-                        var type = siteCdList[0];
-                        SignUpTool.popupSnsLogin(type);
-                    }else{
-                        WebTool.submit ({
-                            'action'	: WebTool.getUrl ('/fo/main/loginPage.do')
-                            , 'inputs'	: {
-                                'memberId' : memberId,
-                            }
-                        });
-                    }
+                if (inputStr.length == 0)
+                {
+                    memberIdError = '아이디를 입력해 주세요.';
                 }
-                else {
-                    alert('로그인 할 계정을 선택하세요');
+                else
+                {
+                    memberIdError = null;
                 }
+
+                return memberIdError;
             },
-            // //공통으로 빼고 싶음
+
+            /*
+             * 비밀번호 체크
+             */
+            checkPasswdFormat: function ($input)
+            {
+                var error;
+                var passwdStr = $.trim($input.val());
+
+                if (passwdStr.length == 0)
+                {
+                    error = '비밀번호를 입력해 주세요.';
+                }
+                else
+                {
+                    error = null;
+                }
+                return error;
+            },
+
+            //
+            prepareLogin: function() {
+			    var memberId = $.trim(me.$memberIdFld.val());
+			    var passwd   = $.trim(me.$passwdFld.val());
+			
+			    // 입력값 검증
+			    me.memberIdError = me.checkIdFormat(me.$memberIdFld);
+			    me.passwdError   = me.checkPasswdFormat(me.$passwdFld);
+			
+			    if (me.memberIdError != null) {
+			        alert(me.memberIdError);
+			        me.$memberIdFld.focus();
+			        return;
+			    }
+			
+			    if (me.passwdError != null) {
+			        alert(me.passwdError);
+			        me.$passwdFld.focus();
+			        return;
+			    }
+			
+			    // 아이디와 비밀번호만 전송
+			    var params = {
+			        'memberId': memberId,
+			        'passwd': passwd
+			    };
+			
+			    // 서버 요청 (URL은 상황에 맞게 수정 가능)
+			    me.login('/loginAction.do', params);
+			},
+
+            //
+		        login: function(url, params) {
+		    $.ajax({
+		        url: WebTool.getUrl(url),   // 로그인 API 주소
+		        type: 'POST',
+		        dataType: 'json',
+		        data: params,
+		        success: function(result) {
+		            // 로그인 성공 여부 확인
+		            if (result && result.success === true) {
+				    alert("✅ 로그인 성공!");
+				    console.log("로그인 성공:", result);
+				    location.href = result.redirectUrl; // 서버가 보내준 URL로 이동
+				} else {
+		                alert("❌ 로그인 실패. 아이디나 비밀번호를 확인하세요.");
+		                console.log("로그인 실패:", result);
+		            }
+		        },
+		        error: function(xhr, status, error) {
+		            alert("⚠️ 서버 통신 오류가 발생했습니다.");
+		            console.error("AJAX 오류:", status, error);
+		        }
+		    });
+		},
+
+            //
+            popupSnsLogin: function(type) {
+                SignUpTool.popupSnsLogin(type);
+            },
+
+            //
             resultSnsLogin: function(params) {
                 var json = JSON.parse( params );
 
                 //
                 if( json.isLogined === 'true' ) {
-                    try{
+
+                    try {
                         // 고객 프로필 추적
                         WebTool.setUserProperties( );
                         WebTool.removeChannelTokUpdateCookie();
-                    }catch(err){
+                    }
+                    catch(err) {
                         console.log(err);
                     }
 
                     if (StringTool.isNotBlank(me.redirectUrl)) {
-                        WebTool.goHome();
-                    }else{
+                        if(me.redirectUrl.indexOf("/fo/member/memberAddPage.do") >= 0){
+                            //회원가입 페이지
+                            WebTool.goHome();
+                        } else if(me.redirectUrl.indexOf("/fo/member/personalInfoPage.do") >= 0){
+                            //개인 정보 입력 페이지
+                            WebTool.goHome();
+                        } else if(me.redirectUrl.indexOf("/fo/member/businessInfoPage.do") >= 0) {
+                            //사업자 정보 입력 페이지
+                            WebTool.goHome();
+                        } else if(me.redirectUrl.indexOf("/fo/member/memberTermsPage.do") >= 0){
+                            //이용 약관 페이지
+                            WebTool.goHome();
+                        } else {
+                            WebTool.go(me.redirectUrl);
+                        }
+                    } else {
                         WebTool.goHome();
                     }
                 }
+                else {
+                    var params = {
+                        'type'	: 'sns',
+                        'isDuplAccounts' : json.isDuplAccounts,
+                        'isNonKorean' : json.isNonKorean,
+                        'email'	: json.email,
+                        'name'	: json.name,
+                        'siteCd': json.siteCd,
+                        'siteId': json.siteId,
+                        'siteNm': json.siteNm,
+                        'authCi': json.authCi,
+                        'cellNo': json.cellNo,
+                    };
+
+                    SignUpTool.goMemberTypePage(params); //가입유형선택 페이지
+                }
             },
-            goJoin: function(){
-                //sns 개인정보 입력
+
+            autoLogin: function(checkbox) {
+                var isCheck = $(checkbox).is(':checked');
+                if(isCheck) {
+                    $.cookie (me.autoCookieName, 'Y', {'path':'/', 'domain':'meatbox.co.kr', 'expires':DateTool.addSeconds (me.expireSeconds)});
+                }
+                else {
+                    $.cookie (me.autoCookieName, 'N', {'path':'/', 'domain':'meatbox.co.kr', 'expires':DateTool.addSeconds (me.expireSeconds)});
+                }
+                $.removeCookie (me.autoCookieName, {'path':'/', 'domain':'www.meatbox.co.kr'});
+            },
+
+            goJoin: function(type){
                 var params = {
-                    'role': me.role, //사업자,개인
-                    'type': me.type,
-                    'email' : me.email,
-                    'realName' : me.realName,
-                    'siteCd' : me.siteCd,
-                    'siteId' : me.siteId,
-                    'siteNm' : me.siteNm,
-                    'authCi' : me.authCi,
-                    'cellNo' : me.cellNo,
-                    'isExist' : true,
+                    'type': type,
                 };
-                // 개인정보 입력 personalInfoPage.jsp
-                SignUpTool.goPersonalInfoPage(params);
+                SignUpTool.goMemberTypePage(params);
             },
             nothing:null
         };
 
     })();
 
-
+    //
     $(function() {
         MainMgr.startup();
     });
 </script>
 
-<!-- 회붠가입: 중복 계정 안내 -->
+<!-- 로그인 -->
 <div class="container white_box">
     <div class="content">
-        <div id="join_login" class="login join_exist">
-            <div class="join-form-comm">
-                <div class="join-tit">
-                    <h2>이미 가입된 계정이 있어요</h2>
-                    <p class="c8080">아래 계정으로 로그인해 주세요.</p>
+        <div id="join_login" class="login login_new">
+            <h3>로그인</h3>
+            <div class="form_box">
+                <div class="form-wrap">
+                    <form>
+                        <ul class="input_form">
+                            <li>
+                                <div class="input-wrap">
+                                    <input type="text" id="memberId" placeholder="아이디 입력" required>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="input-wrap">
+                                    <input type="password" id="passwd" placeholder="비밀번호 입력" required>
+                                    <button type="button" class="pw-show"></button>
+                                </div>
+                            </li>
+                        </ul><!-- //input_form -->
+                        <div class="login_check">
+                            <div class="chkeck_che">
+                                <label class="check" for="chk_auto">자동 로그인
+                                    <input type="checkbox" id="chk_auto" name="autoLoginYn" onclick="MainMgr.autoLogin(this)">
+                                </label>
+                            </div><!-- //chkeck_che -->
+                            <div class="chkeck_che">
+                                <label class="check" for="chk_id">아이디 저장
+                                    <input type="checkbox" id="chk_id" name="savingYn">
+                                </label>
+                            </div><!-- //chkeck_che -->
+                        </div>
+                        <p class="join-noti type02"><em>개인정보보호</em>를 위해 <em>자동 로그인</em>이나 <em>아이디 저장</em>은<br><span class="ce853">개인 PC에서만 사용해 주세요.</span></p>
+                        <div class="login_box flex">
+                            <button type="button" class="comm_btn" onclick="MainMgr.prepareLogin();">로그인</button>
+                            <em id="loginComment">죄송합니다. 로그인에 실패하였습니다. <br> 아이디(ID)와 비밀번호 확인후, 다시 로그인하여 주십시오.</em>
+                            <button type="button" class="comm_btn white" onclick="MainMgr.goJoin('default');">회원가입</button>
+                        </div><!-- //login_box -->
+                        <ul class="find_box after">
+                            <li><a href="/fo/member/findLoginInfoPage.do?findType=id">아이디찾기</a></li>
+                            <li><a href="/fo/member/findLoginInfoPage.do?findType=passwd">비밀번호찾기</a></li>
+                        </ul>
+                        <div class="sns_login">
+                            <p>SNS 간편 가입&nbsp;/&nbsp;로그인</p>
+                            <ul>
+                                <li><a href="#" onclick="MainMgr.popupSnsLogin('SN02');"><img src="https://static-cdn.meatbox.co.kr/img/mo/ico/icon-r-kakao.svg" alt="카카오로 로그인" /><span>카카오</span></a></li>
+                                <li><a href="#" onclick="MainMgr.popupSnsLogin('SN01');"><img src="https://static-cdn.meatbox.co.kr/img/mo/ico/icon-r-naver.svg" alt="네이버로 로그인" /><span>네이버</span></a></li>
+                                <li><a href="#" onclick="MainMgr.popupSnsLogin('SN03');"><img src="https://static-cdn.meatbox.co.kr/img/mo/ico/icon-r-apple.svg" alt="애플 로그인" /><span>애플</span></a></li>
+                            </ul>
+                        </div><!-- //sns_login -->
+                    </form>
                 </div>
-            </div><!-- //join-form-comm -->
-            <div class="join-list">
-                <ul>
-                    <li class="chkeck_che">
-                        <label class="radio" for="publ-20240710_1" id=""><!-- 퍼블리싱 input id값, 스타일 x -->
-                            <input type="radio" class="none" name="radio" id="publ-20240710_1"><!-- 퍼블리싱 input id값, 스타일 x -->
-                            <p class="id">kakao793884</p>
-                            <p class="sns-list">
-                                <img src="https://static-cdn.meatbox.co.kr/img/mo/ico/icon-r-kakao.svg" alt="카카오" value="SN02">
-                            </p>
-                        </label>
-                    </li>
-                </ul>
-            </div><!-- //join-list -->
-            <div class="btn_box">
-                <button type="button" class="comm_btn js-login" disabled onclick="MainMgr.goLogin();">로그인 하기</button>
-                <button type="button" class="comm_btn white-b" id="join" onclick="MainMgr.goJoin();">다른 사업자로 신규 가입하기</button><!-- //사업자 회원인 경우에만 노출되는 버튼 -->
             </div>
-            <p class="join-noti">아이디가 다르거나 가입한 적이 없을 경우<br>고객센터 <em class="ce853">1644-6689</em>로 문의주세요.</p>
         </div><!-- //join_login -->
     </div><!-- //content -->
 </div><!-- //container --><script type="text/javascript">

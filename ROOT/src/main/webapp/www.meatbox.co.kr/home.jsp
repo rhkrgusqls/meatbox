@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopImmediatePropagation(); // Stop other handlers on the same element
             
             // Redirect to the correct login form URL
-            window.location.href = '/ROOT/login.do';
+            window.location.href = '/login.do';
         }
     }, true); // Use capture phase to intercept the event early
 });

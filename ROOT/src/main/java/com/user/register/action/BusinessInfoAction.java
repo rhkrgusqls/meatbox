@@ -42,7 +42,7 @@ public class BusinessInfoAction implements Action {
         // 3. 2단계(개인 정보 입력) 페이지로 리다이렉트시킵니다.
         ActionForward forward = new ActionForward();
         forward.setRedirect(true); // 브라우저의 URL이 바뀌어야 하므로 Redirect 방식
-        forward.setPath("./register/personalInfoPage.html" + query.toString()); 
+        forward.setPath("./register/personalInfoPage.jsp" + query.toString()); 
 
         return forward;
     }
