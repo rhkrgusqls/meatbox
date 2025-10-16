@@ -54,7 +54,7 @@ public class CartPageAction implements Action {
         
         // 3. request 객체에 장바구니 목록 저장 (JSP에서 사용하기 위함)
 
-        request.setAttribute("cartList", cartList);
+//        request.setAttribute("cartList", cartList);
         session.setAttribute("cartList", cartList); // 주문 단계에서 사용하기 위해 session에도 저장
         
         for (int i = 0; i < cartList.size(); i++) {
