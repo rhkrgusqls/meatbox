@@ -83,33 +83,41 @@
                             </li>
                         </ul>
 
-                        <%-- =============================================================================== --%>
-                        <%--  상품 옵션 선택 (동적 데이터 적용)                                             --%>
-                        <%-- =============================================================================== --%>
-                        <div class="select_box select_top">
-                             <c:if test="${not empty productDetail.optionList}">
-                                <select name="options" style="width:100%; padding:10px; font-size:16px;">
-                                    <option value="">옵션을 선택해주세요.</option>
-                                    <c:forEach var="option" items="${productDetail.optionList}">
-                                        <option value="${option.option_id}">
-                                            ${option.option_name} - ${option.option_detail}
-                                            <c:if test="${option.price_of_option > 0}">
-                                                (+<fmt:formatNumber value="${option.price_of_option}" pattern="#,###" />원)
-                                            </c:if>
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </c:if>
-                            <c:if test="${empty productDetail.optionList}">
-                                <p>선택 가능한 옵션이 없습니다.</p>
-                            </c:if>
-                        </div>
+                        <form id="buyNowForm" action="/buyNow.do" method="GET">
+                            <input type="hidden" name="productSeq" value="${productDetail.product_id}">
 
-                        <div class="btn_box" style="margin-top: 30px;">
-                            <a href="javascript:;" class="btn heart_btn">관심상품</a>
-                            <button type="button" class="btn cart">장바구니</button>
-                            <button type="button" class="btn buy" onclick="location.href='/order.do';">구매하기</button>
-                        </div>
+                            <%-- 상품 옵션 선택 --%>
+                            <div class="select_box select_top">
+                                <c:if test="${not empty productDetail.optionList}">
+                                    <select name="optionId" style="width:100%; padding:10px; font-size:16px; margin-bottom:10px;">
+                                        <option value="">옵션을 선택해주세요.</option>
+                                        <c:forEach var="option" items="${productDetail.optionList}">
+                                            <option value="${option.option_id}">
+                                                ${option.option_name} - ${option.option_detail}
+                                                <c:if test="${option.price_of_option > 0}">
+                                                    (+<fmt:formatNumber value="${option.price_of_option}" pattern="#,###" />원)
+                                                </c:if>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </c:if>
+                                <c:if test="${empty productDetail.optionList}">
+                                    <p>선택 가능한 옵션이 없습니다.</p>
+                                </c:if>
+                            </div>
+
+                            <%-- 수량 선택 --%>
+                            <div style="margin-bottom: 20px;">
+                                <label for="quantity">수량:</label>
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" style="width: 60px; text-align: center;">
+                            </div>
+
+                            <div class="btn_box">
+                                <a href="javascript:;" class="btn heart_btn">관심상품</a>
+                                <button type="button" class="btn cart">장바구니</button>
+                                <button type="submit" class="btn buy">구매하기</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 

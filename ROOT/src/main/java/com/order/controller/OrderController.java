@@ -88,6 +88,53 @@ public class OrderController extends HttpServlet {
                 forward = new ActionForward();
                 forward.setPath("/order/orderPage.jsp");
                 forward.setRedirect(false);
+
+            } else if (command.equals("/buyNow.do")) {
+                System.out.println("[DEBUG] /buyNow.do 로직 실행");
+
+                HttpSession session = request.getSession();
+
+                // 1. 로그인 확인
+                Integer userIndex = (Integer) session.getAttribute("userIndex");
+                if (userIndex == null) {
+                    response.setContentType("text/html; charset=UTF-8");
+                    java.io.PrintWriter out = response.getWriter();
+                    out.println("<script>");
+                    out.println("alert('로그인이 필요합니다.');");
+                    out.println("location.href='/login.do';"); // 로그인 페이지 경로
+                    out.println("</script>");
+                    out.close();
+                    return; // 컨트롤러 로직 중단
+                }
+
+                // 2. 파라미터 가져오기
+                int productId = Integer.parseInt(request.getParameter("productSeq"));
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                int optionId = Integer.parseInt(request.getParameter("optionId"));
+                String userName = (String) session.getAttribute("user_name");
+                String userPhone = (String) session.getAttribute("user_phone");
+
+                // 3. 바로 구매할 상품만 포함하는 임시 장바구니 리스트 생성
+                List<CartItem> buyNowCartList = new ArrayList<>();
+                buyNowCartList.add(new CartItem(userIndex, productId, optionId, quantity));
+
+                // 4. 상품 상세 정보 조회
+                List<ProductDetailBean> orderProducts = new ArrayList<>();
+                ProductDAO productDAO = new ProductDAO();
+                ProductDetailBean product = productDAO.getProductDetail(productId);
+                if (product != null) {
+                    orderProducts.add(product);
+                }
+
+                // 5. request에 데이터 저장
+                request.setAttribute("order_product_list", orderProducts);
+                request.setAttribute("cart_list", buyNowCartList); // 수량 정보를 위해 임시 리스트 전달
+                request.setAttribute("user_name", userName);
+                request.setAttribute("user_phone", userPhone);
+
+                forward = new ActionForward();
+                forward.setPath("/order/orderPage.jsp");
+                forward.setRedirect(false);
             }
 
             if (forward != null) {

@@ -114,5 +114,10 @@
         <servlet-name>SearchController</servlet-name>
         <url-pattern>/search/*</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>                                                  
+        <servlet-name>OrderController</servlet-name>                   
+         <url-pattern>/buyNow.do</url-pattern>                          
+ </servlet-mapping>     
         
 </web-app>
