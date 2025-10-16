@@ -1,4 +1,5 @@
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ include file="/include/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -1034,7 +1035,7 @@
 
 <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ThumbnailTool.min.js?ver=1760075176590"></script>
 
-<header class="newVer">
+<!-- <header class="newVer">
     <section class="header-main">
         <article class="main-wrap flex-row-gap032">
             <div class="inquiry flex-space-between">
@@ -1101,24 +1102,24 @@
                 </div>
                 <div class="search-result-area box-shadow">
                     <div class="search-wrapper">
-                        <div class="search-keyword-not-result flex-justify-center" style="display: none;"><!-- 검색결과 없음 -->
+                        <div class="search-keyword-not-result flex-justify-center" style="display: none;">검색결과 없음
                             <p>일치하는 검색어가 없습니다</p>
                         </div>
-                        <div class="search-keyword-box" style="display: none;"><!-- 검색결과 -->
+                        <div class="search-keyword-box" style="display: none;">검색결과
                             <ul class="search-keyword-inner"></ul>
                         </div>
-                        <div class="search-defalut-box flex-col-gap24"><!-- 검색창 디폴트 -->
+                        <div class="search-defalut-box flex-col-gap24">검색창 디폴트
                             <div class="search-keyword-list">
-                                <h6 class="search-title">최근 검색어 <button type="button" class="all-delete">전체삭제</button></h6><!-- 최근검색어 -->
+                                <h6 class="search-title">최근 검색어 <button type="button" class="all-delete">전체삭제</button></h6>최근검색어
                                 <ul class="search-keyword-inner"></ul>
                                 <button type="button" class="more-list none"><span>최근 검색어 더보기</span></button>
                             </div>
                             <div class="search-recommend-list">
-                                <h6 class="search-title">추천 검색어</h6><!-- 추천검색어 -->
+                                <h6 class="search-title">추천 검색어</h6>추천검색어
                                 <ul class="search-list-inner flex-row-gap4"></ul>
                             </div>
                             <div class="search-exhibition-list">
-                                <h6 class="search-title">기획전</h6><!-- 기획전 -->
+                                <h6 class="search-title">기획전</h6>기획전
                                 <div class="swiper-container">
                                     <ul class="search-list-inner swiper-wrapper"></ul>
                                 </div>
@@ -1234,9 +1235,9 @@
                             </span>
                         </a>
                     </li>
-                    <!-- <li class="gnb-tab icon-dotted">
+                    <li class="gnb-tab icon-dotted">
                         <a href="/fo/event/publicEventPage.do?year=2025&name=chuseokGift"><span class="txt">추석선물세트</span></a>
-                    </li> -->
+                    </li>
                     <li class="gnb-tab">
                         <a href="/fo/event/productListPage.do?collectionSeq=10"><span class="txt">낱개</span></a>
                     </li>
@@ -1264,7 +1265,7 @@
             </nav>
         </article>
     </section>
-</header>
+</header> -->
 
 <!-- 내 등급 정보 시작-->
 <div class="grade_pop mypop popup_of">
