@@ -1,4 +1,4 @@
-package com.cart.action.controller;
+package com.cart.controller;
  
 import java.io.IOException;  
 import javax.servlet.RequestDispatcher;
