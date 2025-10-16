@@ -28,16 +28,38 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>registerController</servlet-name>
+        <servlet-name>RegisterController</servlet-name>
         <servlet-class>com.user.register.controller.RegisterController</servlet-class>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>registerController</servlet-name>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/registerNormal.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/registerNormalAction.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/registerSeller.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/registerSellerAction.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
         <url-pattern>/fo/member/memberAddPage.do</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registerController</servlet-name>
-        <url-pattern>/registerSellerAction.do</url-pattern>
+
+	<servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/businessInfoAction.do</url-pattern>
     </servlet-mapping>
 
     <servlet>
