@@ -77,7 +77,7 @@
 
     <servlet>
         <servlet-name>cartController</servlet-name>
-        <servlet-class>com.cart.action.controller.CartController</servlet-class>
+        <servlet-class>com.cart.controller.CartController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>cartController</servlet-name>
