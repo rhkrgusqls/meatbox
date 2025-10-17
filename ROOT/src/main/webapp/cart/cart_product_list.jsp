@@ -11,19 +11,6 @@
 </head>
 <body>
 
-<%@ include file="/include/header.jsp" %>
-
-<div class="cart-tab" style="width: 900px; margin: 20px auto;">
-    <ul>
-        <li class="on" id="typeA">
-            <button type="button" onclick="location.href='/cart/cartPage.do?type=A'">일반 상품 (${fn:length(productList)})</button>
-        </li>
-        <li id="typeB">
-            <button type="button" onclick="location.href='/cart/cartPage.do?type=B'">배송일 지정 상품 (0)</button>
-        </li>
-    </ul>
-</div>
-
 <div style="width: 900px; margin: 20px auto; font-family: sans-serif; color: #333;">
 
     <h2 style="font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px;">일반상품</h2>
@@ -33,13 +20,15 @@
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; border-bottom: 1px solid #eee;">
             <span style="font-weight: bold; color: #00b343;">
                 <img src="icon_fresh.png" alt="" style="vertical-align: middle; margin-right: 5px;">
+                <%-- (✅ 수정) 상품 개수를 동적으로 표시 --%>
                 일반신선 ${fn:length(productList)}개
             </span>
-            <span>(주)미트박스글로벌</span>
+            <span>(주)빈컴퍼니</span>
         </div>
         
-        <c:set var="totalPrice" value="0" />
+        <c:set var="totalPrice" value="0" /> <!-- 총합 초기화 -->
 		
+		<!-- ✅ 전체 선택 체크박스 -->
 		<div style="padding: 10px 20px; border-bottom: 2px solid #ccc; display: flex; align-items: center;">
 		    <input type="checkbox" id="selectAll" style="margin-right: 10px;">
 		    <label for="selectAll" style="font-weight: bold;">모두 선택</label>
@@ -55,13 +44,13 @@
 		        </div>
 		
 		        <div style="margin-right: 20px;">
-		            <c:choose>
-		                <c:when test="${not empty product.imageList}">
-		                    <%-- (✅ 수정) product 객체에 포함된 imageList의 첫 번째 이미지(.dir)를 사용합니다. --%>
-		                    <img src="${product.imageList[0].dir}" alt="${product.name}" width="100" height="100">
-		                </c:when>
-		                <c:otherwise>
-		                    <img src="https://via.placeholder.com/100" alt="${product.name}" width="100" height="100">
+	            <c:choose>
+	                <c:when test="${not empty product.imageList}">
+	                    <%-- (✅ 수정) productDetail.jsp와 동일한 방식으로 이미지 경로를 가져옵니다. --%>
+	                    <img src="${product.imageList[0].dir}" alt="${product.name}" width="100" height="100">
+	                </c:when>
+	                <c:otherwise>
+	                    <img src="https://via.placeholder.com/100" alt="${product.name}" width="100" height="100">
 		                </c:otherwise>
 		            </c:choose>
 		        </div>
@@ -80,6 +69,7 @@
 		        </div>
 		    </div>
 		
+		    <%-- (✅ 수정) 총합 계산 로직 수정: 각 상품의 가격을 totalPrice에 누적합니다. --%>
             <c:set var="totalPrice" value="${totalPrice + (productOptionList[status.index].price_of_option * cartList[status.index].quantity)}" />
 		</c:forEach>
 
@@ -90,6 +80,7 @@
             </strong>
         </div>
 
+        <!-- ✅ 주문 버튼 -->
         <div style="text-align: right; padding: 20px;">
             <button onclick="submitOrder()">선택상품 주문</button>
         </div>
@@ -97,12 +88,15 @@
     </div>
 </div>
 
+<!-- ✅ 모두선택 & 주문 JS -->
 <script>
+// 모두선택 체크박스
 document.getElementById('selectAll').addEventListener('change', function() {
     const itemCheckboxes = document.querySelectorAll('.item-checkbox');
     itemCheckboxes.forEach(cb => cb.checked = this.checked);
 });
 
+// 선택된 상품 아이디와 옵션 아이디 추출 & 동기 POST 요청
 function submitOrder() {
     const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
     if (checkedBoxes.length === 0) {
@@ -119,7 +113,7 @@ function submitOrder() {
     
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/order/orderPage.do';
+    form.action = '/order.do';
     
     selectedItems.forEach(item => {
         const productInput = document.createElement('input');
@@ -140,7 +134,6 @@ function submitOrder() {
 }
 </script>
 
-<%@ include file="/include/footer.jsp" %>
 </body>
 </html>
 
