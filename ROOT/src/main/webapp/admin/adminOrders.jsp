@@ -21,55 +21,6 @@
     /* 전체 레이아웃 */
     .admin-wrapper { display: flex; min-height: 100vh; }
 
-    /* 사이드바 스타일 */
-    .sidebar {
-        width: 230px;
-        background-color: #F0504F;
-        color: #ecf0f1;
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-    }
-    .sidebar-header {
-        padding: 3px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-bottom: 1px solid #D34D4A;
-        height: 80px;
-    }
-    .sidebar-logo {
-        max-width: 100%;
-        height: auto;
-        transition: transform 0.3s ease;
-    }
-    .sidebar-logo:hover { transform: scale(1.05); }
-    .sidebar-nav { flex-grow: 1; }
-    .sidebar-nav ul li a {
-        display: block;
-        padding: 15px 20px;
-        transition: background-color 0.2s;
-    }
-    .sidebar-nav ul li a:hover, .sidebar-nav ul li.active a {
-        background-color: #E76A67;
-    }
-    .sidebar-footer {
-        padding: 20px;
-        text-align: center;
-        font-size: 12px;
-        border-top: 1px solid #E34E4A;
-        background-color: #D34D4A;
-        color: #ffffff;
-        transition: all 0.3s ease;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    .sidebar-footer:hover {
-        background-color: #BF3C39;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.35);
-        transform: translateY(-3px);
-    }
-
     /* 메인 컨텐츠 스타일 */
     .main-content {
         flex-grow: 1;
