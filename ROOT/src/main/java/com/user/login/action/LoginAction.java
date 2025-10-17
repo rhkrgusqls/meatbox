@@ -50,7 +50,7 @@ public class LoginAction implements Action {
             json.put("userIndex", result.getUserIndex());
             json.put("role", result.getRole());
             json.put("userName", userName); // JSON에 userName 추가
-            json.put("redirectUrl", "/myMenu/myMenuMainPage.do"); // 리다이렉트 URL 추가
+            json.put("redirectUrl", "/"); // 리다이렉트 URL 추가
 
         } catch (LoginException e) {
             json.put("success", false);

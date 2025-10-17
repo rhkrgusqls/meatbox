@@ -140,6 +140,44 @@ $(function() {
     });
 });
 </script>
+<script type="text/javascript">
+$(function() {
+    // 검색 실행을 위한 공통 함수
+    function executeSearch() {
+        // 1. id가 'search_word'인 input 요소에서 검색어를 가져옵니다. (앞뒤 공백은 제거)
+        var searchText = $.trim($('#search_word').val());
+
+        // 2. 검색어가 비어있는지 확인합니다.
+        if (searchText === "") {
+            alert("검색어를 입력해주세요.");
+            $('#search_word').focus(); // 비어있다면 다시 입력창에 포커스를 줍니다.
+            return; // 함수를 중단합니다.
+        }
+
+        // 3. 기본 URL에 검색어를 조합하여 최종 URL을 생성합니다.
+        // encodeURIComponent는 한글이나 특수문자가 URL에서 깨지지 않도록 인코딩합니다.
+        var searchUrl = "${pageContext.request.contextPath}/search/searchResultPage.do?searchText=" + encodeURIComponent(searchText);
+
+        // 4. 완성된 URL로 페이지를 이동시킵니다.
+        location.href = searchUrl;
+    }
+
+    // --- 이벤트 핸들러 연결 ---
+
+    // 1. id가 'search_btn'인 검색 버튼에 클릭 이벤트 연결
+    $('#search_btn').on('click', function() {
+        executeSearch();
+    });
+
+    // 2. id가 'search_word'인 입력창에 키보드 입력(keyup) 이벤트 연결
+    $('#search_word').on('keyup', function(event) {
+        // 눌린 키가 'Enter' 키(keyCode 13)인지 확인합니다.
+        if (event.keyCode === 13) {
+            executeSearch();
+        }
+    });
+});
+</script>
 
 </head>
 <body>

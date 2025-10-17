@@ -134,45 +134,45 @@
                 <div class="thin_gray_rounded_box type4 px_16 py_24 none_border">
                     <div style="position:relative">
                         <article class="list_5_cols">
-                            <c:forEach var="product" items="${productList}">
-                                <div class="swiper-slide">
-                                    <%-- ✅ [수정] 링크(a 태그)가 카드 전체를 감싸도록 구조 변경 --%>
-                                    <a href="productViewPage.do?productSeq=${product.productId}" class="product_card type1 stack_vertical false" style="text-decoration: none; color: inherit;">
-                                        <div class="bgInherit" style="cursor:pointer">
-                                            <div role="button">
-                                                
-                                                <div class="img_wrap">
-                                                    <div class="bg_wrap">
-                                                        <p class="absolute_full">
-                                                            <c:choose>
-                                                                <c:when test="${not empty product.productImage}">
-                                                                    <img src="${pageContext.request.contextPath}${product.productImage}" alt="${product.productName}" class="full_image">
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <img src="${pageContext.request.contextPath}/images/default_image.png" alt="이미지 준비중" class="full_image">
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="txt_wrap mt_8" style="overflow:hidden">
-                                                    <div class="flex_side">
-                                                        <span class="none_style_btn btn_brand_name"><span class="txt_box">미트박스</span></span>
-                                                    </div>
-                                                    <p class="product_name">${product.productName}</p>
-                                                    <div class="price_wrap">
-                                                        <span class="price_info">
-                                                            <em><fmt:formatNumber value="${product.price}" pattern="#,###" />원</em>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </c:forEach>
-                        </article>
+						    <c:forEach var="product" items="${productList}">
+						        <div class="swiper-slide">
+						            <%-- ✅ [수정] a 태그에 target="_blank"와 rel="noopener noreferrer" 속성을 추가했습니다. --%>
+						            <a href="${pageContext.request.contextPath}/productViewPage.do?productSeq=${product.productId}" class="product_card type1 stack_vertical false" style="text-decoration: none; color: inherit;" target="_blank" rel="noopener noreferrer">
+						                <div class="bgInherit" style="cursor:pointer">
+						                    <div role="button">
+						                        
+						                        <div class="img_wrap">
+						                            <div class="bg_wrap">
+						                                <p class="absolute_full">
+						                                    <c:choose>
+						                                        <c:when test="${not empty product.productImage}">
+						                                            <img src="${pageContext.request.contextPath}${product.productImage}" alt="${product.productName}" class="full_image">
+						                                        </c:when>
+						                                        <c:otherwise>
+						                                            <img src="${pageContext.request.contextPath}/images/default_image.png" alt="이미지 준비중" class="full_image">
+						                                        </c:otherwise>
+						                                    </c:choose>
+						                                </p>
+						                            </div>
+						                        </div>
+						                        
+						                        <div class="txt_wrap mt_8" style="overflow:hidden">
+						                            <div class="flex_side">
+						                                <span class="none_style_btn btn_brand_name"><span class="txt_box">미트박스</span></span>
+						                            </div>
+						                            <p class="product_name">${product.productName}</p>
+						                            <div class="price_wrap">
+						                                <span class="price_info">
+						                                    <em><fmt:formatNumber value="${product.price}" pattern="#,###" />원</em>
+						                                </span>
+						                            </div>
+						                        </div>
+						                    </div>
+						                </div>
+						            </a>
+						        </div>
+						    </c:forEach>
+						</article>
                     </div>
                 </div>
             </div>
