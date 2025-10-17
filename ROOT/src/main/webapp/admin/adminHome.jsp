@@ -152,8 +152,8 @@
 
         <%-- 메인 컨텐츠: URL 파라미터에 따라 동적으로 페이지 포함 --%>
         <c:choose>
-            <c:when test="${param.page == 'users'}">
-                <jsp:include page="adminUser.jsp" />
+            <c:when test="${param.page == 'categories'}">
+            	<jsp:include page="adminCategories.jsp" />
             </c:when>
             <c:when test="${param.page == 'products'}">
                 <jsp:include page="adminProducts.jsp" />
