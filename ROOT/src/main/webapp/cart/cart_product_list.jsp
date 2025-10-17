@@ -6,6 +6,56 @@
 <!DOCTYPE html>
 <html>
 <head>
+		<style type="text/css">
+		/* 전체 컨테이너 */
+		.select-container {
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    padding: 12px 20px;
+		    border-bottom: 2px solid #ccc;
+		    background-color: #f9f9f9;
+		}
+		
+		/* 왼쪽 체크박스 + 라벨 */
+		.select-left {
+		    display: flex;
+		    align-items: center;
+		    gap: 10px;
+		}
+		
+		.select-left input[type="checkbox"] {
+		    width: 16px;
+		    height: 16px;
+		    cursor: pointer;
+		}
+		
+		.select-left label {
+		    font-weight: bold;
+		    font-size: 14px;
+		    cursor: pointer;
+		}
+		
+		/* 오른쪽 버튼 */
+		.select-right button {
+		    background-color: #7f8c8d;
+		    color: white;
+		    border: none;
+		    padding: 10px 16px;
+		    border-radius: 6px;
+		    font-weight: bold;
+		    cursor: pointer;
+		    transition: all 0.3s ease;
+		    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+		}
+		
+		/* 버튼 호버 효과 */
+		.select-right button:hover {
+		    background-color: #6c7a7b;
+		    transform: translateY(-2px);
+		    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+		}
+		</style>
     <meta charset="UTF-8">
     <title>장바구니</title>
 </head>
@@ -28,21 +78,31 @@
         
         <c:set var="totalPrice" value="0" /> <!-- 총합 초기화 -->
 		
-		<!-- ✅ 전체 선택 체크박스 -->
-		<div style="padding: 10px 20px; border-bottom: 2px solid #ccc; display: flex; align-items: center;">
-		    <input type="checkbox" id="selectAll" style="margin-right: 10px;">
-		    <label for="selectAll" style="font-weight: bold;">모두 선택</label>
-		</div>
+		<div class="select-container">
+    <!-- 왼쪽: 전체 선택 -->
+    <div class="select-left">
+        <input type="checkbox" id="selectAll">
+        <label for="selectAll">모두 선택</label>
+    </div>
+
+    <!-- 오른쪽: 선택 삭제 버튼 -->
+    <div class="select-right">
+        <button onclick="deleteSelectedItems()">선택상품 삭제</button>
+    </div>
+</div>
 		
 		<c:forEach var="product" items="${productList}" varStatus="status">
 		    <div style="display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
 		        
+		        
+		        
 		        <div style="margin-right: 15px;">
-		            <input type="checkbox" class="item-checkbox" 
-		                   data-product-id="${cartList[status.index].productId}"
-		                   data-option-id="${cartList[status.index].optionId}">
-		        </div>
-		
+				    <%-- (✅ 추가) 다중 삭제를 위해 data-cart-id 속성을 추가합니다. --%>
+				    <input type="checkbox" class="item-checkbox" 
+				           data-product-id="${cartList[status.index].productId}"
+				           data-option-id="${cartList[status.index].optionId}">
+				</div>
+						
 		        <div style="margin-right: 20px;">
 	            <c:choose>
 	                <c:when test="${not empty product.imageList}">
@@ -67,18 +127,32 @@
 		        <div style="width: 150px; text-align: right; font-weight: bold; font-size: 16px; margin-right: 30px;">
 		           금액: <fmt:formatNumber value="${productOptionList[status.index].price_of_option * cartList[status.index].quantity}" pattern="#,###" />원
 		        </div>
+		        
+				<%-- 주문 버튼과 삭제 버튼이 함께 있는 div --%>
+				
+				
+		        <%-- =============================================================================== --%>
+                <%--  (✅ 추가) 상품 삭제 버튼                                                      --%>
+                <%-- =============================================================================== --%>
+                <div style="width: 50px; text-align: center;">
+                    <%-- cartId는 cartList 객체에 포함되어 있어야 합니다. --%>
+                    <a href=""
+                       onclick="return confirm('이 상품을 장바구니에서 삭제하시겠습니까?');"
+                       style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border: 1px solid #ddd; border-radius: 4px; text-align: center; background-color: #fafafa; color: #777; text-decoration: none; font-weight: bold; font-size: 14px;">
+                       X
+                    </a>
+                </div>
 		    </div>
 		
 		    <%-- (✅ 수정) 총합 계산 로직 수정: 각 상품의 가격을 totalPrice에 누적합니다. --%>
             <c:set var="totalPrice" value="${totalPrice + (productOptionList[status.index].price_of_option * cartList[status.index].quantity)}" />
 		</c:forEach>
-
         <div style="text-align: right; padding: 20px; font-size: 18px; background-color: #f9f9f9;">
-            총 결제 금액:
-            <strong style="color: #d92d2d; font-size: 22px;">
-                <fmt:formatNumber value="${totalPrice}" pattern="#,###" />원
+         	<strong style="color: #d92d2d; font-size: 22px;">
+                총 결제 금액:<fmt:formatNumber value="${totalPrice}" pattern="#,###" />원
             </strong>
         </div>
+        
     </div>
 </div>
 
@@ -125,6 +199,40 @@ function submitOrder() {
 
     document.body.appendChild(form);
     form.submit();
+}
+
+function deleteCartItem(cartId) {
+    // 사용자에게 삭제 여부를 다시 한번 확인합니다.
+    if (confirm('이 상품을 장바구니에서 삭제하시겠습니까?')) {
+        // '확인'을 누르면 해당 cartId를 포함한 URL로 페이지를 이동시킵니다.
+        location.href = '/cart/cartDeleteAction.do?cartId=' + cartId;
+    }
+}
+
+function deleteSelectedItems() {
+    const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+    if (checkedBoxes.length === 0) {
+        alert('삭제할 상품을 선택해주세요.');
+        return;
+    }
+
+    if (confirm(`선택한 ${checkedBoxes.length}개의 상품을 장바구니에서 삭제하시겠습니까?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        // 선택 삭제를 처리할 새로운 Action 경로를 지정해야 합니다.
+        form.action = '/cart/cartDeleteSelectedAction.do';
+
+        Array.from(checkedBoxes).forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cartId'; // 서버는 'cartId' 배열을 받게 됩니다.
+            input.value = cb.dataset.cartId;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 </script>
 
