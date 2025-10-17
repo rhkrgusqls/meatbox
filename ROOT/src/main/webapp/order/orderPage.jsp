@@ -157,13 +157,13 @@
                 </div>
             </td>
             <td class="price">
-                <span><fmt:formatNumber value="${item.price}" pattern="#,###" /></span>원
+                <span><fmt:formatNumber value="${order_option_list[status.index].price_of_option}" pattern="#,###" /></span>원
             </td>
             <td class="quantity">
                 <span>${cart_list[status.index].quantity}</span>개
             </td>
             <td class="total_price">
-                <span><fmt:formatNumber value="${item.price * cart_list[status.index].quantity}" pattern="#,###" /></span>원
+                <span><fmt:formatNumber value="${order_option_list[status.index].price_of_option * cart_list[status.index].quantity}" pattern="#,###" /></span>원
             </td>
         </tr>
     </c:forEach>
