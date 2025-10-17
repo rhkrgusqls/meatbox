@@ -89,6 +89,6 @@
     </nav>
 
     <div class="sidebar-footer">
-        <a href="#">로그아웃</a>
+        <a href="/logout.do;">로그아웃</a>
     </div>
 </aside>

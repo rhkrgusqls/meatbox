@@ -44,13 +44,23 @@ public class LoginAction implements Action {
             session.setAttribute("role", result.getRole());
             session.setAttribute("userName", userName); // 세션에 userName 추가
 
+            
+           
             // JSON 응답
             json.put("success", true);
             json.put("message", "로그인 성공!");
             json.put("userIndex", result.getUserIndex());
             json.put("role", result.getRole());
             json.put("userName", userName); // JSON에 userName 추가
-            json.put("redirectUrl", "/"); // 리다이렉트 URL 추가
+
+            if (3==result.getRole()) {
+                json.put("redirectUrl", "/admin/adminHome.jsp"); // 실제 조회 컨트롤러 사용하는 url 넣어야합 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            } else if (2==result.getRole()) { 
+                json.put("redirectUrl", "#");
+            } else {
+                json.put("redirectUrl", "/");
+            }
+
 
         } catch (LoginException e) {
             json.put("success", false);
