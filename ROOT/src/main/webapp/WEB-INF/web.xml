@@ -105,6 +105,10 @@
         <servlet-name>OrderController</servlet-name>
         <url-pattern>/order.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderController</servlet-name>
+        <url-pattern>/orderAction.do</url-pattern>
+    </servlet-mapping>
     
     <servlet>
         <servlet-name>SearchController</servlet-name>

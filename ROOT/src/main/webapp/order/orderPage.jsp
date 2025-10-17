@@ -76,9 +76,9 @@
                                 <td>
                                     <div class="addr_info">
                                         <input type="hidden" value="" name="recv_zip_cd" id="recv_zip_cd"/>
-                                        <input type="text" class="addr addr1" value="" name="recv_addr1" id="recv_addr1" style="display: none;"/>
-                                        <input type="text" class="addr addr2" value="" name="recv_addr2" id="recv_addr2" style="display: none;"/>
-                                        <span class="my_addr" id="addr_text"></span>
+                                        <input type="text" class="addr addr1" value="${addressInfo.city} ${addressInfo.district} ${addressInfo.neighborhood}" name="recv_addr1" id="recv_addr1" style="display: none;"/>
+                                        <input type="text" class="addr addr2" value="${addressInfo.detailAddress}" name="recv_addr2" id="recv_addr2" style="display: none;"/>
+                                        <span class="my_addr" id="addr_text">${addressInfo.city} ${addressInfo.district} ${addressInfo.neighborhood} ${addressInfo.detailAddress}</span>
                                         <button type="button" onclick="DaumMgr.show({'type':'open','postcode':'recv_zip_cd','address1':'recv_addr1'});" class="btn-ty2 gray" style="margin-left: 10px;">주소검색</button>
                                     </div>
                                 </td>
@@ -86,13 +86,13 @@
                              <tr class="_deliveryAddr _deliveryAlways">
                                 <th class="line_height"><em>받는 분</em></th>
                                 <td>
-                                    <input type="text" class="width200 input_wid order_name" name="recv_nm" maxlength="20" placeholder="이름을 입력하세요" value="${requestScope.user_name}"/>
+                                    <input type="text" class="width200 input_wid order_name" name="recv_nm" maxlength="20" placeholder="이름을 입력하세요" value="${user_name}"/>
                                 </td>
                             </tr>
                             <tr class="_notDeliveryAD09">
                                 <th class="line_height"><em>연락처</em></th>
                                 <td>
-                                    <input type="tel" class="width200 input_wid ph_num" value="${requestScope.user_phone}" name="recv_cell_no" maxlength="13" placeholder="숫자만 입력하세요"/>
+                                    <input type="tel" class="width200 input_wid ph_num" value="${user_phone}" name="recv_cell_no" maxlength="13" placeholder="숫자만 입력하세요"/>
                                 </td>
                             </tr>
                              <tr>
@@ -142,6 +142,8 @@
                                                            <%-- ProductDetailBean에는 대표 이미지가 없으므로 일단 비워둠 --%>
                                                            <img src="" alt="${item.name}" width="60" style="float:left; margin-right:10px;"/>
                                                             <strong class="prd_name">${item.name}</strong>
+                                                            <input type="hidden" name="product_id" value="${item.product_id}">
+                                                            <input type="hidden" name="product_option_id" value="${cart_list[status.index].optionId}">
                                                         </div>
                                                     </td>
                                                     <td class="price">
@@ -191,9 +193,14 @@
                                 <td>
                                     <div class="pay_choice">
                                         <ul class="method_list">
-                                            <li><label><input type="radio" name="payment_method" value="card" checked> 신용카드</label></li>
-                                            <li><label><input type="radio" name="payment_method" value="bank"> 무통장입금</label></li>
-                                            <li><label><input type="radio" name="payment_method" value="kakao"> 카카오페이</label></li>
+                                            <c:if test="${not empty paymentMethods}">
+                                                <c:forEach var="paymentMethod" items="${paymentMethods}">
+                                                    <li><label><input type="radio" name="payment_method" value="${paymentMethod.payment_method_id}"> ${paymentMethod.provider}</label></li>
+                                                </c:forEach>
+                                            </c:if>
+                                            <c:if test="${empty paymentMethods}">
+                                                <li>등록된 결제수단이 없습니다.</li>
+                                            </c:if>
                                         </ul>
                                     </div>
                                 </td>
@@ -221,6 +228,8 @@
 
 <%-- 푸터 인클루드 --%>
 <jsp:include page="/include/footer.jsp" />
+
+<form id="orderForm" action="/orderAction.do" method="post"></form>
 
 <%-- Daum 주소 API 스크립트 --%>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -308,8 +317,27 @@ $(document).ready(function(){
             alert('주문내역 확인 및 결제 진행에 동의해주세요.');
             return;
         }
-        alert('결제를 진행합니다.');
-        // TODO: 서버로 주문 정보를 전송하는 AJAX 로직 또는 form submit 구현
+
+        let form = $('#orderForm');
+        form.empty(); // 이전 데이터 제거
+
+        // 상품 정보 추가
+        $('.cart_item').each(function(index){
+            let productId = $(this).find('input[name="product_id"]').val();
+            let optionId = $(this).find('input[name="product_option_id"]').val();
+            let quantity = parseInt($(this).find('.quantity span').text());
+
+            for (let i = 0; i < quantity; i++) {
+                form.append('<input type="hidden" name="product_id" value="' + productId + '">');
+                form.append('<input type="hidden" name="product_option_id" value="' + optionId + '">');
+            }
+        });
+
+        // 결제 수단 추가
+        let paymentMethod = $('input[name="payment_method"]:checked').val();
+        form.append('<input type="hidden" name="payment_method" value="' + paymentMethod + '">');
+
+        form.submit();
     });
 });
 </script>
