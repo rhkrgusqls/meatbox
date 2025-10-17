@@ -2,8 +2,13 @@ package com.order.controller;
 
 import com.ActionForward;
 import com.cart.db.CartItem;
+import com.order.db.PaymentMethodDAO;
+import com.order.db.PaymentMethodDTO;
+import com.order.db.PurchaseDAO;
 import com.product.db.ProductDAO;
 import com.product.db.ProductDetailBean;
+import com.user.db.AddressDAO;
+import com.user.db.AddressDTO;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,9 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class OrderController extends HttpServlet {
+public class OrderController extends HttpServlet { // Trigger recompile
 
     protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -48,9 +54,19 @@ public class OrderController extends HttpServlet {
         try {
             if (command.equals("/order.do")) {
                 HttpSession session = request.getSession();
+                Integer userIndex = (Integer) session.getAttribute("userIndex");
+                if (userIndex == null) {
+                    response.setContentType("text/html; charset=UTF-8");
+                    java.io.PrintWriter out = response.getWriter();
+                    out.println("<script>");
+                    out.println("alert('로그인이 필요합니다.');");
+                    out.println("location.href='/login.do';"); // 로그인 페이지 경로
+                    out.println("</script>");
+                    out.close();
+                    return; // 컨트롤러 로직 중단
+                }
+
                 List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartList");
-                String userName = (String) session.getAttribute("user_name");
-                String userPhone = (String) session.getAttribute("user_phone");
 
                 // 1. 세션에서 cartList 확인
                 if (cartItems == null || cartItems.isEmpty()) {
@@ -80,10 +96,18 @@ public class OrderController extends HttpServlet {
                 // 3. 최종 데이터 확인
                 System.out.println("[DEBUG] 최종 orderProducts 리스트 크기: " + orderProducts.size());
 
+                PaymentMethodDAO paymentMethodDAO = new PaymentMethodDAO();
+                List<PaymentMethodDTO> paymentMethods = paymentMethodDAO.getPaymentMethodsByUserIndex(userIndex);
+
+                AddressDAO addressDAO = new AddressDAO();
+                AddressDTO addressInfo = addressDAO.getAddressByUserIndex(userIndex);
+
                 request.setAttribute("order_product_list", orderProducts);
                 request.setAttribute("cart_list", cartItems);
-                request.setAttribute("user_name", userName);
-                request.setAttribute("user_phone", userPhone);
+                request.setAttribute("paymentMethods", paymentMethods);
+                request.setAttribute("addressInfo", addressInfo);
+                request.setAttribute("user_name", session.getAttribute("user_name"));
+                request.setAttribute("user_phone", session.getAttribute("user_phone"));
 
                 forward = new ActionForward();
                 forward.setPath("/order/orderPage.jsp");
@@ -111,8 +135,6 @@ public class OrderController extends HttpServlet {
                 int productId = Integer.parseInt(request.getParameter("productSeq"));
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 int optionId = Integer.parseInt(request.getParameter("optionId"));
-                String userName = (String) session.getAttribute("user_name");
-                String userPhone = (String) session.getAttribute("user_phone");
 
                 // 3. 바로 구매할 상품만 포함하는 임시 장바구니 리스트 생성
                 List<CartItem> buyNowCartList = new ArrayList<>();
@@ -126,15 +148,62 @@ public class OrderController extends HttpServlet {
                     orderProducts.add(product);
                 }
 
+                PaymentMethodDAO paymentMethodDAO = new PaymentMethodDAO();
+                List<PaymentMethodDTO> paymentMethods = paymentMethodDAO.getPaymentMethodsByUserIndex(userIndex);
+
+                AddressDAO addressDAO = new AddressDAO();
+                AddressDTO addressInfo = addressDAO.getAddressByUserIndex(userIndex);
+
                 // 5. request에 데이터 저장
                 request.setAttribute("order_product_list", orderProducts);
                 request.setAttribute("cart_list", buyNowCartList); // 수량 정보를 위해 임시 리스트 전달
-                request.setAttribute("user_name", userName);
-                request.setAttribute("user_phone", userPhone);
+                request.setAttribute("paymentMethods", paymentMethods);
+                request.setAttribute("addressInfo", addressInfo);
+                request.setAttribute("user_name", session.getAttribute("user_name"));
+                request.setAttribute("user_phone", session.getAttribute("user_phone"));
 
                 forward = new ActionForward();
                 forward.setPath("/order/orderPage.jsp");
                 forward.setRedirect(false);
+            } else if (command.equals("/orderAction.do")) {
+                HttpSession session = request.getSession();
+                Integer userIndex = (Integer) session.getAttribute("userIndex");
+
+                if (userIndex == null) {
+                    response.sendRedirect("/login.do");
+                    return;
+                }
+
+                String[] productIdsStr = request.getParameterValues("product_id");
+                String[] optionIdsStr = request.getParameterValues("product_option_id");
+                int paymentMethodId = Integer.parseInt(request.getParameter("payment_method"));
+
+                int[] productIdsInt = Arrays.stream(productIdsStr).mapToInt(Integer::parseInt).toArray();
+                int[] optionIdsInt = Arrays.stream(optionIdsStr).mapToInt(Integer::parseInt).toArray();
+
+                PurchaseDAO purchaseDAO = new PurchaseDAO();
+                int result = purchaseDAO.purchase_product(userIndex, productIdsInt, optionIdsInt, paymentMethodId, 0, 0, 0);
+
+                if (result == 0) {
+                    response.setContentType("text/html; charset=UTF-8");
+                    java.io.PrintWriter out = response.getWriter();
+                    out.println("<script>");
+                    out.println("alert('결제 성공');");
+                    out.println("location.href='/myMenu/myMenuMainPage.do';");
+                    out.println("</script>");
+                    out.close();
+                    return;
+                } else {
+                    // 실패 처리
+                    response.setContentType("text/html; charset=UTF-8");
+                    java.io.PrintWriter out = response.getWriter();
+                    out.println("<script>");
+                    out.println("alert('주문에 실패했습니다.');");
+                    out.println("history.back();");
+                    out.println("</script>");
+                    out.close();
+                    return;
+                }
             }
 
             if (forward != null) {
