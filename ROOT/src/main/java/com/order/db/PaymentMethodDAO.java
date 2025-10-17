@@ -47,4 +47,38 @@ public class PaymentMethodDAO {
 
         return paymentMethods;
     }
+
+    public boolean addPaymentMethod(int userIndex, String provider) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        boolean success = false;
+
+        String sql = "INSERT INTO payment_methods (user_index, provider) VALUES (?, ?)";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userIndex);
+            pstmt.setString(2, provider);
+            int result = pstmt.executeUpdate();
+
+            if (result > 0) {
+                System.out.println("Payment method added successfully.");
+                success = true;
+            } else {
+                System.out.println("Failed to add payment method.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return success;
+    }
 }
