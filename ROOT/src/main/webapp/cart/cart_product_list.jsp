@@ -23,7 +23,7 @@
                 <%-- (✅ 수정) 상품 개수를 동적으로 표시 --%>
                 일반신선 ${fn:length(productList)}개
             </span>
-            <span>(주)미트박스글로벌</span>
+            <span>(주)빈컴퍼니</span>
         </div>
         
         <c:set var="totalPrice" value="0" /> <!-- 총합 초기화 -->
@@ -44,12 +44,13 @@
 		        </div>
 		
 		        <div style="margin-right: 20px;">
-		            <c:choose>
-		                <c:when test="${not empty product.imageList}">
-		                    <img src="han1.jpg" alt="${product.name}" width="100" height="100">
-		                </c:when>
-		                <c:otherwise>
-		                    <img src="https://via.placeholder.com/100" alt="${product.name}" width="100" height="100">
+	            <c:choose>
+	                <c:when test="${not empty product.imageList}">
+	                    <%-- (✅ 수정) productDetail.jsp와 동일한 방식으로 이미지 경로를 가져옵니다. --%>
+	                    <img src="${product.imageList[0].dir}" alt="${product.name}" width="100" height="100">
+	                </c:when>
+	                <c:otherwise>
+	                    <img src="https://via.placeholder.com/100" alt="${product.name}" width="100" height="100">
 		                </c:otherwise>
 		            </c:choose>
 		        </div>
