@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
+import com.product.db.CategoryBean;
 import com.product.db.ProductBean;
 import com.product.db.ProductDAO;
 
@@ -32,6 +33,9 @@ public class ProductListAction implements Action {
         int offset = 0; // 시작 위치
         int limit = 20; // 한 번에 가져올 개수
         List<ProductBean> productList = dao.getProductsByCategory(categoryId, offset, limit);
+        List<CategoryBean> subCategoryList = dao.getSubCategories(1); 
+        // 조회된 카테고리 목록을 request에 저장
+        request.setAttribute("subCategoryList", subCategoryList);
 
         // 3. request 객체에 "productList"라는 이름으로 조회된 상품 목록을 저장합니다.
         request.setAttribute("productList", productList);

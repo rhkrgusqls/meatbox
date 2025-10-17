@@ -27,6 +27,24 @@
 
 <main id="meatboxContent" class="promotion meatbox_container contents_wrapper">
     <div class="inner_global">
+    
+    	<%-- ✅ [추가] 카테고리 목록 표시 영역 --%>
+        <div class="category_tab_wrap" style="margin-top: 24px; margin-bottom: 24px;">
+            <ul style="display: flex; gap: 8px; list-style: none; padding: 0; flex-wrap: wrap;">
+                <li>
+                    <a href="#" class="category_tab active" style="display: block; padding: 8px 16px; border: 1px solid #ddd; border-radius: 16px; text-decoration: none; color: #333; background-color: #f5f5f5;">
+                        <strong>전체</strong>
+                    </a>
+                </li>
+                <c:forEach var="category" items="${subCategoryList}">
+                    <li>
+                        <a href="productList.do?category=${category.categoryId}" class="category_tab" style="display: block; padding: 8px 16px; border: 1px solid #ddd; border-radius: 16px; text-decoration: none; color: #333;">
+                            <span>${category.categoryName}</span>
+                        </a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
         
         <div class="location" style="margin-top: 20px; margin-bottom: 20px; font-size: 14px; color: #666;">
             <span><a href="${pageContext.request.contextPath}/">홈</a> &gt;</span>
