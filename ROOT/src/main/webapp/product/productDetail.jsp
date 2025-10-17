@@ -52,9 +52,6 @@
                         </div>
                     </div>
                     <div class="right_box">
-                         <%-- =============================================================================== --%>
-                         <%--  상품 기본 정보 (동적 데이터 적용)                                             --%>
-                         <%-- =============================================================================== --%>
                         <ul class="top_info">
                             <li>
                                 <strong class="prd_name malgun_st">${productDetail.name}</strong>
@@ -65,7 +62,6 @@
                             <li class="delivery_information">
                                 <span class="absolute_txt">배송안내</span>
                                 <div class="align_box">
-                                   <%-- 배송 관련 정보는 복잡하므로 여기서는 간단히 표시합니다. --%>
                                    <p>배송 정보를 표시하는 영역입니다.</p>
                                 </div>
                             </li>
@@ -75,49 +71,40 @@
                             <li class="bott_info">
                                 <dl>
                                     <dt>상품평</dt>
-                                    <dd>
-                                        <%-- 상품평 개수는 동적으로 가져와야 합니다. --%>
-                                        <em id="mainReviewCnt">0</em> 건
-                                    </dd>
+                                    <dd><em id="mainReviewCnt">0</em> 건</dd>
                                 </dl>
                             </li>
                         </ul>
 
-                        <form id="buyNowForm" action="/buyNow.do" method="GET">
-                            <input type="hidden" name="productSeq" value="${productDetail.product_id}">
+                        <%-- JavaScript가 값을 가져갈 수 있도록 각 요소에 id를 부여합니다. --%>
+                        <input type="hidden" id="productId" name="productId" value="${productDetail.product_id}">
 
-                            <%-- 상품 옵션 선택 --%>
-                            <div class="select_box select_top">
-                                <c:if test="${not empty productDetail.optionList}">
-                                    <select name="optionId" style="width:100%; padding:10px; font-size:16px; margin-bottom:10px;">
-                                        <option value="">옵션을 선택해주세요.</option>
-                                        <c:forEach var="option" items="${productDetail.optionList}">
-                                            <option value="${option.option_id}">
-                                                ${option.option_name} - ${option.option_detail}
-                                                <c:if test="${option.price_of_option > 0}">
-                                                    (+<fmt:formatNumber value="${option.price_of_option}" pattern="#,###" />원)
-                                                </c:if>
-                                            </option>
-                                        </c:forEach>
-                                    </select>
-                                </c:if>
-                                <c:if test="${empty productDetail.optionList}">
-                                    <p>선택 가능한 옵션이 없습니다.</p>
-                                </c:if>
-                            </div>
+                        <div class="select_box select_top">
+                            <c:if test="${not empty productDetail.optionList}">
+                                <select id="optionId" name="optionId" style="width:100%; padding:10px; font-size:16px; margin-bottom:10px;">
+                                    <option value="">옵션을 선택해주세요.</option>
+                                    <c:forEach var="option" items="${productDetail.optionList}">
+                                        <option value="${option.option_id}">
+                                            ${option.option_name} - ${option.option_detail}
+                                            <c:if test="${option.price_of_option > 0}">
+                                                (+<fmt:formatNumber value="${option.price_of_option}" pattern="#,###" />원)
+                                            </c:if>
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </c:if>
+                        </div>
 
-                            <%-- 수량 선택 --%>
-                            <div style="margin-bottom: 20px;">
-                                <label for="quantity">수량:</label>
-                                <input type="number" id="quantity" name="quantity" value="1" min="1" style="width: 60px; text-align: center;">
-                            </div>
+                        <div style="margin-bottom: 20px;">
+                            <label for="quantity">수량:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" style="width: 60px; text-align: center;">
+                        </div>
 
-                            <div class="btn_box">
-                                <a href="javascript:;" class="btn heart_btn">관심상품</a>
-                                <button type="button" class="btn cart">장바구니</button>
-                                <button type="submit" class="btn buy">구매하기</button>
-                            </div>
-                        </form>
+                        <div class="btn_box">
+                            <a href="javascript:;" class="btn heart_btn">관심상품</a>
+                            <button type="button" class="btn cart" onclick="addToCart()">장바구니</button>
+                            <button type="button" class="btn buy" onclick="buyNow()">구매하기</button>
+                        </div>
                     </div>
                 </div>
 
@@ -133,6 +120,7 @@
                             <li><a href="javascript:;">유의사항</a></li>
                         </ul>
                     </div>
+                    
                     <div class="tab_con">
                         <div class="tab_con1 _tab">
                             <div class="explanation">
@@ -201,6 +189,54 @@
                 $('._tab').hide().eq(index).show();
             });
         });
+        
+     // 페이지 하단의 <script> 태그 안의 addToCart 함수를 이걸로 교체해주세요.
+
+        function addToCart() {
+            console.log("1. '장바구니' 버튼 클릭됨. addToCart 함수 실행 시작.");
+
+            // 2. 각 HTML 요소를 찾아서 변수에 담습니다.
+            const productElement = document.getElementById('productId');
+            const optionElement = document.getElementById('optionId');
+            const quantityElement = document.getElementById('quantity');
+
+            // 3. 각 요소가 제대로 찾아졌는지 콘솔에서 확인합니다.
+            console.log("찾아온 productId 요소:", productElement);
+            console.log("찾아온 optionId 요소:", optionElement);
+            console.log("찾아온 quantity 요소:", quantityElement);
+
+            // 4. 요소가 하나라도 없다면 에러 메시지를 보여주고 중단합니다.
+            if (!productElement || !optionElement || !quantityElement) {
+                alert('페이지에 필요한 id를 가진 요소(productId, optionId, quantity)가 없습니다. JSP 코드를 확인해주세요.');
+                console.error("필수 요소를 찾지 못했습니다.");
+                return;
+            }
+
+            // 5. 각 요소의 값을 가져옵니다.
+            const productId = productElement.value;
+            const optionId = optionElement.value;
+            const quantity = quantityElement.value;
+
+            console.log("추출된 productId 값:", productId);
+            console.log("추출된 optionId 값:", optionId);
+            console.log("추출된 quantity 값:", quantity);
+
+            // 6. 옵션을 선택했는지 확인합니다.
+            if (!optionId) {
+                alert('옵션을 선택해주세요.');
+                return;
+            }
+
+            // 7. 최종 URL을 만듭니다.
+            const url = "/cart/cartAddAction.do?productId=" + productId
+          + "&optionId=" + optionId
+          + "&quantity=" + quantity;
+            
+            console.log("8. 생성된 최종 URL:", url);
+
+            // 9. 페이지를 이동시킵니다.
+            location.href = url;
+        }
     </script>
 </body>
 </html>
