@@ -61,7 +61,7 @@
                                         <input type="text" class="addr addr1" value="${addressInfo.city} ${addressInfo.district} ${addressInfo.neighborhood}" name="recv_addr1" id="recv_addr1" style="display: none;"/>
                                         <input type="text" class="addr addr2" value="${addressInfo.detailAddress}" name="recv_addr2" id="recv_addr2" style="display: none;"/>
                                         <span class="my_addr" id="addr_text">${addressInfo.city} ${addressInfo.district} ${addressInfo.neighborhood} ${addressInfo.detailAddress}</span>
-                                        <button type="button" onclick="DaumMgr.show({'type':'open','postcode':'recv_zip_cd','address1':'recv_addr1'});" class="btn-ty2 gray" style="margin-left: 10px;">주소검색</button>
+                                        <button type="button" class="btn-ty2 gray" style="margin-left: 10px;">주소검색</button>
                                     </div>
                                 </td>
                             </tr>
@@ -194,6 +194,7 @@
                                                 <li>등록된 결제수단이 없습니다.</li>
                                             </c:if>
                                         </ul>
+                                        <button type="button" onclick="location.href='/payment/register.do'" class="common-btn-red" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;">결제수단 등록</button>
                                     </div>
                                 </td>
                             </tr>
@@ -247,9 +248,10 @@
             var daumPostcode = new daum.Postcode({
                 oncomplete: function (data) {
                     // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-                    $('input[name="recipient_zipcode"]').val(data.zonecode); // 우편번호
-                    $('input[name="recipient_address1"]').val(data.roadAddress); // 도로명 주소
-                    $('input[name="recipient_address2"]').focus(); // 상세주소로 포커스
+                    $('#recv_zip_cd').val(data.zonecode); // 우편번호
+                    $('#recv_addr1').val(data.roadAddress); // 도로명 주소
+                    $('#addr_text').text(data.roadAddress); // 주소 텍스트 업데이트
+                    $('#recv_addr2').focus(); // 상세주소로 포커스
                     
                     if (typeof(callback) === 'function') {
                         callback();

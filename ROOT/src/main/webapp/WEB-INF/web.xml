@@ -114,7 +114,20 @@
         <servlet-name>OrderController</servlet-name>
         <url-pattern>/orderAction.do</url-pattern>
     </servlet-mapping>
-    
+
+    <servlet>
+        <servlet-name>PaymentMethodController</servlet-name>
+        <servlet-class>com.payment.controller.PaymentMethodController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PaymentMethodController</servlet-name>
+        <url-pattern>/payment/register.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaymentMethodController</servlet-name>
+        <url-pattern>/payment/registerAction.do</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>SearchController</servlet-name>
         <servlet-class>com.search.controller.SearchController</servlet-class>
