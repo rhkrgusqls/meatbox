@@ -79,12 +79,6 @@
                 <fmt:formatNumber value="${totalPrice}" pattern="#,###" />원
             </strong>
         </div>
-
-        <!-- ✅ 주문 버튼 -->
-        <div style="text-align: right; padding: 20px;">
-            <button onclick="submitOrder()">선택상품 주문</button>
-        </div>
-
     </div>
 </div>
 
