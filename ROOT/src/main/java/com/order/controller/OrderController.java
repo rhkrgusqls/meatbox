@@ -7,6 +7,7 @@ import com.order.db.PaymentMethodDTO;
 import com.order.db.PurchaseDAO;
 import com.product.db.ProductDAO;
 import com.product.db.ProductDetailBean;
+import com.product.db.ProductOptionBean;
 import com.user.db.AddressDAO;
 import com.user.db.AddressDTO;
 
@@ -76,17 +77,20 @@ public class OrderController extends HttpServlet { // Trigger recompile
                 }
 
                 List<ProductDetailBean> orderProducts = new ArrayList<>();
+                List<ProductOptionBean> orderOptionList = new ArrayList<>();
                 ProductDAO productDAO = new ProductDAO();
 
                 if (cartItems != null && !cartItems.isEmpty()) {
                     for (CartItem item : cartItems) {
                         System.out.println("[DEBUG] 장바구니 항목 처리 중... ProductId: " + item.getProductId());
                         ProductDetailBean product = productDAO.getProductDetail(item.getProductId());
+                        ProductOptionBean option = productDAO.getProductOptionFromId(item.getOptionId());
                         
                         // 2. DB 조회 결과 확인
                         if (product != null) {
                             System.out.println("[DEBUG] ProductId " + item.getProductId() + "에 대한 상품 정보를 DB에서 찾았습니다. 상품명: " + product.getName());
                             orderProducts.add(product);
+                            orderOptionList.add(option);
                         } else {
                             System.out.println("[DEBUG] ProductId " + item.getProductId() + "에 대한 상품 정보를 DB에서 찾지 못했습니다.");
                         }
@@ -103,6 +107,7 @@ public class OrderController extends HttpServlet { // Trigger recompile
                 AddressDTO addressInfo = addressDAO.getAddressByUserIndex(userIndex);
 
                 request.setAttribute("order_product_list", orderProducts);
+                request.setAttribute("order_option_list", orderOptionList);
                 request.setAttribute("cart_list", cartItems);
                 request.setAttribute("paymentMethods", paymentMethods);
                 request.setAttribute("addressInfo", addressInfo);
@@ -142,10 +147,13 @@ public class OrderController extends HttpServlet { // Trigger recompile
 
                 // 4. 상품 상세 정보 조회
                 List<ProductDetailBean> orderProducts = new ArrayList<>();
+                List<ProductOptionBean> orderOptionList = new ArrayList<>();
                 ProductDAO productDAO = new ProductDAO();
                 ProductDetailBean product = productDAO.getProductDetail(productId);
+                ProductOptionBean option = productDAO.getProductOptionFromId(optionId);
                 if (product != null) {
                     orderProducts.add(product);
+                    orderOptionList.add(option);
                 }
 
                 PaymentMethodDAO paymentMethodDAO = new PaymentMethodDAO();
@@ -156,6 +164,7 @@ public class OrderController extends HttpServlet { // Trigger recompile
 
                 // 5. request에 데이터 저장
                 request.setAttribute("order_product_list", orderProducts);
+                request.setAttribute("order_option_list", orderOptionList);
                 request.setAttribute("cart_list", buyNowCartList); // 수량 정보를 위해 임시 리스트 전달
                 request.setAttribute("paymentMethods", paymentMethods);
                 request.setAttribute("addressInfo", addressInfo);
