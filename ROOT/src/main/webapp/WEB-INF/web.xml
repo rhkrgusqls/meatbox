@@ -87,6 +87,11 @@
         <servlet-name>cartController</servlet-name>
         <url-pattern>/cart/cartAddAction.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>cartController</servlet-name>
+        <url-pattern>/cart/cartDeleteAction.do</url-pattern>
+    </servlet-mapping>
+    
 
     <servlet>
         <servlet-name>myMenuController</servlet-name>

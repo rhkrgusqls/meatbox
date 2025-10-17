@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.Action;
 import com.ActionForward;
 import com.cart.action.CartAddAction;
+import com.cart.action.CartDeleteAction;
 import com.cart.action.CartPageAction;
 
 public class CartController extends HttpServlet {
@@ -44,6 +45,9 @@ public class CartController extends HttpServlet {
                 forward = action.execute(request, response);
             } else if (command.equals("/cart/cartAddAction.do")) {
                 action = new CartAddAction();
+                forward = action.execute(request, response);
+            } else if (command.equals("/cart/cartDeleteAction.do")) {
+                action = new CartDeleteAction();
                 forward = action.execute(request, response);
             }
             

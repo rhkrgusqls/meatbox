@@ -134,30 +134,40 @@
                                             </tr>
                                         </thead>
                                         <tbody class="common-pay-td">
-                                            <%-- 장바구니 상품 목록 (동적 생성) --%>
-                                            <c:forEach var="item" items="${order_product_list}" varStatus="status">
-                                                <tr class="cart_item">
-                                                    <td class="item_info_td">
-                                                        <div class="item_info_opt">
-                                                           <%-- ProductDetailBean에는 대표 이미지가 없으므로 일단 비워둠 --%>
-                                                           <img src="" alt="${item.name}" width="60" style="float:left; margin-right:10px;"/>
-                                                            <strong class="prd_name">${item.name}</strong>
-                                                            <input type="hidden" name="product_id" value="${item.product_id}">
-                                                            <input type="hidden" name="product_option_id" value="${cart_list[status.index].optionId}">
-                                                        </div>
-                                                    </td>
-                                                    <td class="price">
-                                                        <span><fmt:formatNumber value="${item.price}" pattern="#,###" /></span>원
-                                                    </td>
-                                                    <td class="quantity">
-                                                        <span>${cart_list[status.index].quantity}</span>개
-                                                    </td>
-                                                    <td class="total_price">
-                                                        <span><fmt:formatNumber value="${item.price * cart_list[status.index].quantity}" pattern="#,###" /></span>원
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
+    <%-- 장바구니 상품 목록 (동적 생성) --%>
+    <c:forEach var="item" items="${order_product_list}" varStatus="status">
+        <tr class="cart_item">
+            <td class="item_info_td">
+                <div class="item_info_opt">
+                    
+                    <%-- [핵심 수정] 'product' 변수를 'item'으로 변경 --%>
+                    <c:choose>
+                        <c:when test="${not empty item.imageList and not empty item.imageList[0].dir}">
+                            <img src="${item.imageList[0].dir}" alt="${item.name}" width="100" height="100">
+                        </c:when>
+                        <c:otherwise>
+                            <%-- 대표 이미지가 없을 경우 표시할 기본 이미지 --%>
+                            <img src="https://via.placeholder.com/100" alt="${item.name}" width="100" height="100">
+                        </c:otherwise>
+                    </c:choose>
+                    
+                    <strong class="prd_name">${item.name}</strong>
+                    <input type="hidden" name="product_id" value="${item.product_id}">
+                    <input type="hidden" name="product_option_id" value="${cart_list[status.index].optionId}">
+                </div>
+            </td>
+            <td class="price">
+                <span><fmt:formatNumber value="${item.price}" pattern="#,###" /></span>원
+            </td>
+            <td class="quantity">
+                <span>${cart_list[status.index].quantity}</span>개
+            </td>
+            <td class="total_price">
+                <span><fmt:formatNumber value="${item.price * cart_list[status.index].quantity}" pattern="#,###" /></span>원
+            </td>
+        </tr>
+    </c:forEach>
+</tbody>
                                     </table>
                                 </div>
                             </div>
