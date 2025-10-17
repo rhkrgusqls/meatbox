@@ -135,9 +135,9 @@
                 <%--  (✅ 추가) 상품 삭제 버튼                                                      --%>
                 <%-- =============================================================================== --%>
                 <div style="width: 50px; text-align: center;">
-                    <%-- cartId는 cartList 객체에 포함되어 있어야 합니다. --%>
-                    <a href=""
-                       onclick="return confirm('이 상품을 장바구니에서 삭제하시겠습니까?');"
+                    <%-- (✅ 수정) JavaScript 함수를 호출하도록 변경 --%>
+                    <a href="javascript:void(0);"
+                       onclick="deleteCartItem(${cartList[status.index].productId}, ${cartList[status.index].optionId});"
                        style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border: 1px solid #ddd; border-radius: 4px; text-align: center; background-color: #fafafa; color: #777; text-decoration: none; font-weight: bold; font-size: 14px;">
                        X
                     </a>
@@ -149,7 +149,7 @@
 		</c:forEach>
         <div style="text-align: right; padding: 20px; font-size: 18px; background-color: #f9f9f9;">
          	<strong style="color: #d92d2d; font-size: 22px;">
-                총 결제 금액:<fmt:formatNumber value="${totalPrice}" pattern="#,###" />원
+                총 결제 금액:&nbsp;<fmt:formatNumber value="${totalPrice}" pattern="#,###" />원
             </strong>
         </div>
         
@@ -200,15 +200,39 @@ function submitOrder() {
     document.body.appendChild(form);
     form.submit();
 }
+/**
+  * (✅ 수정) 단일 상품 삭제 함수를 POST 방식으로 변경
+  * @param {number} productId - 삭제할 상품의 ID
+  * @param {number} optionId - 삭제할 상품의 옵션 ID
+  */
+ function deleteCartItem(productId, optionId) {
+     if (confirm('이 상품을 장바구니에서 삭제하시겠습니까?')) {
+         const form = document.createElement('form');
+         form.method = 'POST';
+         form.action = '/cart/cartDeleteAction.do';
 
-function deleteCartItem(cartId) {
-    // 사용자에게 삭제 여부를 다시 한번 확인합니다.
-    if (confirm('이 상품을 장바구니에서 삭제하시겠습니까?')) {
-        // '확인'을 누르면 해당 cartId를 포함한 URL로 페이지를 이동시킵니다.
-        location.href = '/cart/cartDeleteAction.do?cartId=' + cartId;
-    }
-}
+         // productId를 위한 input
+         const productInput = document.createElement('input');
+         productInput.type = 'hidden';
+         productInput.name = 'productId';
+         productInput.value = productId;
+         form.appendChild(productInput);
 
+         // optionId를 위한 input
+         const optionInput = document.createElement('input');
+         optionInput.type = 'hidden';
+         optionInput.name = 'optionId';
+         optionInput.value = optionId;
+         form.appendChild(optionInput);
+
+         document.body.appendChild(form);
+         form.submit();
+     }
+ }
+
+/**
+ * 장바구니에서 선택된 여러 상품을 삭제하는 함수 (POST 방식)
+ */
 function deleteSelectedItems() {
     const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
     if (checkedBoxes.length === 0) {
@@ -219,21 +243,30 @@ function deleteSelectedItems() {
     if (confirm(`선택한 ${checkedBoxes.length}개의 상품을 장바구니에서 삭제하시겠습니까?`)) {
         const form = document.createElement('form');
         form.method = 'POST';
-        // 선택 삭제를 처리할 새로운 Action 경로를 지정해야 합니다.
-        form.action = '/cart/cartDeleteSelectedAction.do';
+        // (수정) 서버의 Action 경로와 일치시킵니다.
+        form.action = '/cart/cartDeleteAction.do';
 
         Array.from(checkedBoxes).forEach(cb => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'cartId'; // 서버는 'cartId' 배열을 받게 됩니다.
-            input.value = cb.dataset.cartId;
-            form.appendChild(input);
+            // (수정) productId를 위한 input 추가
+            const productInput = document.createElement('input');
+            productInput.type = 'hidden';
+            productInput.name = 'productId';
+            productInput.value = cb.dataset.productId;
+            form.appendChild(productInput);
+
+            // (수정) optionId를 위한 input 추가
+            const optionInput = document.createElement('input');
+            optionInput.type = 'hidden';
+            optionInput.name = 'optionId';
+            optionInput.value = cb.dataset.optionId;
+            form.appendChild(optionInput);
         });
 
         document.body.appendChild(form);
         form.submit();
     }
 }
+
 </script>
 
 </body>
