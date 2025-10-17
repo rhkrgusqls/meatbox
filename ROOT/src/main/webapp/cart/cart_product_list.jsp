@@ -119,7 +119,7 @@ function submitOrder() {
     
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/order/orderPage.do';
+    form.action = '/order.do';
     
     selectedItems.forEach(item => {
         const productInput = document.createElement('input');

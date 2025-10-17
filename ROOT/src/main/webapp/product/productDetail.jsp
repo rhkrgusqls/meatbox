@@ -237,6 +237,36 @@
             // 9. 페이지를 이동시킵니다.
             location.href = url;
         }
+        function buyNow() {
+            console.log("1. '구매하기' 버튼 클릭됨. buyNow 함수 실행 시작.");
+
+            // 2. 페이지에서 상품 ID, 옵션 ID, 수량 정보를 가져옵니다.
+            const productId = document.getElementById('productId').value;
+            const optionId = document.getElementById('optionId').value;
+            const quantity = document.getElementById('quantity').value;
+
+            console.log("추출된 productId 값:", productId);
+            console.log("추출된 optionId 값:", optionId);
+            console.log("추출된 quantity 값:", quantity);
+
+            // 3. 옵션을 선택했는지 반드시 확인합니다.
+            if (!optionId) {
+                alert('옵션을 선택해주세요.');
+                return;
+            }
+
+            // 4. OrderController의 /buyNow.do로 보낼 URL을 생성합니다.
+            // 컨트롤러가 받는 파라미터 이름(productSeq)에 맞춰서 URL을 만듭니다.
+            const url = "/buyNow.do?productSeq=" + productId
+                      + "&optionId=" + optionId
+                      + "&quantity=" + quantity;
+            
+            console.log("5. 생성된 최종 '바로 구매' URL:", url);
+
+            // 6. 생성된 URL로 페이지를 이동시켜 주문을 시작합니다.
+            location.href = url;
+        }
+    </script>
     </script>
 </body>
 </html>
