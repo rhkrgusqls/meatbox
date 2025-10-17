@@ -5,10 +5,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css" type="text/css" media="all" charset="UTF-8" />
-    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css" type="text/css" media="all" charset="UTF-8" />
-    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css" type="text/css" media="all" charset="UTF-8" />
+	<link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/font/spoqaHanSans.min.css" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/font/notoSanskr.min.css" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/font/pretendard.css" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css?20251001124312135" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css?20251001124312135" type="text/css" media="all" charset="UTF-8" />
+    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css?20251001124312135" type="text/css" media="all" charset="UTF-8" />
+    
     <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-ui-1.12.1.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery.bpopup-0.11.0.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery.cookie-1.4.1.js" charset="UTF-8"></script>
+    
+    <%-- ❗️특히 아래의 Const, Operation, CommonTools 등은 로그인 기능에 필수적입니다. --%>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/constant/Const.min.js?ver=20251001124312135"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/constant/Operation.min.js?ver=20251001124312135"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/CommonTools.min.js?ver=20251001124312135"></script>
+    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ProductTool.min.js?ver=20251001124312135"></script>
+    <!-- <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/FoTool.min.js?ver=20251001124312135"></script> -->
+    <script src="https://static-cdn.meatbox.co.kr/js/tool/MemberTools.min.js?ver=20251001124312135"></script>
 
 <style>
     /* 드롭다운 메뉴 스타일 (수정 없음) */
