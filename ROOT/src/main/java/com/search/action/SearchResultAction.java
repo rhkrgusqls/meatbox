@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
+import com.product.db.CategoryBean;
 import com.product.db.ProductBean;
 import com.product.db.ProductDAO;
 
@@ -17,6 +18,7 @@ public class SearchResultAction implements Action {
 
         String searchText = request.getParameter("searchText");
         String pageStr = request.getParameter("page");
+        String keyword = request.getParameter("searchText");
 
         // page가 null이면 1
         int page = 1;
@@ -30,14 +32,19 @@ public class SearchResultAction implements Action {
         }
 
         ProductDAO dao = new ProductDAO();
-        List<ProductBean> productList = null;
+        List<ProductBean> productList = dao.searchProducts(keyword, 1);
 
         try {
             productList = dao.searchProducts(searchText, page); // DAO에서 페이지 기반 검색
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         request.setAttribute("productList", productList);
+        request.setAttribute("searchText", keyword);
+        
+        List<CategoryBean> subCategoryList = dao.getSubCategories(1); 
+        request.setAttribute("subCategoryList", subCategoryList);
 
         ActionForward forward = new ActionForward();
         forward.setPath("/event/productList.jsp"); 

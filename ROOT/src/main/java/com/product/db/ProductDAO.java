@@ -387,6 +387,7 @@ public class ProductDAO implements ProductInterface {
         String sql =
         		"SELECT " +
         		"    p.product_id, " +
+        		"    p.product_name, " +
         		"    p.price, " +
         		"    p.storage_type, " +
         		"    p.sale_tag, " +
@@ -450,6 +451,7 @@ public class ProductDAO implements ProductInterface {
                 while (rs.next()) {
                     ProductBean p = new ProductBean();
                     p.setProductId(rs.getInt("product_id"));
+                    p.setProductName(rs.getString("product_name"));
                     p.setBrandName(rs.getString("brand_name"));
                     p.setCategoryName(rs.getString("category_name"));
                     p.setDetailCategoryName(rs.getString("detail_category_name"));

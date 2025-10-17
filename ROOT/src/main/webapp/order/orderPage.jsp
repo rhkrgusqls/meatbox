@@ -13,24 +13,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="육류 4,500 + 식재료 2,000개! 미트박스와 최대 30% 원가절감 해볼까요?" />
 
-    <%-- =============================================================================== --%>
-    <%--  미트박스 사이트 CSS 및 JS 라이브러리 링크 (경로는 서버 환경에 맞게 절대경로 사용) --%>
-    <%-- =============================================================================== --%>
-    <link rel="shortcut icon" href="https://static-cdn.meatbox.co.kr/img/fo/favicon.ico?t=20240409" type="image/x-icon" />
-    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/common.min.css" type="text/css" media="all" charset="UTF-8" />
-    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/style.min.css" type="text/css" media="all" charset="UTF-8" />
-    <link rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/fo/renew.min.css" type="text/css" media="all" charset="UTF-8" />
-    <link type="text/css" rel="stylesheet" href="https://static-cdn.meatbox.co.kr/css/swiper/5.2.1/swiper.min.css" media="screen" charset="UTF-8" />
-    
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-ui-1.12.1.min.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery.bpopup-0.11.0.min.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery.cookie-1.4.1.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/constant/Const.min.js"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/CommonTools.min.js"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/ProductTool.min.js"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/tool/FoTool.min.js"></script>
-    <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/swiper/5.2.1/swiper-7.4.1.min.js" charset="UTF-8"></script>
 </head>
 <body>
 

@@ -127,6 +127,29 @@
         <servlet-name>PaymentMethodController</servlet-name>
         <url-pattern>/payment/registerAction.do</url-pattern>
     </servlet-mapping>
+    
+    
+    	    <!-- SellerProductController 서블릿 정의 -->
+	<servlet>
+	    <servlet-name>SellerProductController</servlet-name>
+	    <servlet-class>com.product.seller.controller.SellerProductController</servlet-class>
+	</servlet>
+	
+	<!-- SellerProductController URL 매핑 -->
+	<servlet-mapping>
+	    <servlet-name>SellerProductController</servlet-name>
+	    <url-pattern>/sellerProductRegister.do</url-pattern>
+	</servlet-mapping>
+	
+	<!-- JSP 단순 포워딩 매핑 -->
+	<servlet>
+	    <servlet-name>ProductRegisterJSP</servlet-name>
+	    <jsp-file>/seller/product/productRegister.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>ProductRegisterJSP</servlet-name>
+	    <url-pattern>/productRegister</url-pattern>
+	</servlet-mapping>
 
     <servlet>
         <servlet-name>SearchController</servlet-name>
