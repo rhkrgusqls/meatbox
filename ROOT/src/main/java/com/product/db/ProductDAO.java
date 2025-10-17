@@ -476,6 +476,37 @@ public class ProductDAO implements ProductInterface {
 
         return resultList;
     }
+
+    public List<CategoryBean> getSubCategories(int parentId) throws SQLException {
+        List<CategoryBean> subCategoryList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT category_id, category_name FROM category_hierarchy WHERE parent_category_id = ?";
+
+        try {
+        	conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, parentId);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                CategoryBean category = new CategoryBean();
+                category.setCategoryId(rs.getInt("category_id"));
+                category.setCategoryName(rs.getString("category_name"));
+                subCategoryList.add(category);
+            }
+            System.out.println("DAO : parentId " + parentId + "의 하위 카테고리 " + subCategoryList.size() + "개 조회 완료");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        	conn.close();
+        	pstmt.close();
+        	rs.close();
+        }
+        return subCategoryList;
+    }
     
     
 

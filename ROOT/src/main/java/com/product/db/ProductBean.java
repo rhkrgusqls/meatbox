@@ -4,7 +4,6 @@ public class ProductBean {
     private int productId;
     private String productName;
     private String brandNumber;
-    private String product_name;
     private String brandName;
     private String storageType;
     private String saleTag;

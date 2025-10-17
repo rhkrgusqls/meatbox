@@ -16,6 +16,11 @@ public class CategoryDAO {
     private String sql = "";
 
     // 기존 관리자 기능 (수정 없음)
+    /**
+     * @param childCode 이 카테고리 코드가
+     * @param parentCode 이 카테고리 하위로 들어가게 됨
+     * @throws SQLException
+     */
     public void classifyCategoryLevel(String childCode, String parentCode) throws SQLException {
         try (Connection conn = DBConnectionManager.getConnection();
              CallableStatement stmt = conn.prepareCall("{CALL classify_category_level(?, ?)}")) {
@@ -83,4 +88,15 @@ public class CategoryDAO {
             e.printStackTrace();
         }
     }
+    
+    public void insertCategory(String categoryName) throws SQLException {
+        String sql = "INSERT INTO category (category_name) VALUES (?)";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, categoryName);
+            pstmt.executeUpdate();
+        } 
+    }
+
 }
