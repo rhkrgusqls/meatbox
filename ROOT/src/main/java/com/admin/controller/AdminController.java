@@ -48,7 +48,7 @@ public class AdminController extends HttpServlet {
             }
         } else if (command.equals("/AdminOrderView.ac")) {   // 전체페이지 조회
             System.out.println("C: /AdminOrderView.ac 호출");
-            action = new AdminCategoryAddAction();
+            action = new AdminOrderViewAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
@@ -56,7 +56,7 @@ public class AdminController extends HttpServlet {
             }
         } else if (command.equals("/AdminOrderDetail.ac")) {   // 페이지 상세조회
             System.out.println("C: /AdminOrderDetail.ac 호출");
-            action = new AdminCategoryAddAction();
+            action = new AdminOrderDetailAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
@@ -64,7 +64,7 @@ public class AdminController extends HttpServlet {
             }
         } else if (command.equals("/AdminOrderAdd.ac")) { // 주문추가
             System.out.println("C: /AdminOrderAdd.ac 호출");
-            action = new AdminCategoryAddAction();
+            action = new AdminOrderAddAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
@@ -72,7 +72,7 @@ public class AdminController extends HttpServlet {
             }
         } else if (command.equals("/AdminOrderModify.ac")) {  // 페이지 상세조회에서 주문 수정
             System.out.println("C: /AdminOrderModify.ac 호출");
-            action = new AdminCategoryAddAction();
+            action = new AdminOrderModifyAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
@@ -81,7 +81,7 @@ public class AdminController extends HttpServlet {
         
         } else if (command.equals("/AdminOrderDelete.ac")) { // 주문 삭제
             System.out.println("C: /AdminOrderDelete.ac 호출");
-            action = new AdminCategoryAddAction();
+            action = new AdminOrderDeleteAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
