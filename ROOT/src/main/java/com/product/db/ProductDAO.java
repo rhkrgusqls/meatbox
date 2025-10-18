@@ -511,7 +511,29 @@ public class ProductDAO implements ProductInterface {
     }
     
     
-
+    public List<ProductBean> getAllProducts() throws ProductException {
+    	List<ProductBean> productList = new ArrayList<>();
+    	String sql = "SELECT * FROM view_product_full_info ORDER BY product_id DESC";
+    	
+    	try (Connection conn = DBConnectionManager.getConnection();
+    			PreparedStatement stmt = conn.prepareStatement(sql);
+    			ResultSet rs = stmt.executeQuery()) {
+    		
+    		while(rs.next()) {
+    			ProductBean p = new ProductBean();
+    			p.setProductId(rs.getInt("product_id"));
+                p.setProductName(rs.getString("product_name"));
+                p.setCategoryName(rs.getString("category_name"));
+                p.setPrice(rs.getInt("price"));
+                p.setQuantity(rs.getInt("quantity")); 
+                productList.add(p);
+    		}
+    	}catch (SQLException e) {
+            e.printStackTrace();
+            throw new ProductException("전체 상품 목록 조회 중 오류가 발생했습니다.");
+        }
+        return productList;		
+    }
     
     
 }
