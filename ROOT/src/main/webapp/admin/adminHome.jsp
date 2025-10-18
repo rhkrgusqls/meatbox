@@ -150,25 +150,27 @@
         <%-- 사이드바 포함 --%>
         <%@ include file="adminSidebar.jsp" %>
 
-        <%-- 메인 컨텐츠: URL 파라미터에 따라 동적으로 페이지 포함 --%>
-        <c:choose>
-            <c:when test="${param.page == 'categories'}">
-            	<jsp:include page="adminCategories.jsp" />
-            </c:when>
-            <c:when test="${param.page == 'products'}">
-                <jsp:include page="adminProducts.jsp" />
-            </c:when>
-            <c:when test="${param.page == 'orders'}">
-                <jsp:include page="adminOrders.jsp" />
-            </c:when>
-            <c:when test="${param.page == 'request'}">
-                <jsp:include page="adminRequest.jsp" />
-            </c:when>
-            <%-- 기본 페이지 또는 'dashboard' 요청 시 대시보드 표시 --%>
-            <c:otherwise>
-                <jsp:include page="adminDashboard.jsp" />
-            </c:otherwise>
-        </c:choose>
+         <c:choose>
+        <c:when test="${not empty contentPage}">
+            <jsp:include page="${contentPage}" />
+        </c:when>
+
+        <c:when test="${param.page == 'categories'}">
+            <jsp:include page="adminCategories.jsp" />
+        </c:when>
+        <c:when test="${param.page == 'products'}">
+            <jsp:include page="adminProducts.jsp" />
+        </c:when>
+        <c:when test="${param.page == 'orders'}">
+            <jsp:include page="adminOrders.jsp" />
+        </c:when>
+         <c:when test="${param.page == 'request'}">
+            <jsp:include page="adminRequest.jsp" />
+        </c:when>
+        <c:otherwise>
+            <jsp:include page="adminDashboard.jsp" />
+        </c:otherwise>
+    </c:choose>
     </div>
 </body>
 </html>

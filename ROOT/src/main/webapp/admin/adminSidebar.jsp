@@ -83,7 +83,7 @@
     <nav class="sidebar-nav">
         <ul>
             <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="adminHome.jsp?page=categories">카테고리 관리</a></li>
-            <li class="${currentPage == 'products' ? 'active' : ''}"><a href="adminHome.jsp?page=products">상품 관리</a></li>
+            <li class="${currentPage == 'products' ? 'active' : ''}"><a href="./AdminProductList.ac">상품 관리</a></li>
             <li class="${currentPage == 'orders' ? 'active' : ''}"><a href="adminHome.jsp?page=orders">주문 관리</a></li>
             <li class="${currentPage == 'request' ? 'active' : ''}"><a href="adminHome.jsp?page=request">상품등록 요청 관리</a></li>
         </ul>
