@@ -74,8 +74,9 @@ public class CategoryDAO {
             return null; // 카테고리가 없는 경우
         }
         
-        // 부모 ID가 없을 때까지(최상위 카테고리에 도달할 때까지) 반복해서 부모를 조회
-        while (currentCategory.getParentCategoryId() != null) {
+        // 부모 ID가 null이 아니거나 0이 아닐 동안 반복
+        // 이렇게 하면 parentCategoryId가 0일 때 루프가 멈추고 최상위 카테고리로 인식됩니다.
+        while (currentCategory.getParentCategoryId() != null && currentCategory.getParentCategoryId() != 0) {
             currentCategory = getCategoryById(currentCategory.getParentCategoryId());
             if (currentCategory == null) {
                 return null; // 중간에 부모를 못 찾는 경우 (데이터 오류)

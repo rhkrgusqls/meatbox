@@ -250,24 +250,37 @@ public class ProductDAO implements ProductInterface {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
-        // product 테이블과 product_of_detail_category를 조인하고,
-        // 서브쿼리를 이용해 첫 번째 이미지 경로와 옵션 수량 합계를 가져옵니다.
-        String sql = "SELECT p.*, " +
-                     " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
-                     " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
-                     "FROM product p " +
-                     "JOIN product_of_detail_category podc ON p.product_id = podc.product_id " +
-                     "WHERE podc.detail_category_id = ? " +
-                     "ORDER BY p.created_at DESC " +
-                     "LIMIT ? OFFSET ?";
+        String sql;
 
         try {
             conn = DBConnectionManager.getConnection();
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, categoryId);
-            pstmt.setInt(2, limit);
-            pstmt.setInt(3, offset);
+
+            // categoryId가 0 이하일 경우, 모든 상품을 조회하는 쿼리 실행
+            if (categoryId <= 0) {
+                sql = "SELECT p.*, " +
+                      " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
+                      " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
+                      "FROM product p " +
+                      "ORDER BY p.created_at DESC " +
+                      "LIMIT ? OFFSET ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, limit);
+                pstmt.setInt(2, offset);
+            } else {
+                // 특정 카테고리의 상품을 조회하는 기존 쿼리 실행
+                sql = "SELECT p.*, " +
+                      " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
+                      " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
+                      "FROM product p " +
+                      "JOIN product_of_detail_category podc ON p.product_id = podc.product_id " +
+                      "WHERE podc.detail_category_id = ? " +
+                      "ORDER BY p.created_at DESC " +
+                      "LIMIT ? OFFSET ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, categoryId);
+                pstmt.setInt(2, limit);
+                pstmt.setInt(3, offset);
+            }
 
             rs = pstmt.executeQuery();
 
@@ -276,14 +289,11 @@ public class ProductDAO implements ProductInterface {
                 p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
                 
-                // 옵션에서 합산된 수량 사용
                 p.setQuantity(rs.getInt("totalQuantity"));
                 
                 p.setPrice(rs.getInt("price"));
                 p.setSellerNote(rs.getString("seller_note"));
                 p.setProductImage(rs.getString("productImage"));
-
-                // 필요하다면 나머지 setter 추가
 
                 productList.add(p);
             }
@@ -299,7 +309,6 @@ public class ProductDAO implements ProductInterface {
                 e.printStackTrace();
             }
         }
-
         return productList;
     }
 
