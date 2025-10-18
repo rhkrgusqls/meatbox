@@ -1,7 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.product.seller.db.*" %>
-<%@ page import="java.sql.Timestamp" %>
-<%@ page import="org.apache.commons.fileupload.*, org.apache.commons.fileupload.disk.*, org.apache.commons.fileupload.servlet.*" %>
 <%@ page import="java.io.*, java.util.*" %>
 
 <%
@@ -31,8 +28,12 @@ input[type="submit"]:hover { background:#800000;}
 .add-option:hover { background:#cc0000; }
 </style>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 let optionCount = 0;
+
+// 옵션 추가 버튼
 function addOptionRow() {
     const container = document.getElementById('option-container');
     const row = document.createElement('div');
@@ -47,18 +48,44 @@ function addOptionRow() {
     container.appendChild(row);
     optionCount++;
 }
+
+// 페이지 로드 시 카테고리 목록 비동기 로드
+$(document).ready(function() {
+    const select = $("#categoryName");
+    select.prop("disabled", true);
+    $.ajax({
+        url: "getCategories.do",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            select.empty().append('<option value="">-- 카테고리 선택 --</option>');
+            data.forEach(function(cat){
+                select.append($('<option>', { value: cat.categoryId, text: cat.categoryName }));
+            });
+            select.prop("disabled", false);
+        },
+        error: function(xhr, status, error) {
+            console.error("카테고리 로드 실패:", status, error);
+            console.error("응답 내용:", xhr.responseText);
+        }
+    });
+});
 </script>
 </head>
+
 <body>
 <h2>상품 등록 요청</h2>
 <form action="sellerProductRegister.do" method="post" enctype="multipart/form-data">
     <label>상품명:</label> <input type="text" name="productName" required>
+
     <label>저장방식:</label>
     <select name="storageType">
         <option value="REFRIGERATED">냉장</option>
         <option value="FROZEN">냉동</option>
     </select>
+
     <label>판매태그:</label> <input type="text" name="saleTag">
+
     <label>형태:</label>
     <select name="productForm">
         <option value="CHOPPED">다진</option>
@@ -66,12 +93,18 @@ function addOptionRow() {
         <option value="INDIVIDUAL">개별포장</option>
         <option value="PROCESSED_MEAT">가공육</option>
     </select>
+
     <label>배송비:</label> <input type="text" name="deliveryFee">
     <label>허용 등급:</label> <input type="text" name="allowedMemberLv">
     <label>규격 가격:</label> <input type="text" name="price">
     <label>규격:</label> <input type="text" name="unitPrice">
     <label>판매자 메모:</label> <input type="text" name="sellerNote">
-    <label>카테고리:</label> <input type="text" name="categoryName">
+
+    <label for="categoryName">카테고리:</label>
+    <select name="categoryName" id="categoryName" required>
+        <option value="">-- 카테고리 로드 중... --</option>
+    </select>
+
     <label>세부 항목:</label> <input type="text" name="detailCategoryName">
     <label>주의사항:</label> <input type="text" name="cautionsText">
 
@@ -86,6 +119,7 @@ function addOptionRow() {
 </form>
 </body>
 </html>
+
 
 
 

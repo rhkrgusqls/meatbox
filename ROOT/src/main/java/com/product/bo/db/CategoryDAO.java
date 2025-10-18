@@ -328,5 +328,33 @@ public class CategoryDAO {
             System.out.println("DAO : 새 카테고리 '" + categoryName + "' 추가 완료");
         } 
     }
+    
+    public List<com.product.seller.controller.CategoryBean> getLeafCategories() {
+        List<com.product.seller.controller.CategoryBean> list = new ArrayList<>();
+        String sql = "SELECT * FROM category_hierarchy ch " +
+                     "WHERE ch.category_id NOT IN ( " +
+                     "    SELECT DISTINCT parent_category_id " +
+                     "    FROM category_hierarchy " +
+                     "    WHERE parent_category_id IS NOT NULL " +
+                     ")";
 
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("category_id");
+                String name = rs.getString("category_name");
+                list.add(new com.product.seller.controller.CategoryBean(id, name));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeDB();
+        }
+
+        return list;
+    }
 }

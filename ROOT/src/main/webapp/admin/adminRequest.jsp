@@ -19,7 +19,7 @@ button.approveBtn:hover { background:#45a049; }
 </head>
 <body>
 
-<h1>상품 요청 리스트</h1>
+<h1></h1>
 <table id="productTable">
     <tbody></tbody>
 </table>
