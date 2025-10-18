@@ -1,16 +1,27 @@
+// com/product/bo/db/CategoryDTO.java (최종 수정본)
+
 package com.product.bo.db;
 
-/**
- * 카테고리 메뉴 표시에 필요한 데이터를 전달하는 DTO 클래스.
- * isLeaf 필드를 통해 마지막 카테고리 여부를 판별합니다.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class CategoryDTO {
+
+    // --- 모든 곳에서 공통으로 사용될 필드 ---
     private int categoryId;
     private String categoryName;
+    
+    // --- 상단 네비게이션 메뉴에서 사용 ---
     private int level;
-    private boolean isLeaf; // true이면 마지막 카테고리
+    private boolean isLeaf;
 
-    // Getters and Setters
+    // --- 관리자 페이지 및 데이터 구조화에 사용 ---
+    private Integer parentCategoryId; 
+    private String parentCategoryName; // 이전 목록 방식에서 사용
+    private List<CategoryDTO> children = new ArrayList<>(); // 새 목록 방식에서 사용
+
+    // --- 모든 필드에 대한 Getter & Setter ---
+
     public int getCategoryId() {
         return categoryId;
     }
@@ -39,7 +50,31 @@ public class CategoryDTO {
         return isLeaf;
     }
 
-    public void setLeaf(boolean leaf) {
-        isLeaf = leaf;
+    public void setLeaf(boolean isLeaf) {
+        this.isLeaf = isLeaf;
+    }
+
+    public Integer getParentCategoryId() {
+        return parentCategoryId;
+    }
+
+    public void setParentCategoryId(Integer parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
+    }
+
+    public String getParentCategoryName() {
+        return parentCategoryName;
+    }
+
+    public void setParentCategoryName(String parentCategoryName) {
+        this.parentCategoryName = parentCategoryName;
+    }
+
+    public List<CategoryDTO> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<CategoryDTO> children) {
+        this.children = children;
     }
 }

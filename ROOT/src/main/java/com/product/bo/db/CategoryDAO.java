@@ -5,8 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import jdbc.db.connection.DBConnectionManager;
 
 public class CategoryDAO {
@@ -32,6 +35,53 @@ public class CategoryDAO {
 
     public void classifyCategoryLevel(CategoryBean bean) throws SQLException {
         classifyCategoryLevel(bean.getChildCode(), bean.getParentCode());
+    }
+    /**
+     * 특정 카테고리 ID로 DTO를 조회하는 헬퍼 메서드 (추가)
+     */
+    public CategoryDTO getCategoryById(int categoryId) {
+        CategoryDTO dto = null;
+        sql = "SELECT category_id, category_name, parent_category_id FROM category_hierarchy WHERE category_id = ?";
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, categoryId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                dto = new CategoryDTO();
+                dto.setCategoryId(rs.getInt("category_id"));
+                dto.setCategoryName(rs.getString("category_name"));
+                int parentId = rs.getInt("parent_category_id");
+                if (!rs.wasNull()) {
+                    dto.setParentCategoryId(parentId);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDB();
+        }
+        return dto;
+    }
+
+    /**
+     * 현재 카테고리 ID를 기반으로 최상위 부모 카테고리를 찾는 메서드 (추가)
+     */
+    public CategoryDTO findTopLevelParent(int categoryId) {
+        CategoryDTO currentCategory = getCategoryById(categoryId);
+        if (currentCategory == null) {
+            return null; // 카테고리가 없는 경우
+        }
+        
+        // 부모 ID가 없을 때까지(최상위 카테고리에 도달할 때까지) 반복해서 부모를 조회
+        while (currentCategory.getParentCategoryId() != null) {
+            currentCategory = getCategoryById(currentCategory.getParentCategoryId());
+            if (currentCategory == null) {
+                return null; // 중간에 부모를 못 찾는 경우 (데이터 오류)
+            }
+        }
+        return currentCategory; // 최상위 부모 DTO 반환
     }
 
     /**
@@ -80,16 +130,17 @@ public class CategoryDAO {
     }
     
     /**
-     * 모든 카테고리 목록을 가져오는 메서드 (수정)
+     * 최상위 카테고리만 조회하는 메서드 (자식 카테고리 추가 시 <select>에 사용)
      */
-    public List<CategoryDTO> getAllCategories() throws SQLException {
+    public List<CategoryDTO> getTopLevelCategories() {
         List<CategoryDTO> categoryList = new ArrayList<>();
-        sql = "SELECT category_id, category_name FROM category ORDER BY category_id";
+        // level이 0인 카테고리만 조회
+        sql = "SELECT category_id, category_name FROM category_hierarchy WHERE level = 0 ORDER BY category_name";
 
-        // try-with-resources를 사용하여 자원 자동 해제
-        try (Connection con = DBConnectionManager.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 CategoryDTO dto = new CategoryDTO();
@@ -97,10 +148,111 @@ public class CategoryDAO {
                 dto.setCategoryName(rs.getString("category_name"));
                 categoryList.add(dto);
             }
-            System.out.println("DAO : 모든 카테고리 " + categoryList.size() + "개 조회 완료");
+            System.out.println("DAO : 최상위 카테고리 " + categoryList.size() + "개 조회 완료");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDB();
         }
-        // catch 블록에서 예외를 잡지 않고 던지면, 호출한 곳에서 처리하게 됩니다.
         return categoryList;
+    }
+
+    /**
+     * 모든 카테고리 목록을 계층 구조로 가져오는 메서드 (개선된 최종본)
+     * 최상위 카테고리 목록을 반환하며, 각 DTO는 자신의 자식 목록을 포함합니다.
+     */
+    public List<CategoryDTO> getAllCategoriesHierarchical() {
+        // 1. 모든 카테고리를 DB에서 가져와 ID를 key로 하는 Map에 저장 (조회를 빠르게 하기 위함)
+        Map<Integer, CategoryDTO> allCategoriesMap = new HashMap<>();
+        sql = "SELECT category_id, category_name, parent_category_id FROM category_hierarchy ORDER BY category_name";
+
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                CategoryDTO dto = new CategoryDTO();
+                dto.setCategoryId(rs.getInt("category_id"));
+                dto.setCategoryName(rs.getString("category_name"));
+                
+                int parentId = rs.getInt("parent_category_id");
+                if (!rs.wasNull()) {
+                    dto.setParentCategoryId(parentId);
+                }
+                allCategoriesMap.put(dto.getCategoryId(), dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>(); // 오류 발생 시 빈 리스트 반환
+        } finally {
+            closeDB();
+        }
+
+        // 2. Map에 저장된 모든 카테고리를 순회하며 부모-자식 관계를 설정
+        List<CategoryDTO> topLevelCategories = new ArrayList<>();
+        for (CategoryDTO category : allCategoriesMap.values()) {
+            if (category.getParentCategoryId() == null) {
+                // 부모 ID가 없으면 최상위 카테고리이므로 결과 리스트에 바로 추가
+                topLevelCategories.add(category);
+            } else {
+                // 부모 ID가 있으면, Map에서 부모를 찾아서 자식 리스트에 자신을 추가
+                CategoryDTO parent = allCategoriesMap.get(category.getParentCategoryId());
+                if (parent != null) {
+                    parent.getChildren().add(category);
+                }
+            }
+        }
+        
+        System.out.println("DAO : 계층형 카테고리 구조화 완료, 최상위 " + topLevelCategories.size() + "개");
+        return topLevelCategories;
+    }
+
+
+    /**
+     * 새로운 최상위 카테고리를 추가하는 메서드 (추가)
+     */
+    public void addTopLevelCategory(String categoryName) throws SQLException {
+        sql = "INSERT INTO category_hierarchy (category_name, level, parent_category_id) VALUES (?, 0, NULL)";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, categoryName);
+            pstmt.executeUpdate();
+            System.out.println("DAO : 새 최상위 카테고리 '" + categoryName + "' 추가 완료");
+        }
+    }
+
+    /**
+     * 새로운 자식 카테고리를 추가하는 메서드 (추가)
+     */
+    public void addChildCategory(String categoryName, int parentId) throws SQLException {
+        // 부모의 레벨을 조회하여 자식 레벨을 결정 (예: 부모가 0이면 자식은 1, 부모가 1이면 자식은 2)
+        int parentLevel = 0;
+        String levelSql = "SELECT level FROM category_hierarchy WHERE category_id = ?";
+        sql = "INSERT INTO category_hierarchy (category_name, level, parent_category_id) VALUES (?, ?, ?)";
+        
+        try (Connection conn = DBConnectionManager.getConnection()) {
+            // 부모 레벨 조회
+            try (PreparedStatement levelPstmt = conn.prepareStatement(levelSql)) {
+                levelPstmt.setInt(1, parentId);
+                try (ResultSet levelRs = levelPstmt.executeQuery()) {
+                    if (levelRs.next()) {
+                        parentLevel = levelRs.getInt("level");
+                    }
+                }
+            }
+            
+            // 자식 카테고리 삽입
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, categoryName);
+                pstmt.setInt(2, parentLevel + 1); // 부모 레벨 + 1
+                pstmt.setInt(3, parentId);
+                pstmt.executeUpdate();
+                System.out.println("DAO : '" + parentId + "'의 자식 카테고리 '" + categoryName + "' 추가 완료");
+            }
+        }
     }
 
     public void closeDB() {
