@@ -30,6 +30,7 @@ public class RequestListController extends HttpServlet {
             for (ProductRegisterRequestBean req : allRequests) {
                 JSONObject obj = new JSONObject();
                 System.out.print("Test2");
+                obj.put("requestId", req.getRequestId()); 
                 obj.put("userIndex", req.getUserIndex());
                 obj.put("productName", req.getProductName());
                 obj.put("receivedDate", String.valueOf(req.getReceivedDate()));

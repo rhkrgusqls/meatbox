@@ -14,7 +14,7 @@ public class ProductRegisterRequestBean {
     private int deliveryFee;
     private int allowedMemberLv;
     private int price;
-    private int unitPrice;
+    private String unitPrice;
     private String sellerNote;
     private Integer reviewPreview1Id;
     private Integer reviewPreview2Id;
@@ -27,7 +27,15 @@ public class ProductRegisterRequestBean {
     private String productOptionsJson;
     private String productImagesJson;
     private String productDetailsJson;
+    private int requestId;
 
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
     // ====== getters & setters ======
     public int getUserIndex() { return userIndex; }
     public void setUserIndex(int userIndex) { this.userIndex = userIndex; }
@@ -59,8 +67,8 @@ public class ProductRegisterRequestBean {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
-    public int getUnitPrice() { return unitPrice; }
-    public void setUnitPrice(int unitPrice) { this.unitPrice = unitPrice; }
+    public String getUnitPrice() { return unitPrice; }
+    public void setUnitPrice(String unitPrice) { this.unitPrice = unitPrice; }
 
     public String getSellerNote() { return sellerNote; }
     public void setSellerNote(String sellerNote) { this.sellerNote = sellerNote; }

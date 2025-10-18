@@ -21,7 +21,7 @@ public class TestProductRegisterRequestMain {
             request.setDeliveryFee(3000);
             request.setAllowedMemberLv(1);
             request.setPrice(15000);
-            request.setUnitPrice(15000);
+            request.setUnitPrice("15000");
             request.setSellerNote("신선한 상품입니다.");
             request.setCategoryName("소고기");
             request.setDetailCategoryName("한우");
