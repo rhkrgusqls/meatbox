@@ -69,15 +69,21 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (command.equals("/admin/AdminProductList.ac")) { // "/admin" 경로 추가
+            System.out.println("C: /admin/AdminProductList.ac 호출"); // 경로 확인용 로그
 			/*
 			 * } else if (command.equals("/AdminCategoryAdd.ac")) {
 			 * System.out.println("C: /AdminCategoryAdd.ac 호출"); action = new
 			 * AdminCategoryAddAction(); try { forward = action.execute(request, response);
 			 * } catch (Exception e) { e.printStackTrace(); }
 			 */
-        } else if (command.equals("/AdminProductList.ac")) { 
-            System.out.println("C: /AdminProductList.ac 호출");
+        } 
             action = new AdminProductListAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         } else if (command.equals("/AdminOrderView.ac")) {   // 전체페이지 조회
             System.out.println("C: /AdminOrderView.ac 호출");
@@ -120,16 +126,16 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (command.equals("/AdminProductUpdate.ac")) {
-            System.out.println("C: /AdminProductUpdate.ac 호출");
+        } else if (command.equals("/admin/AdminProductUpdate.ac")) {
+            System.out.println("C: /admin/AdminProductUpdate.ac 호출");
              action = new AdminProductUpdateAction(); 
              try {
                  forward = action.execute(request, response);
              } catch (Exception e) {
                  e.printStackTrace();
              }
-        } else if (command.equals("/AdminProductDelete.ac")) {
-            System.out.println("C: /AdminProductDelete.ac 호출");
+        } else if (command.equals("/admin/AdminProductDelete.ac")) {
+            System.out.println("C: /admin/AdminProductDelete.ac 호출");
              action = new AdminProductDeleteAction(); 
              try {
                  forward = action.execute(request, response);
