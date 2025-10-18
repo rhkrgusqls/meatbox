@@ -10,13 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
+import com.admin.action.AdminHomeAction;
 import com.admin.action.AdminCategoryListAction;
+import com.admin.action.AdminCategoryAddAction;
+import com.admin.action.AdminCategoryAddChildAction;
+import com.admin.action.AdminCategoryAddTopAction;
+import com.admin.action.AdminProductListAction;
+import com.admin.action.AdminProductUpdateAction;
 import com.admin.action.order.AdminOrderAddAction;
 import com.admin.action.order.AdminOrderDeleteAction;
 import com.admin.action.order.AdminOrderDetailAction;
 import com.admin.action.order.AdminOrderModifyAction;
 import com.admin.action.order.AdminOrderViewAction;
-import com.admin.action.AdminCategoryAddAction;
 
 @WebServlet("*.ac") // URL 패턴을 *.ac로 변경
 public class AdminController extends HttpServlet {
@@ -35,7 +40,27 @@ public class AdminController extends HttpServlet {
         ActionForward forward = null;
 
         // 2. 가상주소 매핑
-        if (command.equals("/AdminCategoryList.ac")) {
+        if (command.equals("/AdminHome.ac")) { 
+            System.out.println("C: /AdminHome.ac 호출");
+            action = new AdminHomeAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else  if (command.equals("/AdminCategoryAddTop.ac")) { // 최상위 추가 Action
+            System.out.println("C: /AdminCategoryAddTop.ac 호출");
+            action = new AdminCategoryAddTopAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/AdminCategoryAddChild.ac")) { // 자식 추가 Action
+            System.out.println("C: /AdminCategoryAddChild.ac 호출");
+            action = new AdminCategoryAddChildAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/AdminCategoryList.ac")) {
             System.out.println("C: /AdminCategoryList.ac 호출");
             action = new AdminCategoryListAction();
             try {
@@ -43,9 +68,16 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (command.equals("/AdminCategoryAdd.ac")) {
-            System.out.println("C: /AdminCategoryAdd.ac 호출");
-            action = new AdminCategoryAddAction();
+        } else if (command.equals("/admin/AdminProductList.ac")) { // "/admin" 경로 추가
+            System.out.println("C: /admin/AdminProductList.ac 호출"); // 경로 확인용 로그
+			/*
+			 * } else if (command.equals("/AdminCategoryAdd.ac")) {
+			 * System.out.println("C: /AdminCategoryAdd.ac 호출"); action = new
+			 * AdminCategoryAddAction(); try { forward = action.execute(request, response);
+			 * } catch (Exception e) { e.printStackTrace(); }
+			 */
+        } 
+            action = new AdminProductListAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {

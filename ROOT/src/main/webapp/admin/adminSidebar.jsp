@@ -75,7 +75,7 @@
 
 <aside class="sidebar">
     <div class="sidebar-header">
-        <a href="adminHome.jsp">
+        <a href="${pageContext.request.contextPath}/AdminHome.ac">
             <img src="https://static-cdn.meatbox.co.kr/img/renew/logo-row-ko.svg" alt="미트박스 로고" class="sidebar-logo">
         </a>
     </div>
@@ -83,8 +83,8 @@
     <nav class="sidebar-nav">
         <ul>
             <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="adminHome.jsp?page=categories">카테고리 관리</a></li>
-            <li class="${currentPage == 'products' ? 'active' : ''}"><a href="adminHome.jsp?page=products">상품 관리</a></li>
             <li><a href="AdminOrderViewAction.ac">주문 관리</a></li>
+            <li class="${currentPage == 'products' ? 'active' : ''}"><a href="./AdminProductList.ac">상품 관리</a></li>
             <li class="${currentPage == 'request' ? 'active' : ''}"><a href="adminHome.jsp?page=request">상품등록 요청 관리</a></li>
         </ul>
     </nav>

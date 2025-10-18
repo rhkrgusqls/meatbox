@@ -511,29 +511,90 @@ public class ProductDAO implements ProductInterface {
     }
     
     
+
     public List<ProductBean> getAllProducts() throws ProductException {
-    	List<ProductBean> productList = new ArrayList<>();
-    	String sql = "SELECT * FROM view_product_full_info ORDER BY product_id DESC";
-    	
-    	try (Connection conn = DBConnectionManager.getConnection();
-    			PreparedStatement stmt = conn.prepareStatement(sql);
-    			ResultSet rs = stmt.executeQuery()) {
-    		
-    		while(rs.next()) {
-    			ProductBean p = new ProductBean();
-    			p.setProductId(rs.getInt("product_id"));
+        List<ProductBean> productList = new ArrayList<>();
+
+        String sql = "SELECT p.*, ANY_VALUE(v.category_name) AS category_name, " +
+                     " (SELECT SUM(po.quantity) FROM product_option po WHERE po.product_id = p.product_id) as total_quantity " +
+                     " FROM product p " +
+                     " LEFT JOIN view_product_full_info v ON p.product_id = v.product_id " +
+                     " GROUP BY p.product_id " +
+                     " ORDER BY p.product_id DESC";
+
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                ProductBean p = new ProductBean();
+                p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
-                p.setCategoryName(rs.getString("category_name"));
+                
+                p.setCategoryName(rs.getString("category_name")); 
                 p.setPrice(rs.getInt("price"));
-                p.setQuantity(rs.getInt("quantity")); 
+                
+                p.setQuantity(rs.getInt("total_quantity"));
+
                 productList.add(p);
-    		}
-    	}catch (SQLException e) {
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
             throw new ProductException("전체 상품 목록 조회 중 오류가 발생했습니다.");
         }
-        return productList;		
+        return productList;
     }
     
+    public boolean deleteProduct(int productId) throws ProductException {
+        String sql = "DELETE FROM product WHERE product_id = ?";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, productId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ProductException("상품 삭제 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+    
+    public boolean updateProduct(ProductBean product) throws ProductException {
+        String sql = "UPDATE product SET product_name = ?, price = ? WHERE product_id = ?";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, product.getProductName());
+            pstmt.setInt(2, product.getPrice());
+            pstmt.setInt(3, product.getProductId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ProductException("상품 정보 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+    
+    public boolean updateProductOption(int optionId, int quantity, int priceOfOption) throws ProductException {
+        String sql = "UPDATE product_option SET quantity = ?, price_of_option = ? WHERE option_id = ?";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, quantity);
+            pstmt.setInt(2, priceOfOption);
+            pstmt.setInt(3, optionId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ProductException("상품 옵션 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
     
 }
