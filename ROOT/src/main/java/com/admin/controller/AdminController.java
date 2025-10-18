@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.Action;
 import com.ActionForward;
 import com.admin.action.AdminHomeAction;
+import com.admin.action.AdminProductDeleteAction;
 import com.admin.action.AdminCategoryListAction;
 import com.admin.action.AdminCategoryAddAction;
 import com.admin.action.AdminCategoryAddChildAction;
@@ -69,14 +70,7 @@ public class AdminController extends HttpServlet {
                 e.printStackTrace();
             }
         } else if (command.equals("/admin/AdminProductList.ac")) { // "/admin" 경로 추가
-            System.out.println("C: /admin/AdminProductList.ac 호출"); // 경로 확인용 로그
-			/*
-			 * } else if (command.equals("/AdminCategoryAdd.ac")) {
-			 * System.out.println("C: /AdminCategoryAdd.ac 호출"); action = new
-			 * AdminCategoryAddAction(); try { forward = action.execute(request, response);
-			 * } catch (Exception e) { e.printStackTrace(); }
-			 */
-        } 
+            System.out.println("C: /admin/AdminProductList.ac 호출");
             action = new AdminProductListAction();
             try {
                 forward = action.execute(request, response);
@@ -85,7 +79,15 @@ public class AdminController extends HttpServlet {
             }
          // AdminController.java
          // ...
-         } else if (command.equals("/admin/AdminOrderViewAction.ac")) { // ⬅️ 이 문자열이 로그와 정확히 같은지 확인!
+         } else if (command.equals("/admin/AdminProductUpdate.ac")) {
+             System.out.println("C: /admin/AdminProductUpdate.ac 호출");
+             action = new AdminProductUpdateAction();
+             try {
+                 forward = action.execute(request, response);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+        } else if (command.equals("/admin/AdminOrderViewAction.ac")) { // ⬅️ 이 문자열이 로그와 정확히 같은지 확인!
              System.out.println("C: /admin/AdminOrderViewAction.ac 호출"); // ⬅️ 로그 추가
              action = new AdminOrderViewAction();
              try {
@@ -93,6 +95,23 @@ public class AdminController extends HttpServlet {
              } catch (Exception e) {
                  e.printStackTrace();
              }
+        } else if (command.equals("/admin/AdminProductDelete.ac")) {
+            System.out.println("C: /admin/AdminProductDelete.ac 호출");
+            action = new AdminProductDeleteAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+       } else if (command.equals("/AdminOrderView.ac")) {   // 전체페이지 조회
+            System.out.println("C: /AdminOrderView.ac 호출");
+            action = new AdminOrderViewAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else if (command.equals("/AdminOrderDetail.ac")) {   // 페이지 상세조회
             System.out.println("C: /AdminOrderDetail.ac 호출");
             action = new AdminOrderDetailAction();
