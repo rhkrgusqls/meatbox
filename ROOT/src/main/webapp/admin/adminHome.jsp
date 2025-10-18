@@ -161,6 +161,9 @@
             <c:when test="${param.page == 'orders'}">
                 <jsp:include page="adminOrders.jsp" />
             </c:when>
+            <c:when test="${param.page == 'request'}">
+                <jsp:include page="adminRequest.jsp" />
+            </c:when>
             <%-- 기본 페이지 또는 'dashboard' 요청 시 대시보드 표시 --%>
             <c:otherwise>
                 <jsp:include page="adminDashboard.jsp" />
