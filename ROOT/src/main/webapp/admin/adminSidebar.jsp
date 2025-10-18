@@ -75,7 +75,7 @@
 
 <aside class="sidebar">
     <div class="sidebar-header">
-        <a href="adminHome.jsp">
+        <a href="${pageContext.request.contextPath}/AdminHome.ac">
             <img src="https://static-cdn.meatbox.co.kr/img/renew/logo-row-ko.svg" alt="미트박스 로고" class="sidebar-logo">
         </a>
     </div>
