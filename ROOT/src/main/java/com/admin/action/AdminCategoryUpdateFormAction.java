@@ -1,6 +1,6 @@
-// com/admin/action/AdminCategoryUpdateFormAction.java
 package com.admin.action;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.Action;
@@ -13,20 +13,24 @@ public class AdminCategoryUpdateFormAction implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         
-        // 1. 전달된 카테고리 ID를 가져옵니다.
         int categoryId = Integer.parseInt(request.getParameter("id"));
         
-        // 2. DAO를 이용해 해당 카테고리 정보를 조회합니다.
         CategoryDAO dao = new CategoryDAO();
-        CategoryDTO category = dao.getCategoryById(categoryId); // 이전에 만든 getCategoryById 활용
         
-        // 3. request에 카테고리 정보를 저장합니다.
+        // 1. 수정할 부모 카테고리 정보 조회
+        CategoryDTO category = dao.getCategoryById(categoryId);
+        
+        // 2. 해당 부모의 자식 카테고리 목록 조회 (추가된 로직)
+        List<CategoryDTO> childList = dao.getCategoriesByParent(categoryId);
+        
+        // 3. request에 부모와 자식 목록 모두 저장
         request.setAttribute("category", category);
+        request.setAttribute("childList", childList); // 자식 목록 추가
         
-        // 4. 수정 폼 페이지로 포워딩합니다.
+        // 4. 수정 폼 페이지로 포워딩
         ActionForward forward = new ActionForward();
         forward.setPath("./admin/adminCategoryUpdate.jsp");
-        forward.setRedirect(false); // request 정보를 전달해야 하므로 false
+        forward.setRedirect(false);
         
         return forward;
     }

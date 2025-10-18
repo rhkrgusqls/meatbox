@@ -24,6 +24,7 @@ import com.admin.action.order.AdminOrderDetailAction;
 import com.admin.action.order.AdminOrderModifyAction;
 import com.admin.action.order.AdminOrderViewAction;
 import com.admin.action.AdminCategoryUpdateFormAction;
+import com.admin.action.AdminChildCategoryDeleteAction;
 import com.admin.action.AdminCategoryUpdateAction;
 import com.admin.action.AdminCategoryDeleteAction;
 
@@ -83,6 +84,10 @@ public class AdminController extends HttpServlet {
         } else if (command.equals("/AdminCategoryDelete.ac")) {
             System.out.println("C: /AdminCategoryDelete.ac 호출 (삭제 처리)");
             action = new AdminCategoryDeleteAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/AdminChildCategoryDelete.ac")) {
+            System.out.println("C: /AdminChildCategoryDelete.ac 호출 (수정 폼 내 자식 삭제)");
+            action = new AdminChildCategoryDeleteAction();
             try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
         } else if (command.equals("/admin/AdminProductList.ac")) { // "/admin" 경로 추가
             System.out.println("C: /admin/AdminProductList.ac 호출");
