@@ -163,6 +163,17 @@
     <servlet-mapping>                                                  
         <servlet-name>OrderController</servlet-name>                   
          <url-pattern>/buyNow.do</url-pattern>                          
- </servlet-mapping>     
+ 	</servlet-mapping>     
+    
+    <servlet>
+	    <servlet-name>requestListController</servlet-name>
+	    <servlet-class>com.product.bo.controller.RequestListController</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	    <servlet-name>requestListController</servlet-name>
+	    <url-pattern>/requestList.do</url-pattern>
+	</servlet-mapping>
+    
         
 </web-app>
