@@ -31,12 +31,17 @@
 <body>
 
 <%-- 헤더 인클루드 --%>
+
 <jsp:include page="/include/header.jsp" />
 
 <div class="container">
     <div id="contents" class="inner">
         <h2>결제수단 등록</h2>
         <form action="/payment/registerAction.do" method="post" style="width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ddd;">
+            
+            <%-- [✅ 핵심 수정 2] 컨트롤러로 돌아올 주소를 넘겨주기 위한 hidden input 추가 --%>
+            <input type="hidden" name="returnUrl" value="${param.returnUrl}">
+
             <div style="margin-bottom: 15px;">
                 <label for="provider" style="display: inline-block; width: 120px; font-weight: bold;">결제 제공사</label>
                 <input type="text" id="provider" name="provider" required class="width200 input_wid">
@@ -48,7 +53,6 @@
     </div>
 </div>
 
-<%-- 푸터 인클루드 --%>
 <jsp:include page="/include/footer.jsp" />
 
 </body>

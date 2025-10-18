@@ -177,30 +177,35 @@
 
                 <%-- 결제수단 선택 --%>
                 <div class="section">
-                     <table class="pay_td">
-                        <colgroup><col width="180px"/><col width="*"/></colgroup>
-                        <tbody>
-                            <tr>
-                                <th class="line_height"><em>결제수단 선택</em></th>
-                                <td>
-                                    <div class="pay_choice">
-                                        <ul class="method_list">
-                                            <c:if test="${not empty paymentMethods}">
-                                                <c:forEach var="paymentMethod" items="${paymentMethods}">
-                                                    <li><label><input type="radio" name="payment_method" value="${paymentMethod.payment_method_id}"> ${paymentMethod.provider}</label></li>
-                                                </c:forEach>
-                                            </c:if>
-                                            <c:if test="${empty paymentMethods}">
-                                                <li>등록된 결제수단이 없습니다.</li>
-                                            </c:if>
-                                        </ul>
-                                        <button type="button" onclick="location.href='/payment/register.do'" class="common-btn-red" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;">결제수단 등록</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+     <table class="pay_td">
+        <colgroup><col width="180px"/><col width="*"/></colgroup>
+        <tbody>
+            <tr>
+                <th class="line_height">
+                    <em>결제수단 선택</em><br>
+                    <%-- [✅ 핵심 수정 1] 현재 페이지 주소를 returnUrl 파라미터로 넘겨주는 링크 추가 --%>
+                    <a href="/payment/register.do?returnUrl=/buyNow.do%3FproductSeq%3D${param.productSeq}%26quantity%3D${param.quantity}%26optionId%3D${param.optionId}" class="common-box-btn dist_edit">
+                        결제수단추가
+                    </a>
+                </th>
+                <td>
+                    <div class="pay_choice">
+                        <ul class="method_list">
+                            <c:if test="${not empty paymentMethods}">
+                                <c:forEach var="paymentMethod" items="${paymentMethods}">
+                                    <li><label><input type="radio" name="payment_method" value="${paymentMethod.payment_method_id}"> ${paymentMethod.provider}</label></li>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${empty paymentMethods}">
+                                <li>등록된 결제수단이 없습니다.</li>
+                            </c:if>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
                 <%-- 약관동의 및 결제하기 --%>
                 <div class="last_pay_step">

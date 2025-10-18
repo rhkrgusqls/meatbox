@@ -198,7 +198,7 @@ public class OrderController extends HttpServlet { // Trigger recompile
                     java.io.PrintWriter out = response.getWriter();
                     out.println("<script>");
                     out.println("alert('결제 성공');");
-                    out.println("location.href='/myMenu/myMenuMainPage.do';");
+                    out.println("location.href='/';");
                     out.println("</script>");
                     out.close();
                     return;
