@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <%-- JSTL format 태그 라이브러리 추가 --%>
 
 <!DOCTYPE html>
 <html>
@@ -38,10 +39,15 @@
     .order-table th, .order-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ecf0f1; }
     .order-table th { background-color: #f9f9f9; font-weight: 600; }
     .order-table tbody tr:hover { background-color: #f5f5f5; }
-    .status { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; color: #fff; }
-    .status.pending { background-color: #f1c40f; }
-    .status.completed { background-color: #2ecc71; }
-    .status.cancelled { background-color: #e74c3c; }
+    
+    /* 상태 표시 스타일 추가 */
+    .status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; color: #fff; display: inline-block; text-align: center; min-width: 60px; /* 최소 너비 추가 */ }
+    .status.pending { background-color: #f1c40f; } /* 결제 대기 */
+    .status.completed { background-color: #2ecc71; } /* 결제 완료 */
+    .status.shipping { background-color: #3498db; } /* 배송 중 */
+    .status.delivered { background-color: #9b59b6; } /* 배송 완료 - 색상 추가 */
+    .status.cancelled { background-color: #e74c3c; } /* 주문 취소 */
+    .status.unknown { background-color: #95a5a6; } /* 알 수 없음 - 추가 */
     
     /* 검색/필터 폼 스타일 */
     .filter-form { display: flex; gap: 10px; align-items: center; }
@@ -86,7 +92,7 @@
                 <thead>
                     <tr>
                         <th>주문번호</th>
-                        <th>구매자 ID</th>
+                        <th>구매자 ID (user_index)</th> <%-- 컬럼명 변경 --%>
                         <th>결제 금액</th>
                         <th>주문일시</th>
                         <th>상태</th>
@@ -94,27 +100,53 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>ORD20251017-001</td>
-                        <td>user01</td>
-                        <td>43,900원</td>
-                        <td>2025-10-17 10:30</td>
-                        <td><span class="status completed">결제 완료</span></td>
-                        <td><a href="#" class="btn-small btn-detail">상세보기</a></td>
-                    </tr>
-                    <tr>
-                        <td>ORD20251017-002</td>
-                        <td>user03</td>
-                        <td>15,900원</td>
-                        <td>2025-10-17 09:15</td>
-                        <td><span class="status" style="background-color: #3498db;">배송 중</span></td>
-                        <td><a href="#" class="btn-small btn-detail">상세보기</a></td>
-                    </tr>
+                    <c:choose>
+                        <c:when test="${not empty orderList}">
+                            <%-- ✅ 여기에 varStatus="loop" 추가! --%>
+                            <c:forEach var="order" items="${orderList}" varStatus="loop"> 
+                                <tr>
+                                    <td>${order.orderId}</td>
+                                    <%-- ✅ loop.index를 사용하여 userNameList에서 이름 가져오기 --%>
+                                    <td>${userNameList[loop.index]}</td> 
+                                    <td><fmt:formatNumber value="${order.finalPrice}" type="currency" currencySymbol="₩" /></td>
+                                    <td><fmt:formatDate value="${order.orderDate}" pattern="yyyy-MM-dd HH:mm" /></td>
+                                    <td>
+                                        <%-- ... 상태 표시 로직 ... --%>
+                                        <c:choose>
+                                            <c:when test="${order.deliveryStatus == 'pending'}">
+                                                <span class="status pending">결제 대기</span>
+                                            </c:when>
+                                            <c:when test="${order.deliveryStatus == 'completed'}">
+                                                <span class="status completed">결제 완료</span>
+                                            </c:when>
+                                            <c:when test="${order.deliveryStatus == 'shipping'}">
+                                                <span class="status shipping">배송 중</span>
+                                            </c:when>
+                                             <c:when test="${order.deliveryStatus == 'delivered'}">
+                                                <span class="status delivered">배송 완료</span>
+                                            </c:when>
+                                            <c:when test="${order.deliveryStatus == 'cancelled'}">
+                                                <span class="status cancelled">주문 취소</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="status unknown">${order.deliveryStatus}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td><a href="AdminOrderDetail.ac?orderId=${order.orderId}" class="btn-small btn-detail">상세보기</a></td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="6" style="text-align: center;">조회된 주문 내역이 없습니다.</td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
         </div>
     </main>
 </div>
-
 </body>
 </html>

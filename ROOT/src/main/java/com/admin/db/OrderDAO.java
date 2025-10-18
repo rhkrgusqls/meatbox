@@ -43,6 +43,7 @@ public class OrderDAO {
 	            joinedOrder.setUsedPoints(rsOrder.getInt("used_points"));
 	            joinedOrder.setOrderDate(rsOrder.getTimestamp("order_date"));
 	            joinedOrder.setDeliveryStatus(rsOrder.getString("delivery_status"));
+	            joinedOrder.setFinalPrice(rsOrder.getInt("final_price"));
 	
 	            // 2. 해당 order_id의 order_product에서 product_id 조회
 	            String productIdsSQL = "SELECT product_id FROM order_product WHERE order_id = ?";
