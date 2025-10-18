@@ -78,6 +78,54 @@ public class CategoryDAO {
         }
         return categoryList;
     }
+    
+    /**
+     * 모든 카테고리 목록을 가져오는 메서드
+     */
+    public List<CategoryDTO> getAllCategories() {
+        List<CategoryDTO> categoryList = new ArrayList<>();
+        sql = "SELECT category_id, category_name FROM category ORDER BY category_id";
+
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                CategoryDTO dto = new CategoryDTO();
+                dto.setCategoryId(rs.getInt("category_id"));
+                dto.setCategoryName(rs.getString("category_name"));
+                categoryList.add(dto);
+            }
+            System.out.println("DAO : 모든 카테고리 " + categoryList.size() + "개 조회 완료");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDB();
+        }
+        return categoryList;
+    }
+
+    /**
+     * 새로운 카테고리를 추가하는 메서드
+     */
+    public void addCategory(CategoryDTO newCategory) {
+        sql = "INSERT INTO category (category_name) VALUES (?)";
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, newCategory.getCategoryName());
+            pstmt.executeUpdate();
+            
+            System.out.println("DAO : 새 카테고리 '" + newCategory.getCategoryName() + "' 추가 완료");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDB();
+        }
+    }
 
     public void closeDB() {
         try {

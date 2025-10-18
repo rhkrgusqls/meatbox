@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- URL의 'page' 파라미터를 확인하여 현재 페이지를 변수에 저장. 없으면 'dashboard'를 기본값으로. --%>
+<%-- URL의 'page' 파라미터를 확인하여 현재 페이지를 변수에 저장.
+없으면 'dashboard'를 기본값으로. --%>
 <c:set var="currentPage" value="${empty param.page ? 'dashboard' : param.page}" />
 
 <style>
@@ -81,8 +82,7 @@
 
     <nav class="sidebar-nav">
         <ul>
-            <li class="${currentPage == 'dashboard' ? 'active' : ''}"><a href="adminHome.jsp?page=dashboard">대시보드</a></li>
-            <li class="${currentPage == 'users' ? 'active' : ''}"><a href="adminHome.jsp?page=users">회원 관리</a></li>
+            <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="adminHome.jsp?page=categories">카테고리 관리</a></li>
             <li class="${currentPage == 'products' ? 'active' : ''}"><a href="adminHome.jsp?page=products">상품 관리</a></li>
             <li class="${currentPage == 'orders' ? 'active' : ''}"><a href="adminHome.jsp?page=orders">주문 관리</a></li>
         </ul>
