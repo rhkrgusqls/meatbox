@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.Action;
 import com.ActionForward;
 import com.admin.action.AdminCategoryListAction;
+import com.admin.action.AdminProductDeleteAction;
 import com.admin.action.AdminCategoryAddAction;
+import com.admin.action.AdminProductListAction;
+import com.admin.action.AdminProductUpdateAction;
 
 @WebServlet("*.ac") // URL 패턴을 *.ac로 변경
 public class AdminController extends HttpServlet {
@@ -46,6 +49,10 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (command.equals("/AdminProductList.ac")) { 
+            System.out.println("C: /AdminProductList.ac 호출");
+            action = new AdminProductListAction();
+
         } else if (command.equals("/AdminOrderView.ac")) {   // 전체페이지 조회
             System.out.println("C: /AdminOrderView.ac 호출");
             action = new AdminOrderViewAction();
@@ -87,6 +94,22 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (command.equals("/AdminProductUpdate.ac")) {
+            System.out.println("C: /AdminProductUpdate.ac 호출");
+             action = new AdminProductUpdateAction(); 
+             try {
+                 forward = action.execute(request, response);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+        } else if (command.equals("/AdminProductDelete.ac")) {
+            System.out.println("C: /AdminProductDelete.ac 호출");
+             action = new AdminProductDeleteAction(); 
+             try {
+                 forward = action.execute(request, response);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
         }
         // 다른 관리자 기능이 추가될 경우, 여기에 else if 문을 추가합니다.
 
