@@ -12,7 +12,6 @@ import com.Action;
 import com.ActionForward;
 import com.admin.action.AdminHomeAction;
 import com.admin.action.AdminCategoryListAction;
-import com.admin.action.AdminProductDeleteAction;
 import com.admin.action.AdminCategoryAddAction;
 import com.admin.action.AdminCategoryAddChildAction;
 import com.admin.action.AdminCategoryAddTopAction;
@@ -84,15 +83,16 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-        } else if (command.equals("/AdminOrderView.ac")) {   // 전체페이지 조회
-            System.out.println("C: /AdminOrderView.ac 호출");
-            action = new AdminOrderViewAction();
-            try {
-                forward = action.execute(request, response);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+         // AdminController.java
+         // ...
+         } else if (command.equals("/admin/AdminOrderViewAction.ac")) { // ⬅️ 이 문자열이 로그와 정확히 같은지 확인!
+             System.out.println("C: /admin/AdminOrderViewAction.ac 호출"); // ⬅️ 로그 추가
+             action = new AdminOrderViewAction();
+             try {
+                 forward = action.execute(request, response);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
         } else if (command.equals("/AdminOrderDetail.ac")) {   // 페이지 상세조회
             System.out.println("C: /AdminOrderDetail.ac 호출");
             action = new AdminOrderDetailAction();
@@ -126,22 +126,6 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (command.equals("/admin/AdminProductUpdate.ac")) {
-            System.out.println("C: /admin/AdminProductUpdate.ac 호출");
-             action = new AdminProductUpdateAction(); 
-             try {
-                 forward = action.execute(request, response);
-             } catch (Exception e) {
-                 e.printStackTrace();
-             }
-        } else if (command.equals("/admin/AdminProductDelete.ac")) {
-            System.out.println("C: /admin/AdminProductDelete.ac 호출");
-             action = new AdminProductDeleteAction(); 
-             try {
-                 forward = action.execute(request, response);
-             } catch (Exception e) {
-                 e.printStackTrace();
-             }
         }
         // 다른 관리자 기능이 추가될 경우, 여기에 else if 문을 추가합니다.
 

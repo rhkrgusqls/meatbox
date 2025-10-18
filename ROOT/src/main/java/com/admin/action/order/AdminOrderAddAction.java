@@ -13,6 +13,7 @@ public class AdminOrderAddAction implements Action {
         System.out.println("C: AdminOrderAddAction.execute() 호출");
 
         // TODO: 새로운 주문을 추가하는 비즈니스 로직 구현
+        
 
         ActionForward forward = new ActionForward();
         forward.setPath("/AdminOrderView.ac"); // 주문 추가 후 목록으로 리다이렉트

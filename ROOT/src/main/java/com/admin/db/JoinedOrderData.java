@@ -10,7 +10,8 @@ public class JoinedOrderData {
     private Integer paymentMethodId; // null 허용
     private int discountAmount;
     private int shippingFee;
-    private int usedDeposit;
+    private int finalPrice;
+	private int usedDeposit;
     private int usedPoints;
     private Timestamp orderDate;
     private String deliveryStatus;
@@ -32,6 +33,9 @@ public class JoinedOrderData {
 
     public int getShippingFee() { return shippingFee; }
     public void setShippingFee(int shippingFee) { this.shippingFee = shippingFee; }
+    
+    public int getFinalPrice() { return finalPrice; }
+	public void setFinalPrice(int finalPrice) { this.finalPrice = finalPrice; }
 
     public int getUsedDeposit() { return usedDeposit; }
     public void setUsedDeposit(int usedDeposit) { this.usedDeposit = usedDeposit; }
