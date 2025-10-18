@@ -202,9 +202,9 @@
                         <th>결제 수단</th>
                         <td>
                             <c:choose>
-                                <c:when test="${orderDetail.paymentMethodId == 1}">신용카드</c:when> 
-                                <c:when test="${orderDetail.paymentMethodId == 2}">계좌이체</c:when>
-                                <c:when test="${orderDetail.paymentMethodId == 3}">휴대폰결제</c:when>
+                                <c:when test="${orderDetail.paymentMethodId == 1}">다빈카드</c:when> 
+                                <c:when test="${orderDetail.paymentMethodId == 2}">동건카드</c:when>
+                                <c:when test="${orderDetail.paymentMethodId == 3}">지섭카드</c:when>
                                 <c:otherwise>알 수 없음 (${orderDetail.paymentMethodId})</c:otherwise> 
                             </c:choose>
                         </td>
@@ -220,7 +220,6 @@
         <div class="btn-group">
             <%-- ✅ Action에서 전달된 pageNum 변수 사용 확인 --%>
             <%-- AdminOrderModifyForm.ac 컨트롤러 경로 확인 필요 --%>
-            <button type="button" class="btn btn-primary" onclick="location.href='AdminOrderModifyForm.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'">주문 수정</button> 
             <button type="button" class="btn btn-danger" onclick="confirmDelete()">주문 삭제</button>
             <%-- AdminOrderViewAction.ac 컨트롤러 경로 확인 필요 --%>
             <button type="button" class="btn btn-secondary" onclick="window.history.go(-1)">뒤로가기</button>
