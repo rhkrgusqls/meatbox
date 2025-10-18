@@ -254,6 +254,59 @@ public class CategoryDAO {
             }
         }
     }
+    /**
+     * 카테고리 이름을 수정하는 메서드 (추가)
+     */
+    public void updateCategory(int categoryId, String newName) throws SQLException {
+        sql = "UPDATE category_hierarchy SET category_name = ? WHERE category_id = ?";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, newName);
+            pstmt.setInt(2, categoryId);
+            int result = pstmt.executeUpdate();
+            
+            if (result > 0) {
+                System.out.println("DAO : 카테고리 ID " + categoryId + "의 이름이 '" + newName + "'으로 변경되었습니다.");
+            } else {
+                System.out.println("DAO : 카테고리 ID " + categoryId + "에 해당하는 항목이 없어 업데이트에 실패했습니다.");
+            }
+        }
+    }
+
+    /**
+     * 카테고리를 삭제하는 메서드 (추가)
+     */
+    public void deleteCategory(int categoryId) throws SQLException {
+        // 중요: 자식 카테고리가 있는지 먼저 확인합니다.
+        String checkSql = "SELECT COUNT(*) FROM category_hierarchy WHERE parent_category_id = ?";
+        sql = "DELETE FROM category_hierarchy WHERE category_id = ?";
+        
+        try (Connection conn = DBConnectionManager.getConnection()) {
+            // 자식 카테고리 확인
+            try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
+                checkPstmt.setInt(1, categoryId);
+                try (ResultSet rs = checkPstmt.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        // 자식이 있으면 예외를 발생시켜 삭제를 막습니다.
+                        throw new SQLException("자식 카테고리가 존재하므로 삭제할 수 없습니다.");
+                    }
+                }
+            }
+            
+            // 자식이 없으면 삭제 수행
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, categoryId);
+                int result = pstmt.executeUpdate();
+
+                if (result > 0) {
+                    System.out.println("DAO : 카테고리 ID " + categoryId + "가 삭제되었습니다.");
+                } else {
+                    System.out.println("DAO : 카테고리 ID " + categoryId + "에 해당하는 항목이 없어 삭제에 실패했습니다.");
+                }
+            }
+        }
+    }
 
     public void closeDB() {
         try {

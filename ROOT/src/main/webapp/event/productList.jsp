@@ -18,7 +18,71 @@
 
     <%-- 필수 JavaScript 파일 선언 --%>
     <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
-
+	<style>
+	    .sub-category-container {
+	        width: 100%;
+	        max-width: 1200px; /* 사이트 전체 너비에 맞게 조절 */
+	        margin: 20px auto;
+	        padding: 20px;
+	        box-sizing: border-box;
+	    }
+	    .sub-category-nav h2 {
+	        font-size: 28px;
+	        font-weight: bold;
+	        margin-bottom: 20px;
+	        border-bottom: 2px solid #333;
+	        padding-bottom: 15px;
+	    }
+	    .sub-category-nav ul {
+	        list-style: none;
+	        padding: 0;
+	        margin: 0;
+	        display: flex;
+	        flex-wrap: wrap; /* 메뉴가 길어지면 다음 줄로 넘어가도록 설정 */
+	        gap: 10px 25px; /* 세로, 가로 간격 */
+	    }
+	    .sub-category-nav li a {
+	        text-decoration: none;
+	        color: #555;
+	        font-size: 16px;
+	        padding: 8px 12px;
+	        border-radius: 5px;
+	        transition: background-color 0.2s, color 0.2s;
+	    }
+	    .sub-category-nav li a:hover {
+	        background-color: #f0f0f0;
+	        color: #000;
+	    }
+	    /* 현재 활성화된(보고있는) 하위 카테고리 스타일 */
+	    .sub-category-nav li.active a {
+	        background-color: #333;
+	        color: #fff;
+	        font-weight: bold;
+	    }
+	</style>
+	
+	
+	<div class="sub-category-container">
+	    <%-- ProductListAction에서 넘겨준 topLevelParent가 있을 때만 이 메뉴 영역을 표시합니다. --%>
+	    <c:if test="${not empty topLevelParent}">
+	        <nav class="sub-category-nav">
+	            <%-- 최상위 카테고리 이름을 제목으로 표시 (예: 소고기) --%>
+	            <h2>${topLevelParent.categoryName}</h2>
+	            
+	            <%-- 하위 카테고리 목록을 <ul> 태그로 표시 --%>
+	            <ul>
+	                <c:forEach var="sub" items="${subCategoryList}">
+	                    <%-- 현재 보고 있는 페이지의 카테고리면 'active' 클래스를 추가하여 강조 --%>
+	                    <li <c:if test="${sub.categoryId == currentCategoryId}">class="active"</c:if>>
+	                        <a href="${pageContext.request.contextPath}/ProductList.pr?displayCategorySeq=${sub.categoryId}">
+	                            ${sub.categoryName}
+	                        </a>
+	                    </li>
+	                </c:forEach>
+	            </ul>
+	        </nav>
+	    </c:if>
+	</div>
 </head>
 <body>
 
