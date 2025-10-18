@@ -80,16 +80,16 @@ public class CategoryDAO {
     }
     
     /**
-     * 모든 카테고리 목록을 가져오는 메서드
+     * 모든 카테고리 목록을 가져오는 메서드 (수정)
      */
-    public List<CategoryDTO> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() throws SQLException {
         List<CategoryDTO> categoryList = new ArrayList<>();
         sql = "SELECT category_id, category_name FROM category ORDER BY category_id";
 
-        try {
-            con = DBConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+        // try-with-resources를 사용하여 자원 자동 해제
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 CategoryDTO dto = new CategoryDTO();
@@ -98,33 +98,9 @@ public class CategoryDAO {
                 categoryList.add(dto);
             }
             System.out.println("DAO : 모든 카테고리 " + categoryList.size() + "개 조회 완료");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeDB();
         }
+        // catch 블록에서 예외를 잡지 않고 던지면, 호출한 곳에서 처리하게 됩니다.
         return categoryList;
-    }
-
-    /**
-     * 새로운 카테고리를 추가하는 메서드
-     */
-    public void addCategory(CategoryDTO newCategory) {
-        sql = "INSERT INTO category (category_name) VALUES (?)";
-        try {
-            con = DBConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, newCategory.getCategoryName());
-            pstmt.executeUpdate();
-            
-            System.out.println("DAO : 새 카테고리 '" + newCategory.getCategoryName() + "' 추가 완료");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeDB();
-        }
     }
 
     public void closeDB() {
@@ -144,6 +120,7 @@ public class CategoryDAO {
             
             pstmt.setString(1, categoryName);
             pstmt.executeUpdate();
+            System.out.println("DAO : 새 카테고리 '" + categoryName + "' 추가 완료");
         } 
     }
 

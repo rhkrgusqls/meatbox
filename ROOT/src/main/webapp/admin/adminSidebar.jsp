@@ -75,17 +75,17 @@
 
 <aside class="sidebar">
     <div class="sidebar-header">
-        <a href="adminHome.jsp">
+        <a href="${pageContext.request.contextPath}/AdminHome.ac">
             <img src="https://static-cdn.meatbox.co.kr/img/renew/logo-row-ko.svg" alt="미트박스 로고" class="sidebar-logo">
         </a>
     </div>
 
     <nav class="sidebar-nav">
         <ul>
-            <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="adminHome.jsp?page=categories">카테고리 관리</a></li>
-            <li class="${currentPage == 'products' ? 'active' : ''}"><a href="adminHome.jsp?page=products">상품 관리</a></li>
-            <li class="${currentPage == 'orders' ? 'active' : ''}"><a href="adminHome.jsp?page=orders">주문 관리</a></li>
-            <li class="${currentPage == 'request' ? 'active' : ''}"><a href="adminHome.jsp?page=request">상품등록 요청 관리</a></li>
+            <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="${pageContext.request.contextPath}/AdminHome.ac?page=categories">카테고리 관리</a></li>
+            <li class="${currentPage == 'products' ? 'active' : ''}"><a href="${pageContext.request.contextPath}/AdminHome.ac?page=products">상품 관리</a></li>
+            <li class="${currentPage == 'orders' ? 'active' : ''}"><a href="${pageContext.request.contextPath}/AdminHome.ac?page=orders">주문 관리</a></li>
+            <li class="${currentPage == 'request' ? 'active' : ''}"><a href="${pageContext.request.contextPath}/AdminHome.ac?page=request">상품등록 요청 관리</a></li>
         </ul>
     </nav>
 

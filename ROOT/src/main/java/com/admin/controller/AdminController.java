@@ -10,11 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
+import com.admin.action.AdminHomeAction;
 import com.admin.action.AdminCategoryListAction;
 import com.admin.action.AdminProductDeleteAction;
 import com.admin.action.AdminCategoryAddAction;
 import com.admin.action.AdminProductListAction;
 import com.admin.action.AdminProductUpdateAction;
+import com.admin.action.order.AdminOrderAddAction;
+import com.admin.action.order.AdminOrderDeleteAction;
+import com.admin.action.order.AdminOrderDetailAction;
+import com.admin.action.order.AdminOrderModifyAction;
+import com.admin.action.order.AdminOrderViewAction;
 
 @WebServlet("*.ac") // URL 패턴을 *.ac로 변경
 public class AdminController extends HttpServlet {
@@ -33,7 +39,15 @@ public class AdminController extends HttpServlet {
         ActionForward forward = null;
 
         // 2. 가상주소 매핑
-        if (command.equals("/AdminCategoryList.ac")) {
+        if (command.equals("/AdminHome.ac")) { 
+            System.out.println("C: /AdminHome.ac 호출");
+            action = new AdminHomeAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (command.equals("/AdminCategoryList.ac")) {
             System.out.println("C: /AdminCategoryList.ac 호출");
             action = new AdminCategoryListAction();
             try {
