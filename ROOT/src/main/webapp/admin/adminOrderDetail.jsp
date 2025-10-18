@@ -19,7 +19,7 @@
     a { text-decoration: none; color: inherit; }
 
     /* adminHome.jsp에 include될 경우 이 스타일은 adminHome.jsp에 있어야 할 수 있습니다 */
-    .admin-wrapper { display: flex; min-height: 100vh; } 
+    /* .admin-wrapper { display: flex; min-height: 100vh; } */
     .main-content { flex-grow: 1; padding: 30px; } 
     
     .content-box { background-color: #fff; padding: 20px 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px; }
@@ -73,7 +73,7 @@
         <%-- 주문 기본 정보 --%>
         <div class="content-box">
             <h2>주문 요약</h2>
-            <%-- ✅ orderDetail 객체가 있는지 확인 --%>
+            <%-- ✅ Action에서 전달된 orderDetail 객체 사용 --%>
             <c:if test="${not empty orderDetail}">
                 <table class="detail-table">
                     <tr>
@@ -86,7 +86,7 @@
                     </tr>
                     <tr>
                         <th>구매자 이름</th>
-                         <%-- ✅ userName 변수 사용 --%>
+                         <%-- ✅ Action에서 전달된 userName 변수 사용 --%>
                          <td>${userName}</td> 
                     </tr>
                     <tr>
@@ -115,7 +115,7 @@
             <table class="product-table">
                 <thead>
                     <tr>
-                        <th>이미지</th> <%-- 이미지 컬럼 추가 --%>
+                        <th>이미지</th>
                         <th>상품명</th>
                         <th>옵션명</th>
                         <th>수량</th> 
@@ -126,37 +126,32 @@
                 <tbody>
                     <c:set var="totalProductPrice" value="0" /> 
                     <c:choose>
-                         <%-- ✅ selectedOptionList 변수 사용 확인 --%>
-                        <c:when test="${not empty selectedOptionList}"> 
-                            <%-- ✅ varStatus="loop" 추가 확인 --%>
-                            <c:forEach var="option" items="${selectedOptionList}" varStatus="loop">
-                                <%-- ✅ quantity 가져오기 (ProductOptionBean에 quantity 필드/getter 필요) --%>
-                                <c:set var="quantity" value="${option.quantity}" /> 
-                                <%-- ✅ 옵션 가격 가져오기 (ProductOptionBean에 price_of_option 필드/getter 필요) --%>
-                                <c:set var="pricePerOption" value="${option.price_of_option}" /> 
-                                <c:set var="optionTotalPrice" value="${pricePerOption * quantity}" /> 
-                                <c:set var="totalProductPrice" value="${totalProductPrice + optionTotalPrice}" />
-                                
-                                <%-- ✅ 상품 상세 정보 리스트(productDetailList)에서 현재 옵션 순서(loop.index)에 맞는 상품 정보 가져오기 --%>
-                                <c:set var="productDetail" value="${productDetailList[loop.index]}" />
+                         <%-- ✅ Action에서 수정한 productDetailList를 직접 사용하도록 변경 --%>
+                        <c:when test="${not empty productDetailList}"> 
+                            <c:forEach var="productDetail" items="${productDetailList}">
+                                <%-- 🚨 주의: 이 로직은 상품 1개당 옵션 1개, 수량 1개라고 가정합니다. --%>
+                                <%--    정확한 수량/옵션별 가격을 표시하려면 DAO 수정이 필요합니다. --%>
+                                <c:set var="quantity" value="1" /> <%-- 임시 수량 --%>
+                                <c:set var="pricePerItem" value="${productDetail.price}" /> <%-- 상품 기본 가격 사용 --%>
+                                <c:set var="itemTotalPrice" value="${pricePerItem * quantity}" /> 
+                                <c:set var="totalProductPrice" value="${totalProductPrice + itemTotalPrice}" />
                                 
                                 <tr>
-                                     <%-- ✅ 상품 이미지 표시 (ProductDetailBean에 imageList 필드/getter 및 ProductImageBean에 image_url 필드/getter 필요) --%>
-                                    <td>
-                                        <c:if test="${not empty productDetail.imageList}">
-                                             <%-- ✅ 컨텍스트 경로 추가 --%>
-                                            <img src="#" alt="이미지" class="product-image"> 
-                                        </c:if>
-                                        <c:if test="${empty productDetail.imageList}">
-                                            <span>이미지 없음</span>
-                                        </c:if>
+                                     <td>
+                                        <c:choose>
+                                            <c:when test="${not empty productDetail.imageList}">
+                                                <img src="${productDetail.imageList[0].dir}" alt="${productDetail.name} 이미지" class="product-image">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="https://via.placeholder.com/80x80" alt="${productDetail.name}" class="product-image">
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
-                                    <%-- ✅ product_name 가져오기 (ProductOptionBean에 product_name 필드/getter 필요) --%>
                                     <td class="product-name">${productDetail.name}</td> 
-                                    <td>${productDetail.name}</td>
+                                    <td>(옵션 정보 없음)</td> <%-- 옵션 정보 표시 불가 --%>
                                     <td>${quantity}</td> 
-                                    <td><fmt:formatNumber value="${pricePerOption}" type="currency" currencySymbol=""/>원</td>
-                                    <td><fmt:formatNumber value="${optionTotalPrice}" type="currency" currencySymbol=""/>원</td>
+                                    <td><fmt:formatNumber value="${pricePerItem}" type="currency" currencySymbol=""/>원</td>
+                                    <td><fmt:formatNumber value="${itemTotalPrice}" type="currency" currencySymbol=""/>원</td>
                                 </tr>
                             </c:forEach>
                         </c:when>
@@ -221,22 +216,23 @@
              </c:if>
         </div>
 
-              <%-- 버튼 그룹 --%>
+        <%-- 버튼 그룹 --%>
         <div class="btn-group">
-             <%-- ✅ pageNum 변수 사용 확인 --%>
-             <%-- AdminOrderModifyForm.ac 컨트롤러 경로 확인 필요 --%>
+            <%-- ✅ Action에서 전달된 pageNum 변수 사용 확인 --%>
+            <%-- AdminOrderModifyForm.ac 컨트롤러 경로 확인 필요 --%>
             <button type="button" class="btn btn-primary" onclick="location.href='AdminOrderModifyForm.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'">주문 수정</button> 
             <button type="button" class="btn btn-danger" onclick="confirmDelete()">주문 삭제</button>
-             <%-- AdminOrderViewAction.ac 컨트롤러 경로 확인 필요 --%>
-            <button type="button" class="btn btn-secondary" onclick="location.href='AdminOrderViewAction.ac?pageNum=${pageNum}'">목록으로</button> 
+            <%-- AdminOrderViewAction.ac 컨트롤러 경로 확인 필요 --%>
+            <button type="button" class="btn btn-secondary" onclick="window.history.go(-1)">뒤로가기</button>
         </div>
         
     </main>
+<%-- </div> --%> <%-- adminHome.jsp에 포함될 경우 이 div는 제거 --%>
 
 <script>
     function confirmDelete() {
         if (confirm("정말로 이 주문을 삭제하시겠습니까? 삭제 후 복구할 수 없습니다.")) {
-            // ✅ pageNum 변수 사용 확인
+            // ✅ Action에서 전달된 pageNum 변수 사용 확인
             // AdminOrderDelete.ac 컨트롤러 경로 확인 필요
             location.href = 'AdminOrderDelete.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'; 
         }
