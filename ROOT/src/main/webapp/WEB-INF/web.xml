@@ -163,7 +163,19 @@
     <servlet-mapping>                                                  
         <servlet-name>OrderController</servlet-name>                   
          <url-pattern>/buyNow.do</url-pattern>                          
- 	</servlet-mapping>     
+ 	</servlet-mapping>   
+ 	  
+	<servlet>
+	    <servlet-name>requestApproveServlet</servlet-name>
+	    <servlet-class>com.product.bo.controller.ApproveProductRequestServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	    <servlet-name>requestApproveServlet</servlet-name>
+	    <url-pattern>/approveProductRequest.do</url-pattern>
+	</servlet-mapping>
+
+	
     
     <servlet>
 	    <servlet-name>requestListController</servlet-name>
