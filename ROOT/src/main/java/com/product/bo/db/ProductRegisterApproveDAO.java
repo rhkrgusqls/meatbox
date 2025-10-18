@@ -53,7 +53,7 @@ public class ProductRegisterApproveDAO {
             int deliveryFee = rs.getInt("delivery_fee");
             int allowedMemberLv = rs.getInt("allowed_member_lv");
             int price = rs.getInt("price");
-            int unitPrice = rs.getInt("unit_price");
+            String unitPrice = rs.getString("unit_price");
             String sellerNote = rs.getString("seller_note");
             Integer reviewPreview1Id = (Integer) rs.getObject("review_preview_1_id");
             Integer reviewPreview2Id = (Integer) rs.getObject("review_preview_2_id");
@@ -81,7 +81,7 @@ public class ProductRegisterApproveDAO {
             pstmt.setInt(8, deliveryFee);
             pstmt.setInt(9, allowedMemberLv);
             pstmt.setInt(10, price);
-            pstmt.setInt(11, unitPrice);
+            pstmt.setString(11, unitPrice);
             pstmt.setString(12, sellerNote);
             pstmt.setObject(13, reviewPreview1Id);
             pstmt.setObject(14, reviewPreview2Id);
@@ -198,7 +198,7 @@ public class ProductRegisterApproveDAO {
                     bean.setDeliveryFee(rs.getInt("delivery_fee"));
                     bean.setAllowedMemberLv(rs.getInt("allowed_member_lv"));
                     bean.setPrice(rs.getInt("price"));
-                    bean.setUnitPrice(rs.getInt("unit_price"));
+                    bean.setUnitPrice(rs.getString("unit_price"));
                     bean.setSellerNote(rs.getString("seller_note"));
                     bean.setReviewPreview1Id((Integer) rs.getObject("review_preview_1_id"));
                     bean.setReviewPreview2Id((Integer) rs.getObject("review_preview_2_id"));
@@ -226,6 +226,10 @@ public class ProductRegisterApproveDAO {
 
             while (rs.next()) {
                 ProductRegisterRequestBean bean = new ProductRegisterRequestBean();
+                
+                // request_id 추가
+                bean.setRequestId(rs.getInt("request_id"));
+                
                 bean.setUserIndex(rs.getInt("user_index"));
                 bean.setProductName(rs.getString("product_name"));
                 bean.setReceivedDate(rs.getTimestamp("received_date"));
@@ -236,7 +240,7 @@ public class ProductRegisterApproveDAO {
                 bean.setDeliveryFee(rs.getInt("delivery_fee"));
                 bean.setAllowedMemberLv(rs.getInt("allowed_member_lv"));
                 bean.setPrice(rs.getInt("price"));
-                bean.setUnitPrice(rs.getInt("unit_price"));
+                bean.setUnitPrice(rs.getString("unit_price"));
                 bean.setSellerNote(rs.getString("seller_note"));
                 bean.setReviewPreview1Id((Integer) rs.getObject("review_preview_1_id"));
                 bean.setReviewPreview2Id((Integer) rs.getObject("review_preview_2_id"));
@@ -251,5 +255,6 @@ public class ProductRegisterApproveDAO {
 
         return list;
     }
+
 }
 

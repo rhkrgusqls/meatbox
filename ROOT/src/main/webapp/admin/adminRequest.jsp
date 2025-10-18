@@ -3,98 +3,120 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상품 등록 요청 관리</title>
+<title>상품 요청 리스트</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-/* 테이블 스타일 */
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-.option-box { margin-bottom: 4px; }
-.img-scroll img { max-width: 50px; max-height: 50px; margin: 2px; }
-.detail-box a { text-decoration: none; color: blue; }
+body { font-family: 'Malgun Gothic', sans-serif; background:#f4f7f6; color:#333; }
+table { width:100%; border-collapse: collapse; margin-top:20px; }
+th, td { padding:8px 12px; border-bottom:1px solid #ccc; }
+th { background:#f9f9f9; font-weight:bold; }
+.slide-container { display:flex; overflow-x:auto; gap:10px; padding:5px 0; }
+.slide-container img { height:80px; border-radius:4px; }
+.option-row { white-space: pre-line; font-size:13px; }
+button.approveBtn { background:#4CAF50; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; }
+button.approveBtn:hover { background:#45a049; }
 </style>
 </head>
 <body>
-<div class="admin-wrapper">
-    <main class="main-content">
-        <div class="content-box">
-            <h2>상품 등록 요청 목록</h2>
-            <table class="table" id="requestTable">
-                <thead>
-                    <tr>
-                        <th>판매자 ID</th>
-                        <th>상품명</th>
-                        <th>카테고리</th>
-                        <th>등록일</th>
-                        <th>가격</th>
-                        <th>옵션</th>
-                        <th>이미지</th>
-                        <th>상세자료</th>
-                    </tr>
-                </thead>
-                <tbody id="requestBody">
-                    <!-- JS로 데이터 채움 -->
-                </tbody>
-            </table>
-        </div>
-    </main>
-</div>
+
+<h1>상품 요청 리스트</h1>
+<table id="productTable">
+    <tbody></tbody>
+</table>
 
 <script>
+$(document).ready(function(){
 
+    function loadProducts(){
+        $.ajax({
+            url: '/requestList.do',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data){
+                var tbody = $('#productTable tbody');
+                tbody.empty();
 
-function loadRequestList() {
-    $.ajax({
-        url: "requestList.do", // JSON 데이터를 반환하는 서버 API
-        type: "GET",
-        dataType: "json",
-        success: function(response) {
-            const tbody = $("#requestBody");
-            tbody.empty();
+                data.forEach(function(product){
+                    // 1줄: 버튼에 requestId 직접 data-attribute로 담기
+                    tbody.append('<tr><td colspan="6">' +
+                                 ' 상품명: '+product.productName+
+                                 ' | 카테고리: '+product.categoryName+
+                                 ' | 등록일: '+product.receivedDate+
+                                 ' | 가격: '+product.price+'원'+
+                                 ' <button class="approveBtn" data-requestid="'+product.requestId+'">승인</button>' +
+                                 '</td></tr>');
 
-            if (!response || response.length === 0) {
-                tbody.append("<tr><td colspan='8'>등록된 요청이 없습니다.</td></tr>");
-                return;
+                    // 2줄: 옵션
+                    var optStr = '';
+                    if(product.productOptionsJson && product.productOptionsJson.length > 0){
+                        product.productOptionsJson.forEach(function(opt){
+                            optStr += '옵션ID: '+(opt.optionId||'')+
+                                      ', 이름: '+(opt.optionName||opt.option_name||'')+
+                                      ', 상세: '+(opt.optionDetail||opt.option_detail||'')+
+                                      ', 가격: '+(opt.priceOfOption||0)+
+                                      ', 수량: '+(opt.quantity||0)+'\n';
+                        });
+                    } else {
+                        optStr = '옵션 없음';
+                    }
+                    tbody.append('<tr><td colspan="6" class="option-row">'+optStr+'</td></tr>');
+
+                    // 3줄: 이미지
+                    var imgHtml = '<div class="slide-container">';
+                    if(product.productImagesJson && product.productImagesJson.length > 0){
+                        product.productImagesJson.forEach(function(img){
+                            imgHtml += '<img src="'+img.dir+'" alt="상품 이미지">';
+                        });
+                    }
+                    imgHtml += '</div>';
+                    tbody.append('<tr><td colspan="6">'+imgHtml+'</td></tr>');
+
+                    // 4줄: 상세 이미지
+                    var detailHtml = '<div class="slide-container">';
+                    if(product.productDetailsJson && product.productDetailsJson.length > 0){
+                        product.productDetailsJson.forEach(function(img){
+                            detailHtml += '<img src="'+img.dir+'" alt="상세 이미지">';
+                        });
+                    }
+                    detailHtml += '</div>';
+                    tbody.append('<tr><td colspan="6">'+detailHtml+'</td></tr>');
+                });
+            },
+            error: function(err){
+                alert('데이터 로딩 실패');
+                console.error(err);
             }
+        });
+    }
 
-            response.forEach(req => {
-                // 옵션 처리
-                const optionsHtml = req.productOptionsJson && req.productOptionsJson.length > 0
-                    ? req.productOptionsJson.map(opt => `<div class='option-box'><strong>${opt.name}:</strong> ${opt.value}</div>`).join('')
-                    : '-';
+    loadProducts(); // 초기 로딩
 
-                // 이미지 처리
-                const imagesHtml = req.productImagesJson && req.productImagesJson.length > 0
-                    ? `<div class='img-scroll'>${req.productImagesJson.map(img => `<img src='${img.dir}' alt='상품 이미지'>`).join('')}</div>`
-                    : '-';
+    // 승인 버튼 클릭 처리
+    $(document).on('click', '.approveBtn', function(){
+        var requestId = $(this).data('requestid'); // data-attribute에서 직접 가져오기
+        if(!requestId) return alert('requestId가 없습니다.');
+        if(!confirm("정말 승인하시겠습니까?")) return;
 
-                // 상세자료 처리
-                const detailsHtml = req.productDetailsJson && req.productDetailsJson.length > 0
-                    ? req.productDetailsJson.map(det => `<div class='detail-box'><a href='${det.dir}' target='_blank'>${det.dir}</a></div>`).join('')
-                    : '-';
-
-                // 행 추가
-                const row = `
-                    <tr>
-                        <td>${req.userIndex}</td>
-                        <td>${req.productName}</td>
-                        <td>${req.categoryName} / ${req.detailCategoryName}</td>
-                        <td>${req.receivedDate}</td>
-                        <td>${req.price}원</td>
-                        <td>${optionsHtml}</td>
-                        <td>${imagesHtml}</td>
-                        <td>${detailsHtml}</td>
-                    </tr>
-                `;
-                tbody.append(row);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error("데이터 요청 실패:", error);
-            alert("데이터를 불러오는 중 오류가 발생했습니다.");
-        }
+        $.ajax({
+            url: '/approveProductRequest.do',
+            method: 'POST',
+            data: { requestId: requestId },
+            success: function(res){
+                alert('✅ 승인 완료');
+                loadProducts(); // 승인 후 테이블 새로고침
+            },
+            error: function(err){
+                alert('⚠️ 승인 중 오류 발생');
+                console.error(err);
+            }
+        });
     });
-}
+
+});
 </script>
+
 </body>
 </html>
+
+
+

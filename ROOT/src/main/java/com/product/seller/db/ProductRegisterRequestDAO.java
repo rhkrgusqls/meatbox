@@ -38,7 +38,7 @@ public class ProductRegisterRequestDAO {
             pstmt.setInt(8, bean.getDeliveryFee());
             pstmt.setInt(9, bean.getAllowedMemberLv());
             pstmt.setInt(10, bean.getPrice());
-            pstmt.setInt(11, bean.getUnitPrice());
+            pstmt.setString(11, bean.getUnitPrice());
             pstmt.setString(12, bean.getSellerNote());
             pstmt.setObject(13, bean.getReviewPreview1Id());
             pstmt.setObject(14, bean.getReviewPreview2Id());
