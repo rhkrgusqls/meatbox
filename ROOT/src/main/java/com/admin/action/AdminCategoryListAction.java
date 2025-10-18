@@ -12,7 +12,7 @@ public class AdminCategoryListAction implements Action {
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CategoryDAO dao = new CategoryDAO();
-        List<CategoryDTO> categoryList = dao.getAllCategories();
+        List<CategoryDTO> categoryList = dao.getAllCategoriesHierarchical();
         request.setAttribute("categoryList", categoryList);
 
         ActionForward forward = new ActionForward();

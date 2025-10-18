@@ -1,54 +1,73 @@
 package com.product.action;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
-import com.product.db.CategoryBean;
-import com.product.db.ProductBean;
+import com.product.bo.db.CategoryDAO; 
+import com.product.bo.db.CategoryDTO; 
 import com.product.db.ProductDAO;
+import com.product.db.ProductBean; // ProductBean을 사용합니다.
+
 
 public class ProductListAction implements Action {
 
     @Override
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         
-        System.out.println("M: ProductListAction의 execute() 호출");
+        System.out.println("M: ProductListAction.execute() 호출");
 
-        // 1. URL로부터 전달된 카테고리 ID 파라미터(category)를 가져옵니다.
-        String categoryIdStr = request.getParameter("category");
-        
-        // 카테고리 ID가 없으면 기본값 또는 오류 처리를 할 수 있습니다. 여기서는 0으로 설정.
-        int categoryId = 0;
-        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
-            categoryId = Integer.parseInt(categoryIdStr);
+        // --- 상단 네비게이션 메뉴 로직 ---
+        String categorySeqStr = request.getParameter("displayCategorySeq");
+        int currentCategoryId = 0;
+        if (categorySeqStr != null && !categorySeqStr.isEmpty()) {
+            try {
+                currentCategoryId = Integer.parseInt(categorySeqStr);
+            } catch (NumberFormatException e) {
+                System.out.println("올바르지 않은 카테고리 ID 입니다: " + categorySeqStr);
+                // 유효하지 않은 ID일 경우, 오류 페이지로 보내거나 기본 페이지로 리다이렉트 할 수 있습니다.
+            }
         }
 
-        // 2. ProductDAO 객체를 생성하고, 카테고리별 상품 목록을 조회하는 메소드를 호출합니다.
-        ProductDAO dao = new ProductDAO();
-        // 한 페이지에 보여줄 상품 개수, 시작점 등을 설정할 수 있습니다. (페이징)
-        int offset = 0; // 시작 위치
-        int limit = 20; // 한 번에 가져올 개수
-        List<ProductBean> productList = dao.getProductsByCategory(categoryId, offset, limit);
-        List<CategoryBean> subCategoryList = dao.getSubCategories(1); 
-        // 조회된 카테고리 목록을 request에 저장
-        request.setAttribute("subCategoryList", subCategoryList);
+        if (currentCategoryId > 0) {
+            CategoryDAO cdao = new CategoryDAO();
+            CategoryDTO topLevelParent = cdao.findTopLevelParent(currentCategoryId);
 
-        // 3. request 객체에 "productList"라는 이름으로 조회된 상품 목록을 저장합니다.
+            if (topLevelParent != null) {
+                List<CategoryDTO> subCategoryList = cdao.getCategoriesByParent(topLevelParent.getCategoryId());
+                request.setAttribute("topLevelParent", topLevelParent); 
+                request.setAttribute("subCategoryList", subCategoryList); 
+                request.setAttribute("currentCategoryId", currentCategoryId);
+            }
+        }
+        
+        // --- 상품 목록 조회 로직 (getProductsByCategory 호출 방식 수정) ---
+
+        // 페이징 처리를 위한 파라미터 (우선 기본값으로 설정)
+        int page = 1; // 현재 페이지 번호
+        int limit = 20; // 한 페이지에 보여줄 상품 수
+        
+        String pageStr = request.getParameter("page");
+        if (pageStr != null && !pageStr.isEmpty()) {
+            page = Integer.parseInt(pageStr);
+        }
+
+        int offset = (page - 1) * limit; // DB 조회 시작 위치 계산
+
+        ProductDAO pdao = new ProductDAO();
+        // ProductDAO의 메소드 시그니처에 맞게 3개의 파라미터(categoryId, offset, limit)를 전달합니다.
+        List<ProductBean> productList = pdao.getProductsByCategory(currentCategoryId, offset, limit); 
+        
         request.setAttribute("productList", productList);
-        // JSP에서 카테고리 이름을 보여주기 위해 카테고리 ID도 함께 전달할 수 있습니다.
-        request.setAttribute("categoryId", categoryId);
+        
+        // --- 페이지 이동 설정 ---
 
-        // 4. 포워딩 정보를 담는 ActionForward 객체 생성
         ActionForward forward = new ActionForward();
-        // 이동할 JSP 페이지 경로 설정
-        forward.setPath("./event/productList.jsp"); 
-        // Forward 방식으로 페이지를 이동시켜 request 객체의 데이터를 JSP와 공유
+        forward.setPath("./product/productList.jsp"); 
         forward.setRedirect(false); 
-
+        
         return forward;
     }
 }

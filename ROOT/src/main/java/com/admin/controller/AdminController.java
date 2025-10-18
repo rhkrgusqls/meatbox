@@ -23,6 +23,9 @@ import com.admin.action.order.AdminOrderDeleteAction;
 import com.admin.action.order.AdminOrderDetailAction;
 import com.admin.action.order.AdminOrderModifyAction;
 import com.admin.action.order.AdminOrderViewAction;
+import com.admin.action.AdminCategoryUpdateFormAction;
+import com.admin.action.AdminCategoryUpdateAction;
+import com.admin.action.AdminCategoryDeleteAction;
 
 @WebServlet("*.ac") // URL 패턴을 *.ac로 변경
 public class AdminController extends HttpServlet {
@@ -69,6 +72,18 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (command.equals("/AdminCategoryUpdate.ac")) {
+            System.out.println("C: /AdminCategoryUpdate.ac 호출 (수정 폼)");
+            action = new AdminCategoryUpdateFormAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/AdminCategoryUpdatePro.ac")) {
+            System.out.println("C: /AdminCategoryUpdatePro.ac 호출 (수정 처리)");
+            action = new AdminCategoryUpdateAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/AdminCategoryDelete.ac")) {
+            System.out.println("C: /AdminCategoryDelete.ac 호출 (삭제 처리)");
+            action = new AdminCategoryDeleteAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
         } else if (command.equals("/admin/AdminProductList.ac")) { // "/admin" 경로 추가
             System.out.println("C: /admin/AdminProductList.ac 호출");
             action = new AdminProductListAction();
