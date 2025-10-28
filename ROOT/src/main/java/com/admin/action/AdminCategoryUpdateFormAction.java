@@ -27,9 +27,12 @@ public class AdminCategoryUpdateFormAction implements Action {
         request.setAttribute("category", category);
         request.setAttribute("childList", childList); // 자식 목록 추가
         
-        // 4. 수정 폼 페이지로 포워딩 (절대 경로로 지정하여 중첩 방지)
+        // 4. 레이아웃을 통해 컨텐츠 포함 (사이드바 유지)
+        request.setAttribute("currentPage", "categories");
+        request.setAttribute("contentPage", "/admin/adminCategoryUpdate.jsp");
+
         ActionForward forward = new ActionForward();
-        forward.setPath("/admin/adminCategoryUpdate.jsp");
+        forward.setPath("/admin/adminHome.jsp");
         forward.setRedirect(false);
         
         return forward;

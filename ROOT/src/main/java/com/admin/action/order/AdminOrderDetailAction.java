@@ -82,9 +82,12 @@ public class AdminOrderDetailAction implements Action {
 
         System.out.println(" C: 주문 상세 정보 request 저장 완료");
 
-        // 8. 페이지 이동 설정 (절대 경로 사용하여 중첩 방지)
+        // 8. 레이아웃을 통해 컨텐츠 포함 (사이드바 유지)
+        request.setAttribute("currentPage", "orders");
+        request.setAttribute("contentPage", "/admin/adminOrderDetail.jsp");
+
         ActionForward forward = new ActionForward();
-        forward.setPath("/admin/adminOrderDetail.jsp"); // 최종 상세 페이지 JSP 경로
+        forward.setPath("/admin/adminHome.jsp");
         forward.setRedirect(false);
 
         return forward;
