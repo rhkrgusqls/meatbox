@@ -54,7 +54,7 @@ public class LoginAction implements Action {
             json.put("userName", userName); // JSON에 userName 추가
 
             if (3==result.getRole()) {
-                json.put("redirectUrl", "/admin/adminHome.jsp"); // 실제 조회 컨트롤러 사용하는 url 넣어야합 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                json.put("redirectUrl", "/admin/AdminHome.ac");
             } else if (2==result.getRole()) { 
                 json.put("redirectUrl", "#");
             } else {

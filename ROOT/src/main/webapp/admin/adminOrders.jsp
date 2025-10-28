@@ -133,7 +133,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td><a href="/AdminOrderDetail.ac?orderId=${order.orderId}" class="btn-small btn-detail">상세보기</a></td>
+                                    <td><a href="/admin/AdminOrderDetail.ac?orderId=${order.orderId}" class="btn-small btn-detail">상세보기</a></td>
                                 </tr>
                             </c:forEach>
                         </c:when>

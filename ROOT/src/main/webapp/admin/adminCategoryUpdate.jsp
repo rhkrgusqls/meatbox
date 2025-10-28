@@ -30,7 +30,7 @@
 </head>
 <body>
     <div class="update-container">
-        <form action="${pageContext.request.contextPath}/AdminCategoryUpdatePro.ac" method="post">
+        <form action="${pageContext.request.contextPath}/admin/AdminCategoryUpdatePro.ac" method="post">
             <h2>카테고리 수정</h2>
             
             <%-- 부모 카테고리 ID는 hidden으로 전송 --%>
@@ -51,7 +51,7 @@
                             <%-- 각 자식의 ID와 이름을 전송하기 위한 input --%>
                             <input type="hidden" name="childId" value="${child.categoryId}">
                             <input type="text" name="childName" value="${child.categoryName}" required>
-                            <a href="${pageContext.request.contextPath}/AdminChildCategoryDelete.ac?id=${child.categoryId}&parentId=${category.categoryId}"
+                            <a href="${pageContext.request.contextPath}/admin/AdminChildCategoryDelete.ac?id=${child.categoryId}&parentId=${category.categoryId}"
                                class="delete-btn"
                                onclick="return confirm('[${child.categoryName}] 카테고리를 정말로 삭제하시겠습니까?');">삭제</a>
                         </div>
@@ -60,7 +60,7 @@
             </c:if>
 
             <div class="button-group">
-                <button type="button" class="cancel-btn" onclick="location.href='${pageContext.request.contextPath}/AdminHome.ac?page=categories'">목록으로</button>
+                <button type="button" class="cancel-btn" onclick="location.href='${pageContext.request.contextPath}/admin/AdminCategories.ac'">목록으로</button>
                 <button type="submit" class="submit-btn">전체 저장</button>
             </div>
         </form>

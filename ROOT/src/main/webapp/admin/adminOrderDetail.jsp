@@ -220,7 +220,7 @@
         <div class="btn-group">
             <%-- ✅ Action에서 전달된 pageNum 변수 사용 확인 --%>
             <%-- AdminOrderModifyForm.ac 컨트롤러 경로 확인 필요 --%>
-            <button type="button" class="btn btn-primary" onclick="location.href='AdminOrderModifyForm.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'">주문 수정</button> 
+            <button type="button" class="btn btn-primary" onclick="location.href='/admin/AdminOrderModify.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'">주문 수정</button> 
             <button type="button" class="btn btn-danger" onclick="confirmDelete()">주문 삭제</button>
             <%-- AdminOrderViewAction.ac 컨트롤러 경로 확인 필요 --%>
             <button type="button" class="btn btn-secondary" onclick="window.history.go(-1)">뒤로가기</button>
@@ -234,7 +234,7 @@
         if (confirm("정말로 이 주문을 삭제하시겠습니까? 삭제 후 복구할 수 없습니다.")) {
             // ✅ Action에서 전달된 pageNum 변수 사용 확인
             // AdminOrderDelete.ac 컨트롤러 경로 확인 필요
-            location.href = 'AdminOrderDelete.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'; 
+            location.href = '/admin/AdminOrderDelete.ac?orderId=${orderDetail.orderId}&pageNum=${pageNum}'; 
         }
     }
 </script>

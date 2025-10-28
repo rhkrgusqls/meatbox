@@ -19,7 +19,7 @@ public class AdminCategoryAddTopAction implements Action {
 
         // 작업 완료 후, 목록을 다시 불러오는 Action으로 리다이렉트
         ActionForward forward = new ActionForward();
-        forward.setPath("./AdminHome.ac?page=categories");
+        forward.setPath("/admin/AdminCategories.ac");
         forward.setRedirect(true);
         return forward;
     }

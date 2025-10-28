@@ -17,6 +17,16 @@ public class AdminHomeAction implements Action {
     public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         
         String page = request.getParameter("page");
+        if (page == null) {
+            String uri = request.getRequestURI();
+            if (uri.endsWith("/AdminCategories.ac")) {
+                page = "categories";
+            } else if (uri.endsWith("/AdminRequests.ac")) {
+                page = "request";
+            } else {
+                page = "dashboard";
+            }
+        }
         
         if ("categories".equals(page)) {
             CategoryDAO dao = new CategoryDAO();
@@ -29,8 +39,20 @@ public class AdminHomeAction implements Action {
             request.setAttribute("topLevelCategories", topLevelCategories);
         }
         
+        // 레이아웃에 포함될 기본 컨텐츠 지정 (page에 따라 구성)
+        if ("categories".equals(page)) {
+            request.setAttribute("currentPage", "categories");
+            request.setAttribute("contentPage", "/admin/adminCategories.jsp");
+        } else if ("request".equals(page)) {
+            request.setAttribute("currentPage", "request");
+            request.setAttribute("contentPage", "/admin/adminRequest.jsp");
+        } else {
+            request.setAttribute("currentPage", "dashboard");
+            request.setAttribute("contentPage", "/admin/adminDashboard.jsp");
+        }
+
         ActionForward forward = new ActionForward();
-        forward.setPath("./admin/adminHome.jsp");
+        forward.setPath("/admin/adminHome.jsp");
         forward.setRedirect(false);
         
         return forward;

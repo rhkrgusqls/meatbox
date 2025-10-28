@@ -48,10 +48,12 @@ public class AdminOrderViewAction implements Action{
 		request.setAttribute("userNameList", userNameList); 
 		System.out.println("C: request에 orderList와 userNameList 저장 완료.");
 		
-		//4. 페이지 이동 설정
-		ActionForward forward = new ActionForward();
-		forward.setPath("./adminHome.jsp?page=orders");
-		forward.setRedirect(false);
+        // 페이지 이동: 레이아웃 + 컨텐츠 지정
+        request.setAttribute("currentPage", "orders");
+        request.setAttribute("contentPage", "/admin/adminOrders.jsp");
+        ActionForward forward = new ActionForward();
+        forward.setPath("/admin/adminHome.jsp");
+        forward.setRedirect(false);
 		
 		return forward;
 	}

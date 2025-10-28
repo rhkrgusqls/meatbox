@@ -17,10 +17,9 @@ public class AdminCategoryAddAction implements Action {
         CategoryDAO dao = new CategoryDAO();
         dao.insertCategory(categoryName);
 
-        // AJAX 호출 후 클라이언트가 새로고침할 수 있도록, 최종 목록 페이지로 리다이렉트합니다.
-        // 현재 구조상 AdminHome.ac?page=categories가 최종 목록 페이지입니다.
+        // 완료 후 카테고리 목록으로 이동
         ActionForward forward = new ActionForward();
-        forward.setPath("./AdminHome.ac?page=categories");
+        forward.setPath("/admin/AdminCategories.ac");
         forward.setRedirect(true);
         return forward;
     }
