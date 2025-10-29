@@ -56,7 +56,7 @@ public class LoginAction implements Action {
             if (3==result.getRole()) {
                 json.put("redirectUrl", "/admin/AdminHome.ac");
             } else if (2==result.getRole()) { 
-                json.put("redirectUrl", "#");
+                json.put("redirectUrl", "/productRegister");
             } else {
                 json.put("redirectUrl", "/");
             }
