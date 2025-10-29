@@ -7,7 +7,6 @@
 <main class="main-content">
     <div class="page-header">
         <h1>상품 관리</h1>
-        <a href="#" class="btn btn-primary">+ 김다빈 엉덩이</a>
     </div>
     <div class="content-box">
         <h2>상품 목록</h2>
