@@ -26,7 +26,7 @@ public class AdminChildCategoryDeleteAction implements Action {
             dao.deleteCategory(childId);
             
             // 3. 성공 시, 원래의 '수정 폼 페이지'로 리다이렉트합니다.
-            forward.setPath("./AdminCategoryUpdate.ac?id=" + parentId);
+            forward.setPath("/admin/AdminCategoryUpdate.ac?id=" + parentId);
             forward.setRedirect(true);
             
         } catch (Exception e) {

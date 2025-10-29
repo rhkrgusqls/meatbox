@@ -1,6 +1,5 @@
 package com.admin.db;
 
-import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.product.bo.db.ProductRegisterApproveDAO;
 import com.product.db.ProductDAO;
 import com.product.db.ProductDetailBean;
 import com.product.db.ProductOptionBean;
@@ -177,6 +175,185 @@ public class OrderDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    /**
+     * 총 매출액 계산 (DELIVERED 상태 기준)
+     * @return 총 매출액
+     */
+    public int getTotalSales() {
+        int totalSales = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT SUM(final_price) AS total_sales FROM _order WHERE delivery_status = 'DELIVERED'";
+
+        try {
+            // 수정된 부분: getInstance() 제거하고 getConnection() 직접 호출
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                totalSales = rs.getInt("total_sales");
+            }
+        } catch (SQLException e) {
+            System.err.println("getTotalSales SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) { // DBConnectionManager.getConnection() 예외 처리 추가
+            System.err.println("DB Connection Error in getTotalSales: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 (기존과 동일)
+             try {
+                 if (rs != null) rs.close();
+                 if (pstmt != null) pstmt.close();
+                 if (conn != null) conn.close();
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+        }
+        return totalSales;
+    }
+
+     /**
+     * 특정 상태별 주문 건수 계산
+     * @param status 조회할 배송 상태 (e.g., 'PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED')
+     * @return 해당 상태의 주문 건수
+     */
+    public int getOrderStatusCount(String status) {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+         if (!"PENDING".equals(status) && !"SHIPPED".equals(status) &&
+             !"DELIVERED".equals(status) && !"CANCELLED".equals(status)) {
+             System.err.println("Invalid delivery status: " + status);
+             return 0;
+         }
+
+        String sql = "SELECT COUNT(*) AS status_count FROM _order WHERE delivery_status = ?";
+
+        try {
+            // 수정된 부분: getInstance() 제거하고 getConnection() 직접 호출
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, status);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("status_count");
+            }
+        } catch (SQLException e) {
+            System.err.println("getOrderStatusCount SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) { // DBConnectionManager.getConnection() 예외 처리 추가
+            System.err.println("DB Connection Error in getOrderStatusCount: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 (기존과 동일)
+             try {
+                 if (rs != null) rs.close();
+                 if (pstmt != null) pstmt.close();
+                 if (conn != null) conn.close();
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+        }
+        return count;
+    }
+    
+    /**
+     * 최근 주문 5개를 조회하는 메서드 (주문일시 내림차순)
+     * @return 최근 주문 5개 목록
+     */
+    public List<JoinedOrderData> getRecentOrders(int limit) {
+        List<JoinedOrderData> recentOrders = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM _order ORDER BY order_date DESC LIMIT ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, limit);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                JoinedOrderData order = new JoinedOrderData();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setUserIndex(rs.getInt("user_index"));
+                order.setPaymentMethodId(rs.getInt("payment_method_id"));
+                order.setDiscountAmount(rs.getInt("discount_amount"));
+                order.setShippingFee(rs.getInt("shipping_fee"));
+                order.setUsedDeposit(rs.getInt("used_deposit"));
+                order.setUsedPoints(rs.getInt("used_points"));
+                order.setOrderDate(rs.getTimestamp("order_date"));
+                order.setDeliveryStatus(rs.getString("delivery_status"));
+                order.setFinalPrice(rs.getInt("final_price"));
+                
+                recentOrders.add(order);
+            }
+        } catch (SQLException e) {
+            System.err.println("getRecentOrders SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("DB Connection Error in getRecentOrders: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeDB(conn, pstmt, rs);
+        }
+        
+        return recentOrders;
+    }
+    
+    /**
+     * 주문 상태를 업데이트하는 메서드
+     * @param orderId 주문 ID
+     * @param newStatus 새로운 상태 (PENDING, SHIPPED, DELIVERED, CANCELLED)
+     * @return 업데이트 성공 여부
+     */
+    public boolean updateOrderStatus(int orderId, String newStatus) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        boolean success = false;
+        
+        // 유효한 상태값 검증
+        if (!"PENDING".equals(newStatus) && !"SHIPPED".equals(newStatus) &&
+            !"DELIVERED".equals(newStatus) && !"CANCELLED".equals(newStatus)) {
+            System.err.println("Invalid order status: " + newStatus);
+            return false;
+        }
+        
+        String sql = "UPDATE _order SET delivery_status = ? WHERE order_id = ?";
+        
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, orderId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            success = (rowsAffected > 0);
+            
+            if (success) {
+                System.out.println("Order " + orderId + " status updated to " + newStatus);
+            } else {
+                System.out.println("No order found with ID: " + orderId);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("updateOrderStatus SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("DB Connection Error in updateOrderStatus: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeDB(conn, pstmt, null);
+        }
+        
+        return success;
     }
     
     // -- 페이징 관련 메서드 추가 (필요 시 이전 답변 참고) --

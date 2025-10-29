@@ -35,7 +35,7 @@
 
     <div class="category-add-form">
         <h3>카테고리 추가</h3>
-        <form action="${pageContext.request.contextPath}/AdminCategoryAddTop.ac" method="post">
+        <form action="${pageContext.request.contextPath}/admin/AdminCategoryAddTop.ac" method="post">
             <input type="text" name="categoryName" placeholder="새 카테고리 이름" required>
             <button type="submit">추가</button>
         </form>
@@ -43,7 +43,7 @@
 
     <div class="category-add-form">
         <h3>하위 카테고리 추가</h3>
-        <form action="${pageContext.request.contextPath}/AdminCategoryAddChild.ac" method="post">
+        <form action="${pageContext.request.contextPath}/admin/AdminCategoryAddChild.ac" method="post">
             <select name="parentId" required>
                 <option value="">-- 상위 카테고리 선택 --</option>
                 <c:forEach var="topCat" items="${topLevelCategories}">
@@ -80,8 +80,8 @@
 	                                </c:forEach>
 	                            </td>
 	                            <td>
-	                                <a href="${pageContext.request.contextPath}/AdminCategoryUpdate.ac?id=${category.categoryId}">수정</a>
-	                                <a href="${pageContext.request.contextPath}/AdminCategoryDelete.ac?id=${category.categoryId}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
+                                <a href="${pageContext.request.contextPath}/admin/AdminCategoryUpdate.ac?id=${category.categoryId}">수정</a>
+                                <a href="${pageContext.request.contextPath}/admin/AdminCategoryDelete.ac?id=${category.categoryId}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
 	                            </td>
 	                        </tr>
 	                    </c:forEach>

@@ -4,7 +4,7 @@
 
 <%-- URL의 'page' 파라미터를 확인하여 현재 페이지를 변수에 저장.
 없으면 'dashboard'를 기본값으로. --%>
-<c:set var="currentPage" value="${empty param.page ? 'dashboard' : param.page}" />
+<c:set var="currentPage" value="${empty requestScope.currentPage ? (empty param.page ? 'dashboard' : param.page) : requestScope.currentPage}" />
 
 <style>
     /* ===== 사이드바 스타일 ===== */
@@ -75,17 +75,17 @@
 
 <aside class="sidebar">
     <div class="sidebar-header">
-        <a href="${pageContext.request.contextPath}/AdminHome.ac">
+        <a href="${pageContext.request.contextPath}/admin/AdminHome.ac">
             <img src="https://static-cdn.meatbox.co.kr/img/renew/logo-row-ko.svg" alt="미트박스 로고" class="sidebar-logo">
         </a>
     </div>
 
     <nav class="sidebar-nav">
         <ul>
-            <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="${pageContext.request.contextPath}/AdminHome.ac?page=categories">카테고리 관리</a></li>
-            <li><a href="AdminOrderViewAction.ac">주문 관리</a></li>
+            <li class="${currentPage == 'categories' ? 'active' : ''}"><a href="${pageContext.request.contextPath}/admin/AdminCategories.ac">카테고리 관리</a></li>
+            <li><a href="/admin/AdminOrders.ac">주문 관리</a></li>
             <li><a href="/admin/AdminProductList.ac">상품 관리</a></li>
-            <li class="${currentPage == 'request' ? 'active' : ''}"><a href="adminHome.jsp?page=request">상품등록 요청 관리</a></li>
+            <li class="${currentPage == 'request' ? 'active' : ''}"><a href="/admin/AdminRequests.ac">상품등록 요청 관리</a></li>
         </ul>
     </nav>
 

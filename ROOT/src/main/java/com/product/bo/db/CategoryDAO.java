@@ -74,8 +74,9 @@ public class CategoryDAO {
             return null; // 카테고리가 없는 경우
         }
         
-        // 부모 ID가 없을 때까지(최상위 카테고리에 도달할 때까지) 반복해서 부모를 조회
-        while (currentCategory.getParentCategoryId() != null) {
+        // 부모 ID가 null이 아니거나 0이 아닐 동안 반복
+        // 이렇게 하면 parentCategoryId가 0일 때 루프가 멈추고 최상위 카테고리로 인식됩니다.
+        while (currentCategory.getParentCategoryId() != null && currentCategory.getParentCategoryId() != 0) {
             currentCategory = getCategoryById(currentCategory.getParentCategoryId());
             if (currentCategory == null) {
                 return null; // 중간에 부모를 못 찾는 경우 (데이터 오류)
@@ -328,5 +329,33 @@ public class CategoryDAO {
             System.out.println("DAO : 새 카테고리 '" + categoryName + "' 추가 완료");
         } 
     }
+    
+    public List<com.product.seller.controller.CategoryBean> getLeafCategories() {
+        List<com.product.seller.controller.CategoryBean> list = new ArrayList<>();
+        String sql = "SELECT * FROM category_hierarchy ch " +
+                     "WHERE ch.category_id NOT IN ( " +
+                     "    SELECT DISTINCT parent_category_id " +
+                     "    FROM category_hierarchy " +
+                     "    WHERE parent_category_id IS NOT NULL " +
+                     ")";
 
+        try {
+            con = DBConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("category_id");
+                String name = rs.getString("category_name");
+                list.add(new com.product.seller.controller.CategoryBean(id, name));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeDB();
+        }
+
+        return list;
+    }
 }

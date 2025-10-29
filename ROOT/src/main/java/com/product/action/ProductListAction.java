@@ -6,11 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
-import com.product.bo.db.CategoryDAO; 
-import com.product.bo.db.CategoryDTO; 
+import com.product.bo.db.CategoryDAO;
+import com.product.bo.db.CategoryDTO;
 import com.product.db.ProductDAO;
-import com.product.db.ProductBean; // ProductBean을 사용합니다.
-
+import com.product.db.ProductBean;
 
 public class ProductListAction implements Action {
 
@@ -19,53 +18,66 @@ public class ProductListAction implements Action {
         
         System.out.println("M: ProductListAction.execute() 호출");
 
-        // --- 상단 네비게이션 메뉴 로직 ---
-        String categorySeqStr = request.getParameter("displayCategorySeq");
+        // URL 파라미터에서 카테고리 ID 가져오기 (category 파라미터 우선, displayCategorySeq는 fallback)
+        String categorySeqStr = request.getParameter("category");
+        if (categorySeqStr == null || categorySeqStr.isEmpty()) {
+            categorySeqStr = request.getParameter("displayCategorySeq");
+        }
+        
         int currentCategoryId = 0;
         if (categorySeqStr != null && !categorySeqStr.isEmpty()) {
             try {
                 currentCategoryId = Integer.parseInt(categorySeqStr);
+                System.out.println("M: 선택된 카테고리 ID: " + currentCategoryId);
             } catch (NumberFormatException e) {
                 System.out.println("올바르지 않은 카테고리 ID 입니다: " + categorySeqStr);
-                // 유효하지 않은 ID일 경우, 오류 페이지로 보내거나 기본 페이지로 리다이렉트 할 수 있습니다.
+                currentCategoryId = 0;
             }
+        } else {
+            System.out.println("M: 카테고리 파라미터가 없어 전체 상품을 조회합니다.");
         }
 
+        // ✅ currentCategoryId가 0보다 클 때만 카테고리 네비게이션 정보를 조회합니다.
         if (currentCategoryId > 0) {
             CategoryDAO cdao = new CategoryDAO();
             CategoryDTO topLevelParent = cdao.findTopLevelParent(currentCategoryId);
 
             if (topLevelParent != null) {
                 List<CategoryDTO> subCategoryList = cdao.getCategoriesByParent(topLevelParent.getCategoryId());
+                
                 request.setAttribute("topLevelParent", topLevelParent); 
                 request.setAttribute("subCategoryList", subCategoryList); 
                 request.setAttribute("currentCategoryId", currentCategoryId);
+                System.out.println("M: 카테고리 네비게이션 표시 - " + topLevelParent.getCategoryName() + " (하위 카테고리 " + subCategoryList.size() + "개)");
             }
+        } else {
+            System.out.println("M: 전체 상품 조회 - 카테고리 네비게이션 표시 안함");
         }
         
-        // --- 상품 목록 조회 로직 (getProductsByCategory 호출 방식 수정) ---
-
-        // 페이징 처리를 위한 파라미터 (우선 기본값으로 설정)
-        int page = 1; // 현재 페이지 번호
-        int limit = 20; // 한 페이지에 보여줄 상품 수
+        // --- 상품 목록 조회 로직 ---
+        ProductDAO pdao = new ProductDAO();
         
+        int page = 1;
+        int limit = 20;
         String pageStr = request.getParameter("page");
         if (pageStr != null && !pageStr.isEmpty()) {
             page = Integer.parseInt(pageStr);
         }
+        int offset = (page - 1) * limit;
 
-        int offset = (page - 1) * limit; // DB 조회 시작 위치 계산
-
-        ProductDAO pdao = new ProductDAO();
-        // ProductDAO의 메소드 시그니처에 맞게 3개의 파라미터(categoryId, offset, limit)를 전달합니다.
+        // ProductDAO의 getProductsByCategory는 categoryId가 0일 때 전체 상품을 가져오도록 수정되어 있어야 합니다.
         List<ProductBean> productList = pdao.getProductsByCategory(currentCategoryId, offset, limit); 
+        
+        System.out.println("M: 조회된 상품 수: " + (productList != null ? productList.size() : 0));
+        if (productList != null && !productList.isEmpty()) {
+            System.out.println("M: 첫 번째 상품: " + productList.get(0).getProductName());
+        }
         
         request.setAttribute("productList", productList);
         
         // --- 페이지 이동 설정 ---
-
         ActionForward forward = new ActionForward();
-        forward.setPath("./product/productList.jsp"); 
+        forward.setPath("./event/productList.jsp"); 
         forward.setRedirect(false); 
         
         return forward;

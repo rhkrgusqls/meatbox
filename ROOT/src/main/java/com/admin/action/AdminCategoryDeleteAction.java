@@ -24,7 +24,7 @@ public class AdminCategoryDeleteAction implements Action {
             dao.deleteCategory(categoryId);
             
             // 3. 성공 시 목록 페이지로 리다이렉트합니다.
-            forward.setPath("./AdminHome.ac?page=categories");
+            forward.setPath("/admin/AdminCategories.ac");
             forward.setRedirect(true);
             
         } catch (Exception e) {

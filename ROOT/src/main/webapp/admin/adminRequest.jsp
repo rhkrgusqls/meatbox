@@ -1,32 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>상품 요청 리스트</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-body { font-family: 'Malgun Gothic', sans-serif; background:#f4f7f6; color:#333; }
-table { width:100%; border-collapse: collapse; margin-top:20px; }
-th, td { padding:8px 12px; border-bottom:1px solid #ccc; }
-th { background:#f9f9f9; font-weight:bold; }
 .slide-container { display:flex; overflow-x:auto; gap:10px; padding:5px 0; }
 .slide-container img { height:80px; border-radius:4px; }
 .option-row { white-space: pre-line; font-size:13px; }
-button.approveBtn { background:#4CAF50; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; }
-button.approveBtn:hover { background:#45a049; }
+.btn-approve { background-color:#2ecc71; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; }
+.btn-approve:hover { background-color:#27ae60; }
 </style>
-</head>
-<body>
 
-<h1>상품 요청 리스트</h1>
-<table id="productTable">
-    <tbody></tbody>
-</table>
+<main class="main-content">
+    <div class="page-header">
+        <h1>상품등록 요청 관리</h1>
+    </div>
+    <div class="content-box">
+        <table class="order-table" id="productTable">
+            <tbody></tbody>
+        </table>
+    </div>
+</main>
 
 <script>
 $(document).ready(function(){
-
     function loadProducts(){
         $.ajax({
             url: '/requestList.do',
@@ -37,16 +31,14 @@ $(document).ready(function(){
                 tbody.empty();
 
                 data.forEach(function(product){
-                    // 1줄: 버튼에 requestId 직접 data-attribute로 담기
                     tbody.append('<tr><td colspan="6">' +
-                                 ' 상품명: '+product.productName+
-                                 ' | 카테고리: '+product.categoryName+
-                                 ' | 등록일: '+product.receivedDate+
-                                 ' | 가격: '+product.price+'원'+
-                                 ' <button class="approveBtn" data-requestid="'+product.requestId+'">승인</button>' +
+                                 '<strong>상품명:</strong> '+product.productName+
+                                 ' &nbsp;|&nbsp; <strong>카테고리:</strong> '+product.categoryName+
+                                 ' &nbsp;|&nbsp; <strong>등록일:</strong> '+product.receivedDate+
+                                 ' &nbsp;|&nbsp; <strong>가격:</strong> '+product.price+'원'+
+                                 ' &nbsp; <button class="btn-approve" data-requestid="'+product.requestId+'">승인</button>' +
                                  '</td></tr>');
 
-                    // 2줄: 옵션
                     var optStr = '';
                     if(product.productOptionsJson && product.productOptionsJson.length > 0){
                         product.productOptionsJson.forEach(function(opt){
@@ -61,7 +53,6 @@ $(document).ready(function(){
                     }
                     tbody.append('<tr><td colspan="6" class="option-row">'+optStr+'</td></tr>');
 
-                    // 3줄: 이미지
                     var imgHtml = '<div class="slide-container">';
                     if(product.productImagesJson && product.productImagesJson.length > 0){
                         product.productImagesJson.forEach(function(img){
@@ -71,7 +62,6 @@ $(document).ready(function(){
                     imgHtml += '</div>';
                     tbody.append('<tr><td colspan="6">'+imgHtml+'</td></tr>');
 
-                    // 4줄: 상세 이미지
                     var detailHtml = '<div class="slide-container">';
                     if(product.productDetailsJson && product.productDetailsJson.length > 0){
                         product.productDetailsJson.forEach(function(img){
@@ -89,11 +79,10 @@ $(document).ready(function(){
         });
     }
 
-    loadProducts(); // 초기 로딩
+    loadProducts();
 
-    // 승인 버튼 클릭 처리
-    $(document).on('click', '.approveBtn', function(){
-        var requestId = $(this).data('requestid'); // data-attribute에서 직접 가져오기
+    $(document).on('click', '.btn-approve', function(){
+        var requestId = $(this).data('requestid');
         if(!requestId) return alert('requestId가 없습니다.');
         if(!confirm("정말 승인하시겠습니까?")) return;
 
@@ -101,9 +90,9 @@ $(document).ready(function(){
             url: '/approveProductRequest.do',
             method: 'POST',
             data: { requestId: requestId },
-            success: function(res){
+            success: function(){
                 alert('✅ 승인 완료');
-                loadProducts(); // 승인 후 테이블 새로고침
+                loadProducts();
             },
             error: function(err){
                 alert('⚠️ 승인 중 오류 발생');
@@ -111,12 +100,5 @@ $(document).ready(function(){
             }
         });
     });
-
 });
 </script>
-
-</body>
-</html>
-
-
-

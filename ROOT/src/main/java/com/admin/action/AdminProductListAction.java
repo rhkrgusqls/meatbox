@@ -26,7 +26,7 @@ public class AdminProductListAction implements Action {
 
 	    ActionForward forward = new ActionForward();
 
-	    forward.setPath("/admin/adminHome.jsp");
+    forward.setPath("/admin/adminHome.jsp");
 	    forward.setRedirect(false);
 
 	    return forward;

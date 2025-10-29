@@ -23,6 +23,7 @@ import com.admin.action.order.AdminOrderDeleteAction;
 import com.admin.action.order.AdminOrderDetailAction;
 import com.admin.action.order.AdminOrderModifyAction;
 import com.admin.action.order.AdminOrderViewAction;
+import com.admin.action.order.AdminOrderStatusUpdateAction;
 import com.admin.action.AdminCategoryUpdateFormAction;
 import com.admin.action.AdminChildCategoryDeleteAction;
 import com.admin.action.AdminCategoryUpdateAction;
@@ -44,49 +45,61 @@ public class AdminController extends HttpServlet {
         Action action = null;
         ActionForward forward = null;
 
-        // 2. 가상주소 매핑
-        if (command.equals("/AdminHome.ac")) { 
-            System.out.println("C: /AdminHome.ac 호출");
+        // 2. 가상주소 매핑 (모든 관리자 URL을 /admin/ 하위로 통일)
+        if (command.equals("/admin/AdminHome.ac")) { 
+            System.out.println("C: /admin/AdminHome.ac 호출");
             action = new AdminHomeAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else  if (command.equals("/AdminCategoryAddTop.ac")) { // 최상위 추가 Action
-            System.out.println("C: /AdminCategoryAddTop.ac 호출");
+        } else if (command.equals("/admin/AdminCategories.ac")) { // 카테고리 메인(깨끗한 URL)
+            System.out.println("C: /admin/AdminCategories.ac 호출");
+            action = new AdminCategoryListAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/admin/AdminOrders.ac")) { // 주문 메인(깨끗한 URL)
+            System.out.println("C: /admin/AdminOrders.ac 호출");
+            action = new AdminOrderViewAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
+        } else if (command.equals("/admin/AdminRequests.ac")) { // 요청 관리(깨끗한 URL)
+            System.out.println("C: /admin/AdminRequests.ac 호출");
+            action = new AdminHomeAction();
+            try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
+        } else  if (command.equals("/admin/AdminCategoryAddTop.ac")) { // 최상위 추가 Action
+            System.out.println("C: /admin/AdminCategoryAddTop.ac 호출");
             action = new AdminCategoryAddTopAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) { e.printStackTrace(); }
-        } else if (command.equals("/AdminCategoryAddChild.ac")) { // 자식 추가 Action
-            System.out.println("C: /AdminCategoryAddChild.ac 호출");
+        } else if (command.equals("/admin/AdminCategoryAddChild.ac")) { // 자식 추가 Action
+            System.out.println("C: /admin/AdminCategoryAddChild.ac 호출");
             action = new AdminCategoryAddChildAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) { e.printStackTrace(); }
-        } else if (command.equals("/AdminCategoryList.ac")) {
-            System.out.println("C: /AdminCategoryList.ac 호출");
+        } else if (command.equals("/admin/AdminCategoryList.ac")) {
+            System.out.println("C: /admin/AdminCategoryList.ac 호출");
             action = new AdminCategoryListAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (command.equals("/AdminCategoryUpdate.ac")) {
-            System.out.println("C: /AdminCategoryUpdate.ac 호출 (수정 폼)");
+        } else if (command.equals("/admin/AdminCategoryUpdate.ac")) {
+            System.out.println("C: /admin/AdminCategoryUpdate.ac 호출 (수정 폼)");
             action = new AdminCategoryUpdateFormAction();
             try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
-        } else if (command.equals("/AdminCategoryUpdatePro.ac")) {
-            System.out.println("C: /AdminCategoryUpdatePro.ac 호출 (수정 처리)");
+        } else if (command.equals("/admin/AdminCategoryUpdatePro.ac")) {
+            System.out.println("C: /admin/AdminCategoryUpdatePro.ac 호출 (수정 처리)");
             action = new AdminCategoryUpdateAction();
             try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
-        } else if (command.equals("/AdminCategoryDelete.ac")) {
-            System.out.println("C: /AdminCategoryDelete.ac 호출 (삭제 처리)");
+        } else if (command.equals("/admin/AdminCategoryDelete.ac")) {
+            System.out.println("C: /admin/AdminCategoryDelete.ac 호출 (삭제 처리)");
             action = new AdminCategoryDeleteAction();
             try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
-        } else if (command.equals("/AdminChildCategoryDelete.ac")) {
-            System.out.println("C: /AdminChildCategoryDelete.ac 호출 (수정 폼 내 자식 삭제)");
+        } else if (command.equals("/admin/AdminChildCategoryDelete.ac")) {
+            System.out.println("C: /admin/AdminChildCategoryDelete.ac 호출 (수정 폼 내 자식 삭제)");
             action = new AdminChildCategoryDeleteAction();
             try { forward = action.execute(request, response); } catch (Exception e) { e.printStackTrace(); }
         } else if (command.equals("/admin/AdminProductList.ac")) { // "/admin" 경로 추가
@@ -107,8 +120,8 @@ public class AdminController extends HttpServlet {
              } catch (Exception e) {
                  e.printStackTrace();
              }
-        } else if (command.equals("/admin/AdminOrderViewAction.ac")) { // ⬅️ 이 문자열이 로그와 정확히 같은지 확인!
-             System.out.println("C: /admin/AdminOrderViewAction.ac 호출"); // ⬅️ 로그 추가
+        } else if (command.equals("/admin/AdminOrderView.ac")) {
+             System.out.println("C: /admin/AdminOrderView.ac 호출");
              action = new AdminOrderViewAction();
              try {
                  forward = action.execute(request, response);
@@ -123,33 +136,24 @@ public class AdminController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-       } else if (command.equals("/AdminOrderView.ac")) {   // 전체페이지 조회
-            System.out.println("C: /AdminOrderView.ac 호출");
-            action = new AdminOrderViewAction();
-            try {
-                forward = action.execute(request, response);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else if (command.equals("/AdminOrderDetail.ac")) {   // 페이지 상세조회
-            System.out.println("C: /AdminOrderDetail.ac 호출");
+       } else if (command.equals("/admin/AdminOrderDetail.ac")) {   // 페이지 상세조회
+            System.out.println("C: /admin/AdminOrderDetail.ac 호출");
             action = new AdminOrderDetailAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (command.equals("/AdminOrderAdd.ac")) { // 주문추가
-            System.out.println("C: /AdminOrderAdd.ac 호출");
+        } else if (command.equals("/admin/AdminOrderAdd.ac")) { // 주문추가
+            System.out.println("C: /admin/AdminOrderAdd.ac 호출");
             action = new AdminOrderAddAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (command.equals("/AdminOrderModify.ac")) {  // 페이지 상세조회에서 주문 수정
-            System.out.println("C: /AdminOrderModify.ac 호출");
+        } else if (command.equals("/admin/AdminOrderModify.ac")) {  // 페이지 상세조회에서 주문 수정
+            System.out.println("C: /admin/AdminOrderModify.ac 호출");
             action = new AdminOrderModifyAction();
             try {
                 forward = action.execute(request, response);
@@ -157,9 +161,17 @@ public class AdminController extends HttpServlet {
                 e.printStackTrace();
             }
         
-        } else if (command.equals("/AdminOrderDelete.ac")) { // 주문 삭제
-            System.out.println("C: /AdminOrderDelete.ac 호출");
+        } else if (command.equals("/admin/AdminOrderDelete.ac")) { // 주문 삭제
+            System.out.println("C: /admin/AdminOrderDelete.ac 호출");
             action = new AdminOrderDeleteAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (command.equals("/admin/AdminOrderStatusUpdate.ac")) { // 주문 상태 변경
+            System.out.println("C: /admin/AdminOrderStatusUpdate.ac 호출");
+            action = new AdminOrderStatusUpdateAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {

@@ -19,70 +19,94 @@
     <%-- 필수 JavaScript 파일 선언 --%>
     <script type="text/javascript" src="https://static-cdn.meatbox.co.kr/js/jquery/jquery-1.12.4.min.js" charset="UTF-8"></script>
 	<style>
-	    .sub-category-container {
+	    
+	    /* 상품 목록 스타일 복원 */
+	    .list_5_cols {
+	        display: grid;
+	        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	        gap: 20px;
+	        padding: 20px 0;
+	    }
+	    
+	    .product_card {
+	        border: 1px solid #e0e0e0;
+	        border-radius: 8px;
+	        overflow: hidden;
+	        transition: transform 0.2s, box-shadow 0.2s;
+	        background: white;
+	        display: block;
 	        width: 100%;
-	        max-width: 1200px; /* 사이트 전체 너비에 맞게 조절 */
-	        margin: 20px auto;
-	        padding: 20px;
-	        box-sizing: border-box;
 	    }
-	    .sub-category-nav h2 {
-	        font-size: 28px;
-	        font-weight: bold;
-	        margin-bottom: 20px;
-	        border-bottom: 2px solid #333;
-	        padding-bottom: 15px;
+	    
+	    .product_card:hover {
+	        transform: translateY(-2px);
+	        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 	    }
-	    .sub-category-nav ul {
-	        list-style: none;
-	        padding: 0;
-	        margin: 0;
-	        display: flex;
-	        flex-wrap: wrap; /* 메뉴가 길어지면 다음 줄로 넘어가도록 설정 */
-	        gap: 10px 25px; /* 세로, 가로 간격 */
-	    }
-	    .sub-category-nav li a {
-	        text-decoration: none;
-	        color: #555;
-	        font-size: 16px;
-	        padding: 8px 12px;
-	        border-radius: 5px;
-	        transition: background-color 0.2s, color 0.2s;
-	    }
-	    .sub-category-nav li a:hover {
-	        background-color: #f0f0f0;
-	        color: #000;
-	    }
-	    /* 현재 활성화된(보고있는) 하위 카테고리 스타일 */
-	    .sub-category-nav li.active a {
-	        background-color: #333;
-	        color: #fff;
-	        font-weight: bold;
-	    }
+	    
+	    .img_wrap {
+	        position: relative;
+                                        width: 100%;
+                                        height: 200px;
+                                        overflow: hidden;
+                                        background: #f8f9fa;
+                                    }
+	    
+                                    .img_wrap img {
+                                        width: 100%;
+                                        height: 100%;
+                                        object-fit: cover;
+                                    }
+	    
+                                    .txt_wrap {
+                                        padding: 12px;
+                                    }
+	    
+                                    .product_name {
+                                        font-size: 14px;
+                                        font-weight: 500;
+                                        margin: 8px 0;
+                                        line-height: 1.4;
+                                        color: #333;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 2;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
+                                        min-height: 2.8em;
+                                    }
+	    
+                                    .price_info em {
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        color: #e74c3c;
+                                    }
+	    
+                                    .btn_brand_name {
+                                        background: #f8f9fa;
+                                        color: #666;
+                                        padding: 4px 8px;
+                                        border-radius: 4px;
+                                        font-size: 12px;
+                                        display: inline-block;
+                                    }
+	    
+                                    .flex_side {
+                                        margin-bottom: 8px;
+                                    }
+	    
+                                    .price_wrap {
+                                        margin-top: 8px;
+                                    }
+	    
+                                    /* 기본 스타일 초기화 */
+                                    * {
+                                        box-sizing: border-box;
+                                    }
+	    
+                                    body {
+                                        font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+                                        line-height: 1.6;
+                                    }
 	</style>
-	
-	
-	<div class="sub-category-container">
-	    <%-- ProductListAction에서 넘겨준 topLevelParent가 있을 때만 이 메뉴 영역을 표시합니다. --%>
-	    <c:if test="${not empty topLevelParent}">
-	        <nav class="sub-category-nav">
-	            <%-- 최상위 카테고리 이름을 제목으로 표시 (예: 소고기) --%>
-	            <h2>${topLevelParent.categoryName}</h2>
-	            
-	            <%-- 하위 카테고리 목록을 <ul> 태그로 표시 --%>
-	            <ul>
-	                <c:forEach var="sub" items="${subCategoryList}">
-	                    <%-- 현재 보고 있는 페이지의 카테고리면 'active' 클래스를 추가하여 강조 --%>
-	                    <li <c:if test="${sub.categoryId == currentCategoryId}">class="active"</c:if>>
-	                        <a href="${pageContext.request.contextPath}/ProductList.pr?displayCategorySeq=${sub.categoryId}">
-	                            ${sub.categoryName}
-	                        </a>
-	                    </li>
-	                </c:forEach>
-	            </ul>
-	        </nav>
-	    </c:if>
-	</div>
 </head>
 <body>
 
@@ -92,27 +116,37 @@
 <main id="meatboxContent" class="promotion meatbox_container contents_wrapper">
     <div class="inner_global">
     
-    	<%-- ✅ [추가] 카테고리 목록 표시 영역 --%>
-        <div class="category_tab_wrap" style="margin-top: 24px; margin-bottom: 24px;">
-            <ul style="display: flex; gap: 8px; list-style: none; padding: 0; flex-wrap: wrap;">
-                <li>
-                    <a href="#" class="category_tab active" style="display: block; padding: 8px 16px; border: 1px solid #ddd; border-radius: 16px; text-decoration: none; color: #333; background-color: #f5f5f5;">
-                        <strong>전체</strong>
-                    </a>
-                </li>
-                <c:forEach var="category" items="${subCategoryList}">
+        <%-- 카테고리 네비게이션 (특정 카테고리 선택 시에만 표시) --%>
+        <c:if test="${not empty topLevelParent and not empty subCategoryList}">
+            <div class="category_tab_wrap" style="margin-top: 24px; margin-bottom: 24px;">
+                <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #333;">${topLevelParent.categoryName}</h2>
+                <ul style="display: flex; gap: 8px; list-style: none; padding: 0; flex-wrap: wrap;">
                     <li>
-                        <a href="productList.do?category=${category.categoryId}" class="category_tab" style="display: block; padding: 8px 16px; border: 1px solid #ddd; border-radius: 16px; text-decoration: none; color: #333;">
-                            <span>${category.categoryName}</span>
+                        <a href="productList.do" class="category_tab <c:if test='${currentCategoryId == 0}'>active</c:if>" style="display: block; padding: 8px 16px; border: 1px solid #ddd; border-radius: 16px; text-decoration: none; color: #333; <c:if test='${currentCategoryId == 0}'>background-color: #f5f5f5;</c:if>">
+                            <strong>전체</strong>
                         </a>
                     </li>
-                </c:forEach>
-            </ul>
-        </div>
+                    <c:forEach var="category" items="${subCategoryList}">
+                        <li>
+                            <a href="productList.do?category=${category.categoryId}" class="category_tab <c:if test='${category.categoryId == currentCategoryId}'>active</c:if>" style="display: block; padding: 8px 16px; border: 1px solid #ddd; border-radius: 16px; text-decoration: none; color: #333; <c:if test='${category.categoryId == currentCategoryId}'>background-color: #f5f5f5;</c:if>">
+                                <span>${category.categoryName}</span>
+                            </a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
         
         <div class="location" style="margin-top: 20px; margin-bottom: 20px; font-size: 14px; color: #666;">
             <span><a href="${pageContext.request.contextPath}/">홈</a> &gt;</span>
-            <span>기획전</span>
+            <c:choose>
+                <c:when test="${not empty topLevelParent}">
+                    <span>${topLevelParent.categoryName}</span>
+                </c:when>
+                <c:otherwise>
+                    <span>상품 목록</span>
+                </c:otherwise>
+            </c:choose>
         </div>
 
         <div class="stack_horizontal gap_32 mt_16">
@@ -198,44 +232,52 @@
                 <div class="thin_gray_rounded_box type4 px_16 py_24 none_border">
                     <div style="position:relative">
                         <article class="list_5_cols">
-						    <c:forEach var="product" items="${productList}">
-						        <div class="swiper-slide">
-						            <%-- ✅ [수정] a 태그에 target="_blank"와 rel="noopener noreferrer" 속성을 추가했습니다. --%>
-						            <a href="${pageContext.request.contextPath}/productViewPage.do?productSeq=${product.productId}" class="product_card type1 stack_vertical false" style="text-decoration: none; color: inherit;" target="_blank" rel="noopener noreferrer">
-						                <div class="bgInherit" style="cursor:pointer">
-						                    <div role="button">
-						                        
-						                        <div class="img_wrap">
-						                            <div class="bg_wrap">
-						                                <p class="absolute_full">
-						                                    <c:choose>
-						                                        <c:when test="${not empty product.productImage}">
-						                                            <img src="${pageContext.request.contextPath}${product.productImage}" alt="${product.productName}" class="full_image">
-						                                        </c:when>
-						                                        <c:otherwise>
-						                                            <img src="${pageContext.request.contextPath}/images/default_image.png" alt="이미지 준비중" class="full_image">
-						                                        </c:otherwise>
-						                                    </c:choose>
-						                                </p>
+						    <c:choose>
+						        <c:when test="${not empty productList}">
+						            <c:forEach var="product" items="${productList}">
+						                <div class="swiper-slide">
+						                    <a href="${pageContext.request.contextPath}/productViewPage.do?productSeq=${product.productId}" class="product_card type1 stack_vertical false" style="text-decoration: none; color: inherit;">
+						                        <div class="bgInherit" style="cursor:pointer">
+						                            <div role="button">
+						                                
+						                                <div class="img_wrap">
+						                                    <div class="bg_wrap">
+						                                        <p class="absolute_full">
+						                                            <c:choose>
+						                                                <c:when test="${not empty product.productImage}">
+						                                                    <img src="${pageContext.request.contextPath}${product.productImage}" alt="${product.productName}" class="full_image">
+						                                                </c:when>
+						                                                <c:otherwise>
+						                                                    <img src="${pageContext.request.contextPath}/images/default_image.png" alt="이미지 준비중" class="full_image">
+						                                                </c:otherwise>
+						                                            </c:choose>
+						                                        </p>
+						                                    </div>
+						                                </div>
+						                                
+						                                <div class="txt_wrap mt_8" style="overflow:hidden">
+						                                    <div class="flex_side">
+						                                        <span class="none_style_btn btn_brand_name"><span class="txt_box">미트박스</span></span>
+						                                    </div>
+						                                    <p class="product_name">${product.productName}</p>
+						                                    <div class="price_wrap">
+						                                        <span class="price_info">
+						                                            <em><fmt:formatNumber value="${product.price}" pattern="#,###" />원</em>
+						                                        </span>
+						                                    </div>
+						                                </div>
 						                            </div>
 						                        </div>
-						                        
-						                        <div class="txt_wrap mt_8" style="overflow:hidden">
-						                            <div class="flex_side">
-						                                <span class="none_style_btn btn_brand_name"><span class="txt_box">미트박스</span></span>
-						                            </div>
-						                            <p class="product_name">${product.productName}</p>
-						                            <div class="price_wrap">
-						                                <span class="price_info">
-						                                    <em><fmt:formatNumber value="${product.price}" pattern="#,###" />원</em>
-						                                </span>
-						                            </div>
-						                        </div>
-						                    </div>
+						                    </a>
 						                </div>
-						            </a>
-						        </div>
-						    </c:forEach>
+						            </c:forEach>
+						        </c:when>
+						        <c:otherwise>
+						            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+						                <p>등록된 상품이 없습니다.</p>
+						            </div>
+						        </c:otherwise>
+						    </c:choose>
 						</article>
                     </div>
                 </div>

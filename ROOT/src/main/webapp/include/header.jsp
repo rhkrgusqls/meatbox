@@ -278,16 +278,16 @@ $(function() {
                         </a>
                     </li>
                     <li class="gnb-tab">
-                        <a href="낱개상품_URL"><span class="txt">낱개</span></a>
+                        <a href="${pageContext.request.contextPath}/productList.do"><span class="txt">낱개</span></a>
                     </li>
                     <li class="gnb-tab">
-                        <a href="세절상품_URL"><span class="txt">세절</span></a>
+                        <a href="${pageContext.request.contextPath}/productList.do"><span class="txt">세절</span></a>
                     </li>
                     <li class="gnb-tab">
-                        <a href="대량특가_URL"><span class="txt">대량특가</span></a>
+                        <a href="${pageContext.request.contextPath}/productList.do"><span class="txt">대량특가</span></a>
                     </li>
                     <li class="gnb-tab icon-dotted">
-                        <a href="랭킹_URL"><span class="txt">랭킹</span></a>
+                        <a href="${pageContext.request.contextPath}/productList.do"><span class="txt">랭킹</span></a>
                     </li>
                 </ul>
                 <ul class="depth01 depth-sub flex-row-gap016 f-size14-500">
