@@ -308,6 +308,54 @@ public class OrderDAO {
         return recentOrders;
     }
     
+    /**
+     * 주문 상태를 업데이트하는 메서드
+     * @param orderId 주문 ID
+     * @param newStatus 새로운 상태 (PENDING, SHIPPED, DELIVERED, CANCELLED)
+     * @return 업데이트 성공 여부
+     */
+    public boolean updateOrderStatus(int orderId, String newStatus) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        boolean success = false;
+        
+        // 유효한 상태값 검증
+        if (!"PENDING".equals(newStatus) && !"SHIPPED".equals(newStatus) &&
+            !"DELIVERED".equals(newStatus) && !"CANCELLED".equals(newStatus)) {
+            System.err.println("Invalid order status: " + newStatus);
+            return false;
+        }
+        
+        String sql = "UPDATE _order SET delivery_status = ? WHERE order_id = ?";
+        
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, orderId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            success = (rowsAffected > 0);
+            
+            if (success) {
+                System.out.println("Order " + orderId + " status updated to " + newStatus);
+            } else {
+                System.out.println("No order found with ID: " + orderId);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("updateOrderStatus SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("DB Connection Error in updateOrderStatus: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeDB(conn, pstmt, null);
+        }
+        
+        return success;
+    }
+    
     // -- 페이징 관련 메서드 추가 (필요 시 이전 답변 참고) --
     // public int getTotalOrderCount() { ... }
     // public List<JoinedOrderData> getOrdersWithProductsPaginated(int startRow, int pageSize) { ... }

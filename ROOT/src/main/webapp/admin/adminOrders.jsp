@@ -60,6 +60,51 @@
     .btn-primary:hover { background-color: #d94342; }
     .btn-small { font-size: 12px; padding: 4px 8px; color: white !important; border-radius: 4px; }
     .btn-detail { background-color: #2ecc71; }
+    
+    /* 상태 변경 드롭다운 스타일 */
+    .status-select {
+        padding: 4px 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 12px;
+        background-color: white;
+        cursor: pointer;
+    }
+    
+    .status-update-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+    
+    .status-update-btn:hover {
+        background-color: #2980b9;
+    }
+    
+    /* 알림 메시지 스타일 */
+    .alert {
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
 </style>
 </head>
 <body>
@@ -69,6 +114,19 @@
         <header class="main-header">
             <h1>주문 관리</h1>
         </header>
+        
+        <!-- 알림 메시지 -->
+        <c:if test="${not empty success}">
+            <div class="alert alert-success">
+                ${success}
+            </div>
+        </c:if>
+        
+        <c:if test="${not empty error}">
+            <div class="alert alert-error">
+                ${error}
+            </div>
+        </c:if>
         <div class="content-box">
              <form class="filter-form">
                 <label>주문일:</label>
@@ -113,19 +171,16 @@
                                     <td>
                                         <%-- ... 상태 표시 로직 ... --%>
                                         <c:choose>
-                                            <c:when test="${order.deliveryStatus == 'pending'}">
+                                            <c:when test="${order.deliveryStatus == 'PENDING'}">
                                                 <span class="status pending">결제 대기</span>
                                             </c:when>
-                                            <c:when test="${order.deliveryStatus == 'completed'}">
-                                                <span class="status completed">결제 완료</span>
-                                            </c:when>
-                                            <c:when test="${order.deliveryStatus == 'shipping'}">
+                                            <c:when test="${order.deliveryStatus == 'SHIPPED'}">
                                                 <span class="status shipping">배송 중</span>
                                             </c:when>
-                                             <c:when test="${order.deliveryStatus == 'delivered'}">
+                                            <c:when test="${order.deliveryStatus == 'DELIVERED'}">
                                                 <span class="status delivered">배송 완료</span>
                                             </c:when>
-                                            <c:when test="${order.deliveryStatus == 'cancelled'}">
+                                            <c:when test="${order.deliveryStatus == 'CANCELLED'}">
                                                 <span class="status cancelled">주문 취소</span>
                                             </c:when>
                                             <c:otherwise>
@@ -133,7 +188,20 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td><a href="/admin/AdminOrderDetail.ac?orderId=${order.orderId}" class="btn-small btn-detail">상세보기</a></td>
+                                    <td>
+                                        <a href="/admin/AdminOrderDetail.ac?orderId=${order.orderId}" class="btn-small btn-detail">상세보기</a>
+                                        <br><br>
+                                        <form method="post" action="/admin/AdminOrderStatusUpdate.ac" style="display: inline;">
+                                            <input type="hidden" name="orderId" value="${order.orderId}">
+                                            <select name="status" class="status-select">
+                                                <option value="PENDING" ${order.deliveryStatus == 'PENDING' ? 'selected' : ''}>결제 대기</option>
+                                                <option value="SHIPPED" ${order.deliveryStatus == 'SHIPPED' ? 'selected' : ''}>배송 중</option>
+                                                <option value="DELIVERED" ${order.deliveryStatus == 'DELIVERED' ? 'selected' : ''}>배송 완료</option>
+                                                <option value="CANCELLED" ${order.deliveryStatus == 'CANCELLED' ? 'selected' : ''}>주문 취소</option>
+                                            </select>
+                                            <button type="submit" class="status-update-btn">변경</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:when>

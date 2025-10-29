@@ -23,6 +23,7 @@ import com.admin.action.order.AdminOrderDeleteAction;
 import com.admin.action.order.AdminOrderDetailAction;
 import com.admin.action.order.AdminOrderModifyAction;
 import com.admin.action.order.AdminOrderViewAction;
+import com.admin.action.order.AdminOrderStatusUpdateAction;
 import com.admin.action.AdminCategoryUpdateFormAction;
 import com.admin.action.AdminChildCategoryDeleteAction;
 import com.admin.action.AdminCategoryUpdateAction;
@@ -163,6 +164,14 @@ public class AdminController extends HttpServlet {
         } else if (command.equals("/admin/AdminOrderDelete.ac")) { // 주문 삭제
             System.out.println("C: /admin/AdminOrderDelete.ac 호출");
             action = new AdminOrderDeleteAction();
+            try {
+                forward = action.execute(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (command.equals("/admin/AdminOrderStatusUpdate.ac")) { // 주문 상태 변경
+            System.out.println("C: /admin/AdminOrderStatusUpdate.ac 호출");
+            action = new AdminOrderStatusUpdateAction();
             try {
                 forward = action.execute(request, response);
             } catch (Exception e) {
