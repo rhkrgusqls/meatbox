@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <%-- 숫자 포맷팅을 위해 추가 --%>
 
 <style>
     /* 대시보드 전용 KPI 카드 스타일 */
@@ -37,17 +38,23 @@
     </header>
 
     <div class="kpi-cards">
-        <div class="card">
-            <h3>오늘 매출</h3>
-            <p class="value">1,230,000<span class="unit">원</span></p>
+        <div>
+            <h2>📊 매출 현황</h2>
+            <p>총 매출액 (배송 완료 기준):
+                <strong><fmt:formatNumber value="${totalSales}" pattern="#,###" /> 원</strong>
+            </p>
         </div>
-        <div class="card">
-            <h3>신규 가입</h3>
-            <p class="value">15<span class="unit">명</span></p>
-        </div>
-        <div class="card">
-            <h3>처리 대기 주문</h3>
-            <p class="value">5<span class="unit">건</span></p>
+
+        <hr>
+
+        <div>
+            <h2>📋 주문 현황</h2>
+            <ul>
+                <li>결제 대기: <strong><c:out value="${pendingCount}" /></strong> 건</li>
+                <li>배송 중: <strong><c:out value="${shippedCount}" /></strong> 건</li>
+                <li>배송 완료: <strong><c:out value="${deliveredCount}" /></strong> 건</li>
+                <li>주문 취소: <strong><c:out value="${cancelledCount}" /></strong> 건</li>
+            </ul>
         </div>
         <div class="card">
             <h3>전체 상품 수</h3>

@@ -178,7 +178,92 @@ public class OrderDAO {
             e.printStackTrace();
         }
     }
-    
+    /**
+     * 총 매출액 계산 (DELIVERED 상태 기준)
+     * @return 총 매출액
+     */
+    public int getTotalSales() {
+        int totalSales = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT SUM(final_price) AS total_sales FROM _order WHERE delivery_status = 'DELIVERED'";
+
+        try {
+            // 수정된 부분: getInstance() 제거하고 getConnection() 직접 호출
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                totalSales = rs.getInt("total_sales");
+            }
+        } catch (SQLException e) {
+            System.err.println("getTotalSales SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) { // DBConnectionManager.getConnection() 예외 처리 추가
+            System.err.println("DB Connection Error in getTotalSales: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 (기존과 동일)
+             try {
+                 if (rs != null) rs.close();
+                 if (pstmt != null) pstmt.close();
+                 if (conn != null) conn.close();
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+        }
+        return totalSales;
+    }
+
+     /**
+     * 특정 상태별 주문 건수 계산
+     * @param status 조회할 배송 상태 (e.g., 'PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED')
+     * @return 해당 상태의 주문 건수
+     */
+    public int getOrderStatusCount(String status) {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+         if (!"PENDING".equals(status) && !"SHIPPED".equals(status) &&
+             !"DELIVERED".equals(status) && !"CANCELLED".equals(status)) {
+             System.err.println("Invalid delivery status: " + status);
+             return 0;
+         }
+
+        String sql = "SELECT COUNT(*) AS status_count FROM _order WHERE delivery_status = ?";
+
+        try {
+            // 수정된 부분: getInstance() 제거하고 getConnection() 직접 호출
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, status);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("status_count");
+            }
+        } catch (SQLException e) {
+            System.err.println("getOrderStatusCount SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) { // DBConnectionManager.getConnection() 예외 처리 추가
+            System.err.println("DB Connection Error in getOrderStatusCount: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 (기존과 동일)
+             try {
+                 if (rs != null) rs.close();
+                 if (pstmt != null) pstmt.close();
+                 if (conn != null) conn.close();
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+        }
+        return count;
+    }
     // -- 페이징 관련 메서드 추가 (필요 시 이전 답변 참고) --
     // public int getTotalOrderCount() { ... }
     // public List<JoinedOrderData> getOrdersWithProductsPaginated(int startRow, int pageSize) { ... }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Action;
 import com.ActionForward;
+import com.admin.db.OrderDAO;
 import com.product.bo.db.CategoryDAO;
 import com.product.bo.db.CategoryDTO;
 
@@ -50,6 +51,25 @@ public class AdminHomeAction implements Action {
             request.setAttribute("currentPage", "dashboard");
             request.setAttribute("contentPage", "/admin/adminDashboard.jsp");
         }
+
+        OrderDAO orderDAO = new OrderDAO();
+
+        // 총 매출액 조회 (배송 완료 기준)
+        int totalSales = orderDAO.getTotalSales();
+
+        // 상태별 주문 건수 조회
+        int pendingCount = orderDAO.getOrderStatusCount("PENDING");
+        int shippedCount = orderDAO.getOrderStatusCount("SHIPPED");
+        int deliveredCount = orderDAO.getOrderStatusCount("DELIVERED");
+        int cancelledCount = orderDAO.getOrderStatusCount("CANCELLED");
+
+
+        // 조회된 데이터를 request 객체에 속성으로 설정
+        request.setAttribute("totalSales", totalSales);
+        request.setAttribute("pendingCount", pendingCount);
+        request.setAttribute("shippedCount", shippedCount);
+        request.setAttribute("deliveredCount", deliveredCount);
+        request.setAttribute("cancelledCount", cancelledCount);
 
         ActionForward forward = new ActionForward();
         forward.setPath("/admin/adminHome.jsp");
