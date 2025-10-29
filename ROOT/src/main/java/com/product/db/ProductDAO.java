@@ -257,6 +257,7 @@ public class ProductDAO implements ProductInterface {
 
             // categoryId가 0 이하일 경우, 모든 상품을 조회하는 쿼리 실행
             if (categoryId <= 0) {
+                System.out.println("ProductDAO: 전체 상품 조회 (categoryId: " + categoryId + ")");
                 sql = "SELECT p.*, " +
                       " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
                       " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
@@ -268,6 +269,7 @@ public class ProductDAO implements ProductInterface {
                 pstmt.setInt(2, offset);
             } else {
                 // 특정 카테고리의 상품을 조회하는 기존 쿼리 실행
+                System.out.println("ProductDAO: 카테고리별 상품 조회 (categoryId: " + categoryId + ")");
                 sql = "SELECT p.*, " +
                       " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
                       " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
@@ -297,6 +299,8 @@ public class ProductDAO implements ProductInterface {
 
                 productList.add(p);
             }
+            
+            System.out.println("ProductDAO: 조회된 상품 수: " + productList.size());
 
         } catch (Exception e) {
             e.printStackTrace();

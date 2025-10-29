@@ -18,15 +18,23 @@ public class ProductListAction implements Action {
         
         System.out.println("M: ProductListAction.execute() 호출");
 
-        String categorySeqStr = request.getParameter("displayCategorySeq");
+        // URL 파라미터에서 카테고리 ID 가져오기 (category 파라미터 우선, displayCategorySeq는 fallback)
+        String categorySeqStr = request.getParameter("category");
+        if (categorySeqStr == null || categorySeqStr.isEmpty()) {
+            categorySeqStr = request.getParameter("displayCategorySeq");
+        }
+        
         int currentCategoryId = 0;
         if (categorySeqStr != null && !categorySeqStr.isEmpty()) {
             try {
                 currentCategoryId = Integer.parseInt(categorySeqStr);
+                System.out.println("M: 선택된 카테고리 ID: " + currentCategoryId);
             } catch (NumberFormatException e) {
                 System.out.println("올바르지 않은 카테고리 ID 입니다: " + categorySeqStr);
                 currentCategoryId = 0;
             }
+        } else {
+            System.out.println("M: 카테고리 파라미터가 없어 전체 상품을 조회합니다.");
         }
 
         // ✅ currentCategoryId가 0보다 클 때만 카테고리 네비게이션 정보를 조회합니다.
@@ -56,6 +64,11 @@ public class ProductListAction implements Action {
 
         // ProductDAO의 getProductsByCategory는 categoryId가 0일 때 전체 상품을 가져오도록 수정되어 있어야 합니다.
         List<ProductBean> productList = pdao.getProductsByCategory(currentCategoryId, offset, limit); 
+        
+        System.out.println("M: 조회된 상품 수: " + (productList != null ? productList.size() : 0));
+        if (productList != null && !productList.isEmpty()) {
+            System.out.println("M: 첫 번째 상품: " + productList.get(0).getProductName());
+        }
         
         request.setAttribute("productList", productList);
         
