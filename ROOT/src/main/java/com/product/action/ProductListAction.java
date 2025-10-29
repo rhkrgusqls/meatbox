@@ -48,7 +48,10 @@ public class ProductListAction implements Action {
                 request.setAttribute("topLevelParent", topLevelParent); 
                 request.setAttribute("subCategoryList", subCategoryList); 
                 request.setAttribute("currentCategoryId", currentCategoryId);
+                System.out.println("M: 카테고리 네비게이션 표시 - " + topLevelParent.getCategoryName() + " (하위 카테고리 " + subCategoryList.size() + "개)");
             }
+        } else {
+            System.out.println("M: 전체 상품 조회 - 카테고리 네비게이션 표시 안함");
         }
         
         // --- 상품 목록 조회 로직 ---
