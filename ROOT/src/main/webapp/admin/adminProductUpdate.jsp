@@ -20,6 +20,13 @@
                     <th>기본 가격</th>
                     <td><input type="number" name="price" value="${product.price}"> 원</td>
                 </tr>
+                <tr>
+                    <th>카테고리</th>
+                    <td>
+                        <select id="parentCategory" style="min-width:180px;"></select>
+                        <select id="childCategory" name="categoryId" style="min-width:220px; margin-left:8px;"></select>
+                    </td>
+                </tr>
             </table>
 
             <h3 style="margin-top: 30px; margin-bottom: 10px;">옵션별 재고 및 가격 관리</h3>
@@ -55,5 +62,57 @@
                 <a href="/admin/AdminProductList.ac" class="btn">취소</a>
             </div>
         </form>
+
+        <script>
+        (function() {
+            var currentParentId = ${currentParentId == null ? "null" : currentParentId};
+            var currentCategoryId = ${currentCategoryId == null ? "null" : currentCategoryId};
+
+            var parentSel = document.getElementById('parentCategory');
+            var childSel = document.getElementById('childCategory');
+
+            function fetchCategories(parentId) {
+                var url = parentId == null ? '/GetCategories.cbo' : ('/GetCategories.cbo?parentId=' + parentId);
+                return fetch(url).then(function(r){return r.json();});
+            }
+
+            function fillSelect(select, items, selectedId) {
+                select.innerHTML = '';
+                var placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = select === parentSel ? '상위 카테고리 선택' : '하위 카테고리 선택';
+                select.appendChild(placeholder);
+                items.forEach(function(it){
+                    var opt = document.createElement('option');
+                    opt.value = it.id;
+                    opt.textContent = it.name;
+                    if (selectedId !== null && selectedId !== undefined && String(it.id) === String(selectedId)) {
+                        opt.selected = true;
+                    }
+                    select.appendChild(opt);
+                });
+            }
+
+            parentSel.addEventListener('change', function() {
+                var pid = parentSel.value ? parseInt(parentSel.value, 10) : null;
+                childSel.innerHTML = '';
+                if (pid == null) return;
+                fetchCategories(pid).then(function(list){
+                    fillSelect(childSel, list, null);
+                });
+            });
+
+            // 초기 로드: 상위 카테고리 채우기 -> 자식 채우기
+            fetchCategories(null).then(function(top){
+                fillSelect(parentSel, top, currentParentId);
+                var pid = parentSel.value ? parseInt(parentSel.value, 10) : null;
+                if (pid != null) {
+                    return fetchCategories(pid).then(function(children){
+                        fillSelect(childSel, children, currentCategoryId);
+                    });
+                }
+            });
+        })();
+        </script>
     </div>
 </main>

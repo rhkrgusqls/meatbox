@@ -268,16 +268,16 @@ public class ProductDAO implements ProductInterface {
                 pstmt.setInt(1, limit);
                 pstmt.setInt(2, offset);
             } else {
-                // 특정 카테고리의 상품을 조회하는 기존 쿼리 실행
+				// 특정 카테고리의 상품을 조회하는 쿼리 실행 (category_products 기반)
                 System.out.println("ProductDAO: 카테고리별 상품 조회 (categoryId: " + categoryId + ")");
-                sql = "SELECT p.*, " +
-                      " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
-                      " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
-                      "FROM product p " +
-                      "JOIN product_of_detail_category podc ON p.product_id = podc.product_id " +
-                      "WHERE podc.detail_category_id = ? " +
-                      "ORDER BY p.created_at DESC " +
-                      "LIMIT ? OFFSET ?";
+				sql = "SELECT p.*, " +
+				      " (SELECT dir FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS productImage, " +
+				      " (SELECT SUM(quantity) FROM product_option po WHERE po.product_id = p.product_id) AS totalQuantity " +
+				      "FROM product p " +
+				      "JOIN category_products cp ON p.product_id = cp.product_id " +
+				      "WHERE cp.category_id = ? " +
+				      "ORDER BY p.created_at DESC " +
+				      "LIMIT ? OFFSET ?";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, categoryId);
                 pstmt.setInt(2, limit);
@@ -528,12 +528,15 @@ public class ProductDAO implements ProductInterface {
     public List<ProductBean> getAllProducts() throws ProductException {
         List<ProductBean> productList = new ArrayList<>();
 
-        String sql = "SELECT p.*, ANY_VALUE(v.category_name) AS category_name, " +
-                     " (SELECT SUM(po.quantity) FROM product_option po WHERE po.product_id = p.product_id) as total_quantity " +
-                     " FROM product p " +
-                     " LEFT JOIN view_product_full_info v ON p.product_id = v.product_id " +
-                     " GROUP BY p.product_id " +
-                     " ORDER BY p.product_id DESC";
+        String sql =
+            "SELECT " +
+            "  p.product_id, p.product_name, p.price, " +
+            "  ch.category_name, " +
+            "  (SELECT SUM(po.quantity) FROM product_option po WHERE po.product_id = p.product_id) AS total_quantity " +
+            "FROM product p " +
+            "LEFT JOIN category_products cp ON cp.product_id = p.product_id " +
+            "LEFT JOIN category_hierarchy ch ON ch.category_id = cp.category_id " +
+            "ORDER BY p.product_id DESC";
 
         try (Connection conn = DBConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -616,6 +619,51 @@ public class ProductDAO implements ProductInterface {
             e.printStackTrace();
             throw new ProductException("상품 정보 업데이트 중 오류가 발생했습니다: " + e.getMessage());
         }
+    }
+
+    /**
+     * 상품의 카테고리 매핑을 category_products 기준으로 갱신한다.
+     * 기존 매핑을 제거하고 새 category_id로 1건을 저장한다.
+     */
+    public boolean updateProductCategory(int productId, int categoryId) throws ProductException {
+        String deleteSql = "DELETE FROM category_products WHERE product_id = ?";
+        String insertSql = "INSERT INTO category_products (category_id, product_id) VALUES (?, ?)";
+        try (Connection conn = DBConnectionManager.getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement del = conn.prepareStatement(deleteSql)) {
+                del.setInt(1, productId);
+                del.executeUpdate();
+            }
+            try (PreparedStatement ins = conn.prepareStatement(insertSql)) {
+                ins.setInt(1, categoryId);
+                ins.setInt(2, productId);
+                ins.executeUpdate();
+            }
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ProductException("상품 카테고리 갱신 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 상품이 속한 category_id를 조회한다. 없으면 null 반환.
+     */
+    public Integer getProductCategoryId(int productId) {
+        String sql = "SELECT category_id FROM category_products WHERE product_id = ? LIMIT 1";
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("category_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     
     public boolean updateProductOption(int optionId, int quantity, int priceOfOption) throws ProductException {
