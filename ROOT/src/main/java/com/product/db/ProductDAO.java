@@ -554,6 +554,32 @@ public class ProductDAO implements ProductInterface {
         return productList;
     }
     
+    /**
+     * 전체 상품 수를 조회하는 메서드
+     * @return 전체 상품 수
+     */
+    public int getTotalProductCount() {
+        int totalCount = 0;
+        String sql = "SELECT COUNT(*) AS total_count FROM product";
+        
+        try (Connection conn = DBConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                totalCount = rs.getInt("total_count");
+            }
+        } catch (SQLException e) {
+            System.err.println("getTotalProductCount SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("DB Connection Error in getTotalProductCount: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return totalCount;
+    }
+    
     public boolean deleteProduct(int productId) throws ProductException {
         String sql = "DELETE FROM product WHERE product_id = ?";
         try (Connection conn = DBConnectionManager.getConnection();

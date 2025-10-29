@@ -1,6 +1,5 @@
 package com.admin.db;
 
-import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.product.bo.db.ProductRegisterApproveDAO;
 import com.product.db.ProductDAO;
 import com.product.db.ProductDetailBean;
 import com.product.db.ProductOptionBean;
@@ -264,6 +262,52 @@ public class OrderDAO {
         }
         return count;
     }
+    
+    /**
+     * 최근 주문 5개를 조회하는 메서드 (주문일시 내림차순)
+     * @return 최근 주문 5개 목록
+     */
+    public List<JoinedOrderData> getRecentOrders(int limit) {
+        List<JoinedOrderData> recentOrders = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM _order ORDER BY order_date DESC LIMIT ?";
+
+        try {
+            conn = DBConnectionManager.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, limit);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                JoinedOrderData order = new JoinedOrderData();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setUserIndex(rs.getInt("user_index"));
+                order.setPaymentMethodId(rs.getInt("payment_method_id"));
+                order.setDiscountAmount(rs.getInt("discount_amount"));
+                order.setShippingFee(rs.getInt("shipping_fee"));
+                order.setUsedDeposit(rs.getInt("used_deposit"));
+                order.setUsedPoints(rs.getInt("used_points"));
+                order.setOrderDate(rs.getTimestamp("order_date"));
+                order.setDeliveryStatus(rs.getString("delivery_status"));
+                order.setFinalPrice(rs.getInt("final_price"));
+                
+                recentOrders.add(order);
+            }
+        } catch (SQLException e) {
+            System.err.println("getRecentOrders SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("DB Connection Error in getRecentOrders: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeDB(conn, pstmt, rs);
+        }
+        
+        return recentOrders;
+    }
+    
     // -- 페이징 관련 메서드 추가 (필요 시 이전 답변 참고) --
     // public int getTotalOrderCount() { ... }
     // public List<JoinedOrderData> getOrdersWithProductsPaginated(int startRow, int pageSize) { ... }

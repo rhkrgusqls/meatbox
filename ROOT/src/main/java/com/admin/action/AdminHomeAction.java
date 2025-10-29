@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.Action;
 import com.ActionForward;
 import com.admin.db.OrderDAO;
+import com.admin.db.JoinedOrderData;
 import com.product.bo.db.CategoryDAO;
 import com.product.bo.db.CategoryDTO;
+import com.product.db.ProductDAO;
 
 public class AdminHomeAction implements Action {
 
@@ -53,6 +55,7 @@ public class AdminHomeAction implements Action {
         }
 
         OrderDAO orderDAO = new OrderDAO();
+        ProductDAO productDAO = new ProductDAO();
 
         // 총 매출액 조회 (배송 완료 기준)
         int totalSales = orderDAO.getTotalSales();
@@ -63,6 +66,11 @@ public class AdminHomeAction implements Action {
         int deliveredCount = orderDAO.getOrderStatusCount("DELIVERED");
         int cancelledCount = orderDAO.getOrderStatusCount("CANCELLED");
 
+        // 전체 상품 수 조회
+        int totalProductCount = productDAO.getTotalProductCount();
+        
+        // 최근 주문 5개 조회
+        List<JoinedOrderData> recentOrders = orderDAO.getRecentOrders(5);
 
         // 조회된 데이터를 request 객체에 속성으로 설정
         request.setAttribute("totalSales", totalSales);
@@ -70,6 +78,8 @@ public class AdminHomeAction implements Action {
         request.setAttribute("shippedCount", shippedCount);
         request.setAttribute("deliveredCount", deliveredCount);
         request.setAttribute("cancelledCount", cancelledCount);
+        request.setAttribute("totalProductCount", totalProductCount);
+        request.setAttribute("recentOrders", recentOrders);
 
         ActionForward forward = new ActionForward();
         forward.setPath("/admin/adminHome.jsp");
